@@ -1,0 +1,13 @@
+/NOLOGO
+/errorReport:prompt
+/MACHINE:x64
+/SUBSYSTEM:WINDOWS
+/DEF
+/NAME:"UnrealEditor-GAS.dll"
+/IGNORE:4221
+/NODEFAULTLIB
+"H:/Unreal/GAS/Intermediate/Build/Win64/x64/GASEditor/Development/UnrealEd/SharedPCH.UnrealEd.Project.ValApi.ValExpApi.Cpp20.h.obj"
+"H:/Unreal/GAS/Intermediate/Build/Win64/x64/UnrealEditor/Development/GAS/GAS.cpp.obj"
+"H:/Unreal/GAS/Intermediate/Build/Win64/x64/UnrealEditor/Development/GAS/PerModuleInline.gen.cpp.obj"
+"H:/Unreal/GAS/Intermediate/Build/Win64/x64/UnrealEditor/Development/GAS/Default.rc2.res"
+/OUT:"H:/Unreal/GAS/Intermediate/Build/Win64/x64/UnrealEditor/Development/GAS/UnrealEditor-GAS.lib"

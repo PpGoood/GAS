@@ -1,0 +1,14 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "h:\\unreal\\gas\\source\\gas\\gas.cpp",
+        "ProvidedModule": "",
+        "PCH": "h:\\unreal\\gas\\intermediate\\build\\win64\\x64\\gaseditor\\development\\unrealed\\sharedpch.unrealed.project.valapi.valexpapi.cpp20.h.pch",
+        "Includes": [
+            "h:\\unreal\\gas\\intermediate\\build\\win64\\x64\\unrealeditor\\development\\gas\\definitions.gas.h",
+            "h:\\unreal\\gas\\source\\gas\\gas.h"
+        ],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

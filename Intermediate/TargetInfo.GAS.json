@@ -1,0 +1,44 @@
+{
+	"Targets": [
+		{
+			"Name": "LiveLinkHub",
+			"Path": "E:\\Epic\\Epic Engine\\UE_5.6\\Engine\\Source\\Programs\\LiveLinkHub\\Source\\LiveLinkHub.Target.cs",
+			"Type": "Editor"
+		},
+		{
+			"Name": "DotNetPerforceLib",
+			"Path": "E:\\Epic\\Epic Engine\\UE_5.6\\Engine\\Source\\Programs\\Shared\\EpicGames.Perforce.Native\\DotNetPerforceLib.Target.cs",
+			"Type": "Program"
+		},
+		{
+			"Name": "IoStoreOnDemandTests",
+			"Path": "E:\\Epic\\Epic Engine\\UE_5.6\\Engine\\Source\\Runtime\\Experimental\\IoStore\\Tests\\IoStoreOnDemandTests.Target.cs",
+			"Type": "Program"
+		},
+		{
+			"Name": "EventLoopUnitTests",
+			"Path": "E:\\Epic\\Epic Engine\\UE_5.6\\Engine\\Source\\Runtime\\Online\\Experimental\\EventLoopTests\\EventLoopUnitTests.Target.cs",
+			"Type": "Program"
+		},
+		{
+			"Name": "UnrealEditor",
+			"Path": "E:\\Epic\\Epic Engine\\UE_5.6\\Engine\\Source\\UnrealEditor.Target.cs",
+			"Type": "Editor"
+		},
+		{
+			"Name": "UnrealGame",
+			"Path": "E:\\Epic\\Epic Engine\\UE_5.6\\Engine\\Source\\UnrealGame.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "GAS",
+			"Path": "..\\Source\\GAS.Target.cs",
+			"Type": "Game"
+		},
+		{
+			"Name": "GASEditor",
+			"Path": "..\\Source\\GASEditor.Target.cs",
+			"Type": "Editor"
+		}
+	]
+}
