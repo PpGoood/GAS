@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "GASPlayerController.generated.h"
 
+class IEnemyInterface;
 struct FInputActionValue;
 class UInputAction;
 class UInputMappingContext;
@@ -23,6 +24,7 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
+	virtual void Tick(float DeltaSeconds) override;
 private:
 	UPROPERTY(EditAnywhere,Category="Input")
 	TObjectPtr<UInputMappingContext> InputContext;
@@ -30,5 +32,9 @@ private:
 	UPROPERTY(EditAnywhere,Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
 
+	void CursorTrace();
+	IEnemyInterface* LastHighlightEnemy;
+	IEnemyInterface* CurHightlightEnemy;
+	
 	void Move(const struct FInputActionValue& InputActionValue);
 };

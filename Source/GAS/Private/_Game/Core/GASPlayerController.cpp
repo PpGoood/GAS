@@ -4,6 +4,7 @@
 #include "_Game/Core/GASPlayerController.h"
 #include "EnhancedInput/Public/EnhancedInputSubsystems.h"
 #include "EnhancedInput/Public/EnhancedInputComponent.h"
+#include "_Game/Interaction/EnemyInterface.h"
 
 AGASPlayerController::AGASPlayerController()
 {
@@ -36,6 +37,42 @@ void AGASPlayerController::SetupInputComponent()
 
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 	EnhancedInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this,&AGASPlayerController::Move);
+}
+
+void AGASPlayerController::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	CursorTrace();
+}
+
+void AGASPlayerController::CursorTrace()
+{
+	FHitResult CursorHit;
+	GetHitResultUnderCursor(ECC_Visibility,false,CursorHit);
+
+	LastHighlightEnemy = CurHightlightEnemy;
+	CurHightlightEnemy = Cast<IEnemyInterface>(CursorHit.GetActor());
+
+	// 如果当前和上一个都没有敌人，直接返回
+	if (CurHightlightEnemy == nullptr && LastHighlightEnemy == nullptr)
+		return;
+
+	// 如果当前没有敌人，但上一个敌人存在
+	if (CurHightlightEnemy == nullptr)
+	{
+		LastHighlightEnemy->UnHighlightActor();
+	}
+	// 如果当前有敌人，但上一个敌人不存在
+	else if (LastHighlightEnemy == nullptr)
+	{
+		CurHightlightEnemy->HighlightActor();
+	}
+	// 如果当前和上一个敌人都存在，且不同
+	else if (CurHightlightEnemy != LastHighlightEnemy)
+	{
+		CurHightlightEnemy->HighlightActor();
+		LastHighlightEnemy->UnHighlightActor();
+	}
 }
 
 void AGASPlayerController::Move(const FInputActionValue& InputActionValue)
