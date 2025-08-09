@@ -19,4 +19,8 @@ APlayerCharacter::APlayerCharacter()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
 	bUseControllerRotationRoll = false;
+
+	//由于弹簧臂没勾选了Inherit pitch，yaw，roll
+	//弹簧臂不会随着玩家旋转即出生点有旋转角度则相机也不会旋转
+	//所以playerstart的旋转必须和弹簧臂一致。
 }
