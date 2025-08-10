@@ -15,10 +15,16 @@ void AGASPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	check(InputContext);
-
+	
+	UE_LOG(LogTemp, Warning, TEXT("This is running on %s with Role: %d"), 
+	   *GetName(), (int)GetLocalRole());
+	
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
-	check(Subsystem);
-	Subsystem->AddMappingContext(InputContext,0);
+	
+	if (Subsystem)
+	{
+		Subsystem->AddMappingContext(InputContext,0);
+	}
 
 	//显示鼠标
 	bShowMouseCursor = true;
