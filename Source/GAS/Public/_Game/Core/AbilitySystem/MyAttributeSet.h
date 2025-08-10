@@ -4,13 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameplayAbilitySet.h"
-#include "MyGameplayAbilitySet.generated.h"
+#include "MyAttributeSet.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GAS_API UMyGameplayAbilitySet : public UGameplayAbilitySet
+class GAS_API UMyAttributeSet : public UGameplayAbilitySet
 {
 	GENERATED_BODY()
 	
