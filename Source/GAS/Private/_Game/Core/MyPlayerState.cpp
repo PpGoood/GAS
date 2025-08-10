@@ -2,6 +2,7 @@
 
 #include "_Game/Core/MyPlayerState.h"
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
+#include "_Game/Core/AbilitySystem/MyAttributeSet.h"
 
 AMyPlayerState::AMyPlayerState()
 {
@@ -13,5 +14,5 @@ AMyPlayerState::AMyPlayerState()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
-	AttributeSet = CreateDefaultSubobject<UAttributeSet>(TEXT("AttributeSet"));
+	AttributeSet = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSet"));
 }

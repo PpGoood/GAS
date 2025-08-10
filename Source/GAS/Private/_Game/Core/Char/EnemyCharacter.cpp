@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "GAS/GAS.h"
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
+#include "_Game/Core/AbilitySystem/MyAttributeSet.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -15,7 +16,7 @@ AEnemyCharacter::AEnemyCharacter()
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	
-	AttributeSet = CreateDefaultSubobject<UAttributeSet>(TEXT("AttributeSet"));
+	AttributeSet = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSet"));
 }
 
 void AEnemyCharacter::HighlightActor()
