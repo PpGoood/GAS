@@ -29,6 +29,9 @@ void AMVCHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySyste
 
 	OverlayWidget->SetWidgetController(OverlayWidgetController); //设置用户控件的控制器层
 	
+	OverlayWidgetController->BroadcastInitialValues(); //初始化广播
+	OverlayWidgetController->BindCallbacksToDependencies(); //绑定监听数值变化
+	
 	Widget->AddToViewport(); //添加到视口
 	
 }

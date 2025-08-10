@@ -42,7 +42,9 @@ class GAS_API UMVCController : public UObject
 public:
 	UFUNCTION(BlueprintCallable)
 	void SetWidgetControllerParmas(const FWidgetControllerParams& Params);
-	
+	virtual void BroadcastInitialValues(){}; //广播初始化的值
+	virtual void BindCallbacksToDependencies(){}; //绑定数值变动后回调的广播
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category="WidgetController")
 	TObjectPtr<APlayerController> PlayerController;
