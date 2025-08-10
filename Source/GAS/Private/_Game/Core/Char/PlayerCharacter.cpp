@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "_Game/Core/MyPlayerState.h"
+#include "_Game/UI/HUD/MVCHUD.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -47,4 +48,14 @@ void APlayerCharacter::InitAbilityInfo()
 	AbilitySystemComponent = MyPlayerState->GetAbilitySystemComponent();
 	AttributeSet = MyPlayerState->GetAttributeSet();
 	AbilitySystemComponent->InitAbilityActorInfo(MyPlayerState,this);
+
+	//获取PC
+	if(APlayerController* PlayerControllerBase = Cast<APlayerController>(GetController()))
+	{
+		if(AMVCHUD* HUD = Cast<AMVCHUD>(PlayerControllerBase->GetHUD()))
+		{
+			HUD->InitOverlay(PlayerControllerBase, MyPlayerState, AbilitySystemComponent, AttributeSet);
+		}
+	}
+
 }
