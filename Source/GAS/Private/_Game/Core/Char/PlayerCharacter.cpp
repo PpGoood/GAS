@@ -3,7 +3,9 @@
 
 #include "_Game/Core/Char/PlayerCharacter.h"
 
+#include "AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "_Game/Core/MyPlayerState.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -23,4 +25,26 @@ APlayerCharacter::APlayerCharacter()
 	//由于弹簧臂没勾选了Inherit pitch，yaw，roll
 	//弹簧臂不会随着玩家旋转即出生点有旋转角度则相机也不会旋转
 	//所以playerstart的旋转必须和弹簧臂一致。
+}
+
+void APlayerCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	InitAbilityInfo();
+}
+
+void APlayerCharacter::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+	InitAbilityInfo();
+}
+
+void APlayerCharacter::InitAbilityInfo()
+{
+	AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
+	check(MyPlayerState)
+
+	AbilitySystemComponent = MyPlayerState->GetAbilitySystemComponent();
+	AttributeSet = MyPlayerState->GetAttributeSet();
+	AbilitySystemComponent->InitAbilityActorInfo(MyPlayerState,this);
 }
