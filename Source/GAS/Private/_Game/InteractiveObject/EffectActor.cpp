@@ -30,6 +30,7 @@ void AEffectActor::OnOverlap(UPrimitiveComponent* OverlappedComponent, AActor* O
 		const UMyAttributeSet* AttributeSet = Cast<UMyAttributeSet>(ASCInterface->GetAbilitySystemComponent()->GetAttributeSet(UMyAttributeSet::StaticClass()));
 		UMyAttributeSet* MutableAttributeSet = const_cast<UMyAttributeSet*>(AttributeSet); //将常量转为变量
 		MutableAttributeSet->SetHealth(AttributeSet->GetHealth() + 25.f);
+		MutableAttributeSet->SetMana(AttributeSet->GetMana() - 25.f);
 		Destroy(); // 销毁自身
 	}
 }
