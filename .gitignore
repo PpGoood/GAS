@@ -49,3 +49,7 @@ Session.vim
 
 # Visual Studio
 .vs
+
+# 忽略 UnLua 文件夹中的 Binaries 和 Intermediate 文件夹
+/Plugins/UnLua/Binaries/
+/Plugins/UnLua/Intermediate/
