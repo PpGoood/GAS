@@ -59,5 +59,7 @@ Session.vim
 # 忽略所有名为 Intermediate 的文件夹
 **/Intermediate/
 
+rider.project*
+
 
 
