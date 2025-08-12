@@ -7,10 +7,8 @@
 --
 
 ---@type WBP_ManaGlobe_C
-local M = UnLua.Class()
-function M:PreConstruct(IsDesignTime)
-    self.ProgressBar_Globe.WidgetStyle = self.ProgressBarStyle
-end
+local M = UnLua.Class("UI.Component.GlobeProgress")
+
 function M:WidgetControllerSet_Event()
     self.WidgetController.OnManaChanged:Add(self,self.SetProgressMana)
     self.WidgetController.OnMaxManaChanged:Add(self,self.SetProgressMaxMana)

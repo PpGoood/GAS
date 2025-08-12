@@ -7,10 +7,7 @@
 --
 
 ---@type WBP_HealthGlobe_C
-local M = UnLua.Class()
-function M:PreConstruct(IsDesignTime)
-    self.ProgressBar_Globe.WidgetStyle = self.ProgressBarStyle
-end
+local M = UnLua.Class("UI.Component.GlobeProgress")
 
 function M:WidgetControllerSet_Event()
     self.WidgetController.OnHealthChanged:Add(self,self.SetProgressHealth)
