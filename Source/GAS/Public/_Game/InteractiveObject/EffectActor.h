@@ -3,10 +3,34 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffect.h"
 #include "GameFramework/Actor.h"
 #include "EffectActor.generated.h"
 
-class UGameplayEffect;
+
+UENUM(BlueprintType) 
+enum class EEffectApplicationPolicy : uint8
+{
+	ApplyOnOverlap UMETA(DisplayName = "Apply on Overlap"),    
+	ApplyOnEndOverlap UMETA(DisplayName = "Apply on End Overlap"), 
+	None UMETA(DisplayName = "Do Not Apply")                   
+};
+
+
+UENUM(BlueprintType) 
+enum class EEffectRemovalPolicy : uint8
+{
+	RemoveOnEndOverlap UMETA(DisplayName = "Remove on End Overlap"), 
+	None UMETA(DisplayName = "Do Not Remove")
+};
+
+UENUM(BlueprintType) 
+enum class EDestroyPolicy : uint8
+{
+	DestroyOnOverlap UMETA(DisplayName = "Destory on Overlap"),
+	DestroyOnEndOverlap UMETA(DisplayName = "Destory on End Overlap"), 
+	None UMETA(DisplayName = "Do Not Remove")
+};
 
 UCLASS()
 class GAS_API AEffectActor : public AActor
@@ -18,11 +42,42 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="GameplayEffect")
-	TSubclassOf<UGameplayEffect> EffectClass;
-
+	
 	UFUNCTION(BlueprintCallable) 
 	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> GameplayEffectClass);//给与目标添加GameplayEffect
+
+	//在重叠开始时处理效果的添加删除逻辑
+	UFUNCTION(BlueprintCallable) 
+	void OnOverlap(AActor* TargetActor);
+
+	//在重叠结束时处理效果的添加删除逻辑
+	UFUNCTION(BlueprintCallable) 
+	void OnEndOverlap(AActor* TargetActor);
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	EDestroyPolicy DestroyPolicy = EDestroyPolicy::None;
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass; //生成GameplayEffect的类
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	EEffectApplicationPolicy InstantEffectApplicationPolicy = EEffectApplicationPolicy::None;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	TSubclassOf<UGameplayEffect> DurationGameplayEffectClass; //生成具有一定持续时间的GameplayEffect的类
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	EEffectApplicationPolicy DurationEffectApplicationPolicy = EEffectApplicationPolicy::None;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	TSubclassOf<UGameplayEffect> InfinityGameplayEffectClass; //生成具有一定持续时间的GameplayEffect的类
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	EEffectApplicationPolicy InfinityEffectApplicationPolicy = EEffectApplicationPolicy::None;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	EEffectRemovalPolicy InfinityEffectRemovalPolicy = EEffectRemovalPolicy::RemoveOnEndOverlap;
+
+	//用于存储当前已经激活的GameplayEffect的句柄的map
+	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
 };
