@@ -28,7 +28,6 @@ local M = UnLua.Class()
 -- end
 
 function M:ReceiveActorBeginOverlap(OtherActor)
-    print("[peiLuaLog]进入")
     self:OnOverlap(OtherActor)
 end
 
