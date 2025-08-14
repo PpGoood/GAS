@@ -13,4 +13,8 @@ UCLASS()
 class GAS_API UMyAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
+public:
+	void InitAbilitySystemComponent();
+protected:
+	void EffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec, FActiveGameplayEffectHandle GEHandle);
 };

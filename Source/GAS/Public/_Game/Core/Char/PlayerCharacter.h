@@ -19,5 +19,5 @@ public:
 	virtual void OnRep_PlayerState() override; //客户端初始化ASC
 
 private:
-	void InitAbilityInfo();
+	virtual void InitAbilityActorInfo() override;
 };

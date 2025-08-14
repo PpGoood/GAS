@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "_Game/Core/MyPlayerState.h"
+#include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 #include "_Game/UI/HUD/MVCHUD.h"
 
 APlayerCharacter::APlayerCharacter()
@@ -27,24 +28,23 @@ APlayerCharacter::APlayerCharacter()
 	//弹簧臂不会随着玩家旋转即出生点有旋转角度则相机也不会旋转
 	//所以playerstart的旋转必须和弹簧臂一致。
 }
-
+//服务器
 void APlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	InitAbilityInfo();
+	InitAbilityActorInfo();
 }
-
+//客户端
 void APlayerCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-	InitAbilityInfo();
+	InitAbilityActorInfo();
 }
 
-void APlayerCharacter::InitAbilityInfo()
+void APlayerCharacter::InitAbilityActorInfo()
 {
 	AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
 	check(MyPlayerState)
-
 	AbilitySystemComponent = MyPlayerState->GetAbilitySystemComponent();
 	AttributeSet = MyPlayerState->GetAttributeSet();
 	AbilitySystemComponent->InitAbilityActorInfo(MyPlayerState,this);
@@ -57,5 +57,5 @@ void APlayerCharacter::InitAbilityInfo()
 			HUD->InitOverlay(PlayerControllerBase, MyPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
-
+	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->InitAbilitySystemComponent();
 }
