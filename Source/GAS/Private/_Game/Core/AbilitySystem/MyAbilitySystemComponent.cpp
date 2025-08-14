@@ -11,6 +11,17 @@ void UMyAbilitySystemComponent::InitAbilitySystemComponent()
 void UMyAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec,
 	FActiveGameplayEffectHandle GEHandle)
 {
-	GEngine->AddOnScreenDebugMessage(1,1.f,FColor::Blue,"EffectApplied");
+
+	FGameplayTagContainer TagContainer;
+	GESpec.GetAllAssetTags(TagContainer);
+
+	EffectAssetTags.Broadcast(TagContainer);
+	
+	// for (const FGameplayTag& Tag : TagContainer)
+	// {
+	// 	const FString Msg = FString::Printf(TEXT("Tag: %s"), *Tag.ToString());
+	// 	GEngine->AddOnScreenDebugMessage(1,1.f,FColor::Blue,Msg);
+	// }
+	
 }
 

@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "MyAbilitySystemComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAssetTags,const FGameplayTagContainer& /**AssetTags**/);
 /**
  * 
  */
@@ -15,6 +16,8 @@ class GAS_API UMyAbilitySystemComponent : public UAbilitySystemComponent
 	GENERATED_BODY()
 public:
 	void InitAbilitySystemComponent();
+
+	FEffectAssetTags EffectAssetTags;
 protected:
 	void EffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec, FActiveGameplayEffectHandle GEHandle);
 };
