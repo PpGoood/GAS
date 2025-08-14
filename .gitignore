@@ -61,5 +61,6 @@ Session.vim
 
 rider.project*
 
-
+# Ignore Rider/Visual Studio local user settings
+*.DotSettings.user
 
