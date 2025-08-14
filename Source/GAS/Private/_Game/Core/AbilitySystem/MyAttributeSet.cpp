@@ -9,9 +9,9 @@
 
 UMyAttributeSet::UMyAttributeSet()
 {
-	InitHealth(50.f);
+	InitHealth(1.f);
 	InitMaxHealth(100.f);
-	InitMana(100.f);
+	InitMana(1.f);
 	InitMaxMana(100.f);
 }
 
