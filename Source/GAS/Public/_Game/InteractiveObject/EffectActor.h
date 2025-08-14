@@ -13,7 +13,7 @@ enum class EEffectApplicationPolicy : uint8
 {
 	ApplyOnOverlap UMETA(DisplayName = "Apply on Overlap"),    
 	ApplyOnEndOverlap UMETA(DisplayName = "Apply on End Overlap"), 
-	None UMETA(DisplayName = "Do Not Apply")                   
+	None UMETA(DisplayName = "None")                   
 };
 
 
@@ -21,7 +21,7 @@ UENUM(BlueprintType)
 enum class EEffectRemovalPolicy : uint8
 {
 	RemoveOnEndOverlap UMETA(DisplayName = "Remove on End Overlap"), 
-	None UMETA(DisplayName = "Do Not Remove")
+	None UMETA(DisplayName = "None")
 };
 
 UENUM(BlueprintType) 
@@ -29,8 +29,9 @@ enum class EDestroyPolicy : uint8
 {
 	DestroyOnOverlap UMETA(DisplayName = "Destory on Overlap"),
 	DestroyOnEndOverlap UMETA(DisplayName = "Destory on End Overlap"), 
-	None UMETA(DisplayName = "Do Not Remove")
+	None UMETA(DisplayName = "None")
 };
+
 
 UCLASS()
 class GAS_API AEffectActor : public AActor

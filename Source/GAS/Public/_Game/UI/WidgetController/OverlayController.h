@@ -4,13 +4,34 @@
 
 #include "CoreMinimal.h"
 #include "_Game/Core/AbilitySystem/MyAttributeSet.h"
+#include "_Game/UI/Widget/MVCWidget.h"
 #include "_Game/UI/WidgetController/MVCController.h"
 #include "OverlayController.generated.h"
+
+USTRUCT(BlueprintType)
+struct FUIWidgetRow:public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FGameplayTag MessageTag = FGameplayTag();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText Message = FText();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UMVCWidget> MessageWidget;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UTexture2D* Image = nullptr;
+};
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChangedSignature,float, NewHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChangedSignature,float, NewMaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChangedSignature,float, NewMana);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChangedSignature,float, NewMaxMana);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature,FUIWidgetRow,Row);
 /**
  * 
  */
@@ -34,9 +55,25 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
 	FOnMaxManaChangedSignature OnMaxManaChanged;
 
+	UPROPERTY(BlueprintAssignable, Category="GAS|Message")
+	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category="Widget Data")
+	TObjectPtr<UDataTable> MessageWidgetDataTable;
+	
 	void HealthChanged(const FOnAttributeChangeData& Data) const;
 	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
 	void ManaChanged(const FOnAttributeChangeData& Data) const;
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
+
+	//使用tag去查找datatable的数据，需要datatable每行的名称与Tag的名称完全一致
+	template<typename T>
+	T* GetDataTableRowByTag(UDataTable* DataTable,const FGameplayTag& Tag);
 };
+
+template <typename T>
+T* UOverlayController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+{
+	T* RowData = DataTable->FindRow<T>(Tag.GetTagName(), TEXT(""));
+	return RowData == nullptr ? nullptr : RowData;
+}
