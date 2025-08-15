@@ -23,8 +23,7 @@ function M:WidgetControllerSet_Event()
 end
 
 function M:OnMessage(Row)
-    -- 打印消息，检查是否接收到正确的消息内容
-    print("[PeiLuaLog] OnMessage", Row.Message)
+    --TODO 使用UI管理器，现在每次消息都会弹出
 
     -- 加载蓝图类，确保路径正确
     local UMG_C = UE4.UClass.Load("/Game/_Game/Blueprints/UI/Main/SubWidget/WBP_EffectMessage.WBP_EffectMessage_C")
@@ -50,7 +49,7 @@ function M:OnMessage(Row)
         CanvasSlot.SetAnchors(CanvasSlot,Anchors) -- 锚点设置为左下
         CanvasSlot.SetSize(CanvasSlot,UE4.FVector2D(400.0, 75.0))
         CanvasSlot.SetAlignment(CanvasSlot,UE4.FVector2D(0.0, 1.0))  -- 设置对齐方式为左下
-        CanvasSlot.SetPosition(CanvasSlot,UE4.FVector2D(50.0, -50.0))  -- 设置具体位置
+        CanvasSlot.SetPosition(CanvasSlot,UE4.FVector2D(50.0, 0.0))  -- 设置具体位置
     end
 
     -- 确保 UMG_TestMain_Ins 被成功转换为期望的蓝图类型
