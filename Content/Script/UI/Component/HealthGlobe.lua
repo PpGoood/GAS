@@ -16,12 +16,12 @@ end
 
 function M:SetProgressHealth(NewHealth)
     self.Health = NewHealth
-    self.ProgressBar_Globe:SetPercent(self.Health / self.MaxHealth)
+    self:UpdateProgressBar(self.Health,self.MaxHealth)
 end
 
 function M:SetProgressMaxHealth(NewMaxHealth)
     self.MaxHealth = NewMaxHealth
-    self.ProgressBar_Globe:SetPercent(self.Health / self.MaxHealth)
+    self:UpdateProgressBar(self.Health,self.MaxHealth)
 end
 
 return M

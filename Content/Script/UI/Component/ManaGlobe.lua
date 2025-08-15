@@ -16,12 +16,14 @@ end
 
 function M:SetProgressMana(NewMana)
     self.Mana = NewMana
-    self.ProgressBar_Globe:SetPercent(self.Mana / self.MaxMana)
+    self:UpdateProgressBar(self.Mana,self.MaxMana)
 end
 
 function M:SetProgressMaxMana(NewMaxMana)
     self.MaxMana = NewMaxMana
-    self.ProgressBar_Globe:SetPercent(self.Mana / self.MaxMana)
+    self:UpdateProgressBar(self.Mana,self.MaxMana)
 end
+
+
 
 return M
