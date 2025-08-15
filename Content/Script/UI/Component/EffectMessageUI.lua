@@ -10,7 +10,9 @@
 local M = UnLua.Class()
 
 function M:ShowMessage(Image,msg)
-    self.Image_Icon:SetBrushFromTexture(Image)
+    if Image then        
+        self.Image_Icon:SetBrushFromTexture(Image)
+    end
     self.Text_Message:SetText(msg)
 end
 --function M:Initialize(Initializer)

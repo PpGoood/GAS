@@ -34,26 +34,34 @@ function M:OnMessage(Row)
     end
 
     -- 创建 UMG 实例
-    local UMG_TestMain_Ins = UE4.UWidgetBlueprintLibrary.Create(self, UMG_C)
-    if UMG_TestMain_Ins == nil then
+    local UMG_Message = UE4.UWidgetBlueprintLibrary.Create(self, UMG_C)
+    if UMG_Message == nil then
         print("[PeiLuaLog] Failed to create UMG instance!")
         return
     end
 
-    -- 获取视口大小并进行调整
-    local vector = UE4.UWidgetLayoutLibrary.GetViewportSize(self)
-
-    -- 将 UMG 实例添加到视口
-    UMG_TestMain_Ins:AddToViewport()
+    self.CanvasPanel.AddChild(self.CanvasPanel,UMG_Message)
+    local CanvasSlot = UE4.UWidgetLayoutLibrary.SlotAsCanvasSlot(UMG_Message)
+    if CanvasSlot then
+        -- 锚定到左下角 (0,1) 的位置
+        local Anchors = UE4.FAnchors()
+        Anchors.Minimum = UE4.FVector2D(0.0, 1.0)
+        Anchors.Maximum = UE4.FVector2D(0.0, 1.0)
+        CanvasSlot.SetAnchors(CanvasSlot,Anchors) -- 锚点设置为左下
+        CanvasSlot.SetSize(CanvasSlot,UE4.FVector2D(400.0, 75.0))
+        CanvasSlot.SetAlignment(CanvasSlot,UE4.FVector2D(0.0, 1.0))  -- 设置对齐方式为左下
+        CanvasSlot.SetPosition(CanvasSlot,UE4.FVector2D(50.0, -50.0))  -- 设置具体位置
+    end
 
     -- 确保 UMG_TestMain_Ins 被成功转换为期望的蓝图类型
-    local castUI = UMG_TestMain_Ins:Cast(UE4.AWBP_EffectMessage_C)  -- 确保类名正确
-    if castUI == nil then
+    local UMG_Message_Cast = UMG_Message:Cast(UE4.AWBP_EffectMessage_C)  -- 确保类名正确
+    if UMG_Message_Cast == nil then
         print("[PeiLuaLog] Failed to cast UMG_TestMain_Ins to WBP_EffectMessage_C")
         return
     end
+    
     -- 调用 WBP_EffectMessage_C 中的 ShowMessage 方法
-    castUI:ShowMessage(Row.Image, Row.Message)
+    UMG_Message_Cast:ShowMessage(Row.Image, Row.Message)
 end
 
 
