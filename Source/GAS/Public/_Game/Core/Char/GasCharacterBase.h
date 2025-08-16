@@ -7,6 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "GasCharacterBase.generated.h"
 
+class UGameplayEffect;
 class UAttributeSet;
 
 UCLASS(Abstract)
@@ -32,6 +33,11 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
 
+	//使用GE对AttributeSet初始化
+	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Attributes")
+	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
+
+	void InitializePrimaryAttributes() const;
 private:
 	virtual void InitAbilityActorInfo(){};
 };

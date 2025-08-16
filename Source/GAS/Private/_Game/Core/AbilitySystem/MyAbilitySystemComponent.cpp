@@ -7,7 +7,7 @@ void UMyAbilitySystemComponent::InitAbilitySystemComponent()
 {
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this,&UMyAbilitySystemComponent::EffectApplied);
 }
-
+//GE被应用时候委托调用方法
 void UMyAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec,
 	FActiveGameplayEffectHandle GEHandle)
 {

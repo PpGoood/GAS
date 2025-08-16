@@ -2,6 +2,7 @@
 
 
 #include "_Game/Core/Char/GasCharacterBase.h"
+#include "AbilitySystemComponent.h"
 
 // Sets default values
 AGasCharacterBase::AGasCharacterBase()
@@ -18,5 +19,18 @@ AGasCharacterBase::AGasCharacterBase()
 void AGasCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AGasCharacterBase::InitializePrimaryAttributes() const
+{
+	if (GetAbilitySystemComponent() == nullptr) return;
+	if (DefaultPrimaryAttributes == nullptr) return;
+	
+	FGameplayEffectContextHandle EffectContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(this);
+	//TODO 根据等级创建基础的GE值
+	const FGameplayEffectSpecHandle EffectSpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttributes,1,EffectContextHandle);
+	//GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*EffectSpecHandle.Data.Get(),GetAbilitySystemComponent());
+	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }
 

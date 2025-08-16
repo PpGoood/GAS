@@ -58,4 +58,6 @@ void APlayerCharacter::InitAbilityActorInfo()
 		}
 	}
 	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->InitAbilitySystemComponent();
+
+	InitializePrimaryAttributes();
 }
