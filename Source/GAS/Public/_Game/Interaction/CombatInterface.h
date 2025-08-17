@@ -19,7 +19,7 @@ class UCombatInterface : public UInterface
 class GAS_API ICombatInterface
 {
 	GENERATED_BODY()
+public:	
 	virtual int32 GetPlayerLevel(){return 0;}
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
-public:
 };

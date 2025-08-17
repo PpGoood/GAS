@@ -23,9 +23,9 @@ void AGasCharacterBase::BeginPlay()
 
 void AGasCharacterBase::InitializeDefaultAttributes() const
 {
-	ApplyEffectToSelf(DefaultVitalAttributes,1);
 	ApplyEffectToSelf(DefaultPrimaryAttributes,1);
 	ApplyEffectToSelf(DefaultSecondaryAttributes,1);
+	ApplyEffectToSelf(DefaultVitalAttributes,1);
 }
 
 void AGasCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectClass, float Level) const
@@ -34,6 +34,7 @@ void AGasCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectCla
 	if (EffectClass == nullptr) return;
 	
 	FGameplayEffectContextHandle EffectContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle EffectSpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(EffectClass,Level,EffectContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }
