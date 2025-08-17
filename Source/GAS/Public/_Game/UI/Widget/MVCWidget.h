@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "CommonActivatableWidget.h"
 #include "MVCWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GAS_API UMVCWidget : public UUserWidget
+class GAS_API UMVCWidget : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
 public:

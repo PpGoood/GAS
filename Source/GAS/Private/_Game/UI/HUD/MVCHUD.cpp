@@ -5,6 +5,7 @@
 
 #include "_Game/UI/WidgetController/MVCController.h"
 #include "_Game/UI/WidgetController/OverlayController.h"
+#include "_Game/UIManager/UIManagerSubsystem.h"
 
 UOverlayController* AMVCHUD::GetOverlayWidgetController(const FWidgetControllerParams& WCParams)
 {
@@ -16,22 +17,27 @@ UOverlayController* AMVCHUD::GetOverlayWidgetController(const FWidgetControllerP
 	return OverlayWidgetController;
 }
 
-void AMVCHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
+void AMVCHUD::InitPrimary(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS)
 {
 	checkf(OverlayWidgetClass, TEXT("OverlayWidgetClass 未设置，请在HUD上面设置")); //会打印相关信息到log列表
 	checkf(OverlayWidgetControllerClass, TEXT("OverlayWidgetControllerClass 未设置，请在HUD上面设置"));
 	
-	UMVCWidget* Widget = CreateWidget<UMVCWidget>(GetWorld(), OverlayWidgetClass); //创建Overlay用户控件
-	OverlayWidget = Cast<UMVCWidget>(Widget);
+	// UMVCWidget* Widget = CreateWidget<UMVCWidget>(GetWorld(), OverlayWidgetClass); //创建Overlay用户控件
+	// OverlayWidget = Cast<UMVCWidget>(Widget);
+	
+	UUIManagerSubsystem* UIManager = GetGameInstance()->GetSubsystem<UUIManagerSubsystem>();
+	UIManager->InitPrimaryGameLayout();
 
+	UMVCWidget* MainUI = Cast<UMVCWidget>(UIManager->OpenUI(FGameplayTag::RequestGameplayTag(FName("UI.Layer.Game.OverlayUI"))));
+	
 	const FWidgetControllerParams WidgetControllerParams(PC, PS, ASC, AS); //创建参数结构体
 	OverlayWidgetController = GetOverlayWidgetController(WidgetControllerParams); //获取控制器层
-
-	OverlayWidget->SetWidgetController(OverlayWidgetController); //设置用户控件的控制器层
+	MainUI->SetWidgetController(OverlayWidgetController);
+	//OverlayWidget->SetWidgetController(OverlayWidgetController); //设置用户控件的控制器层
 	
 	OverlayWidgetController->BroadcastInitialValues(); //初始化广播
 	OverlayWidgetController->BindCallbacksToDependencies(); //绑定监听数值变化
 	
-	Widget->AddToViewport(); //添加到视口
+	//Widget->AddToViewport(); //添加到视口
 	
 }

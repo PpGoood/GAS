@@ -62,7 +62,7 @@ void APlayerCharacter::InitAbilityActorInfo()
 	{
 		if(AMVCHUD* HUD = Cast<AMVCHUD>(PlayerControllerBase->GetHUD()))
 		{
-			HUD->InitOverlay(PlayerControllerBase, MyPlayerState, AbilitySystemComponent, AttributeSet);
+			HUD->InitPrimary(PlayerControllerBase, MyPlayerState, AbilitySystemComponent, AttributeSet);
 		}
 	}
 	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->InitAbilitySystemComponent();
