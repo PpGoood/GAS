@@ -1,6 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "_Game/Core/MyPlayerState.h"
+
+#include "Net/UnrealNetwork.h"
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 #include "_Game/Core/AbilitySystem/MyAttributeSet.h"
 
@@ -15,4 +17,17 @@ AMyPlayerState::AMyPlayerState()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 
 	AttributeSet = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSet"));
+}
+
+void AMyPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
+	DOREPLIFETIME_CONDITION_NOTIFY(AMyPlayerState, Level, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME(AMyPlayerState,Level);
+}
+
+void AMyPlayerState::OnRep_Level(int32 OldLevel)
+{
+	
 }

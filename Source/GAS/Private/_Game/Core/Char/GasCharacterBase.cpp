@@ -21,16 +21,20 @@ void AGasCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AGasCharacterBase::InitializePrimaryAttributes() const
+void AGasCharacterBase::InitializeDefaultAttributes() const
+{
+	ApplyEffectToSelf(DefaultVitalAttributes,1);
+	ApplyEffectToSelf(DefaultPrimaryAttributes,1);
+	ApplyEffectToSelf(DefaultSecondaryAttributes,1);
+}
+
+void AGasCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectClass, float Level) const
 {
 	if (GetAbilitySystemComponent() == nullptr) return;
-	if (DefaultPrimaryAttributes == nullptr) return;
+	if (EffectClass == nullptr) return;
 	
 	FGameplayEffectContextHandle EffectContextHandle = GetAbilitySystemComponent()->MakeEffectContext();
-	EffectContextHandle.AddSourceObject(this);
-	//TODO 根据等级创建基础的GE值
-	const FGameplayEffectSpecHandle EffectSpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(DefaultPrimaryAttributes,1,EffectContextHandle);
-	//GetAbilitySystemComponent()->ApplyGameplayEffectSpecToTarget(*EffectSpecHandle.Data.Get(),GetAbilitySystemComponent());
+	const FGameplayEffectSpecHandle EffectSpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(EffectClass,Level,EffectContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }
 

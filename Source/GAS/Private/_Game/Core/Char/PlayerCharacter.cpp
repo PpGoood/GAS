@@ -41,6 +41,14 @@ void APlayerCharacter::OnRep_PlayerState()
 	InitAbilityActorInfo();
 }
 
+int32 APlayerCharacter::GetPlayerLevel()
+{
+	AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
+	if (MyPlayerState == nullptr)return 0;
+
+	return  MyPlayerState->GetPlayerLevel();
+}
+
 void APlayerCharacter::InitAbilityActorInfo()
 {
 	AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
@@ -59,5 +67,5 @@ void APlayerCharacter::InitAbilityActorInfo()
 	}
 	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->InitAbilitySystemComponent();
 
-	InitializePrimaryAttributes();
+	InitializeDefaultAttributes();
 }

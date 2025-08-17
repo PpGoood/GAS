@@ -9,10 +9,11 @@
 
 UMyAttributeSet::UMyAttributeSet()
 {
+	// 由GE进行初始化不需要每次编译C++代码
 	InitHealth(1.f);
-	InitMaxHealth(100.f);
+	// InitMaxHealth(100.f);
 	InitMana(1.f);
-	InitMaxMana(100.f);
+	// InitMaxMana(100.f);
 }
 
 void UMyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

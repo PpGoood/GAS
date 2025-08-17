@@ -34,7 +34,7 @@ function M:DelayUpdateGhostProgressBar(Induration,Value,MaxValue)
     coroutine.resume(coroutine.create(
         function(WorldContectObject,duration,InValue,InMaxValue)    
             UE4.UKismetSystemLibrary.Delay(WorldContectObject,duration)
-            UE4.UKismetSystemLibrary.PrintString(WorldContectObject,InValue)
+            -- UE4.UKismetSystemLibrary.PrintString(WorldContectObject,InValue)
             self.ProgressBar_Ghost:SetPercent(InValue / InMaxValue)
         end
     ),
