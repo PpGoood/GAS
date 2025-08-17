@@ -6,6 +6,14 @@
 #include "_Game/Core/AbilitySystem/MyAttributeSet.h"
 #include "_Game/Interaction/CombatInterface.h"
 
+/**
+ * FGameplayEffectAttributeCaptureDefinition&	你在 MMC 构造函数里定义的属性捕获规则（捕获哪个属性、来源、是否快照）
+ * Spec	FGameplayEffectSpec&	当前正在应用的 GE 实例，包含源/目标信息、Effect上下文、标签等
+ * EvaluationParameters	FAggregatorEvaluateParameters&	计算上下文参数，包括 Source/Target 标签、忽略的 GE、预测 Modifier 等
+ * Magnitude	float&	输出参数，返回捕获的属性最终值（经过标签和 Modifier 计算）
+ */
+
+
 UMMC_MaxHealth::UMMC_MaxHealth()
 {
 	VigorDefinition.AttributeToCapture = UMyAttributeSet::GetVigorAttribute();
