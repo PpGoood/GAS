@@ -29,9 +29,6 @@ public:
 	
 private:
 
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<UMVCWidget> OverlayWidgetClass;
-
 	UPROPERTY()
 	TObjectPtr<UOverlayController> OverlayWidgetController;
 

@@ -10,8 +10,6 @@
 void UUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	//InitPrimaryGameLayout();
-	//GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UUIManagerSubsystem::InitPrimaryGameLayout, 0.5f, true);
 }
 
 bool UUIManagerSubsystem::CreatePrimaryGameLayout()
@@ -100,23 +98,9 @@ void UUIManagerSubsystem::CloseUI(FGameplayTag WidgetClassTag)
 	UE_LOG(LogTemp, Log, TEXT("Successfully removed WidgetClass: %s from Active UI list."), *WidgetClassTag.GetTagName().ToString());
 }
 
-void UUIManagerSubsystem::InitPrimaryGameLayout()
-{
-	if (CreatePrimaryGameLayout())
-	{
-		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
-		UE_LOG(LogTemp, Log, TEXT("[peiTest]PrimaryGameLayout created successfully. Timer stopped."));
-		//Test 测试用例
-		// OpenUI(FGameplayTag::Test);
-		// OpenUI(FGameplayTag::Test2);
-		GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &UUIManagerSubsystem::DelayFun, 5.f, false);
-	}
-}
-
 void UUIManagerSubsystem::DelayFun()
 {
-	// CloseUI(FGameplayTag::Test);
-	// CloseUI(FGameplayTag::Test2);
+	
 }
 
 

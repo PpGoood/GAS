@@ -3,13 +3,14 @@
 
 #include "_Game/UIManager/PrimaryGameLayout.h"
 
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Chaos/Character/CharacterGroundConstraintContainer.h"
 #include "Chaos/Deformable/MuscleActivationConstraints.h"
+#include "Components/CanvasPanelSlot.h"
 
 void UPrimaryGameLayout::NativeConstruct()
 {
 	Super::NativeConstruct();
-	//InitializeWidgetMappings();
 }
 
 void UPrimaryGameLayout::SetIsDormant(bool InDormant)
@@ -58,27 +59,20 @@ UCommonActivatableWidget* UPrimaryGameLayout::OpenUI(FGameplayTag WidgetClassTag
 		return nullptr;
 	}
 	
-
 	// 2. 获取映射的层（LayerTag）和 Widget 类（WidgetClassType）
 	FGameplayTag LayerTag = WidgetClassTag.RequestDirectParent();
-	// TSubclassOf<UCommonActivatableWidget> WidgetClassType = Data->WidgetClassType;
-	//
-	// if (!WidgetClassType)
-	// {
-	// 	UE_LOG(LogTemp, Warning, TEXT("[peiTest]WidgetClassType is invalid for WidgetClass: %s"), *WidgetClassTag.GetTagName().ToString());
-	// 	return nullptr;
-	// }
-
+	
 	// 3. 推送到对应层
 	UCommonActivatableWidget* Widget = PushWidgetToLayerStack(LayerTag, FoundWidgetClass);
+	
 	if (!Widget)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Failed to push widget to layer: %s"), *LayerTag.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("[peiTest]Failed to push widget to layer: %s"), *LayerTag.ToString());
 		return nullptr;
 	}
-
+	
 	// 4. 返回 Widget 指针
-	UE_LOG(LogTemp, Log, TEXT("Successfully opened UI: %s on layer: %s"), *Widget->GetName(), *LayerTag.ToString());
+	UE_LOG(LogTemp, Log, TEXT("[peiTest]Successfully opened UI: %s on layer: %s"), *Widget->GetName(), *LayerTag.ToString());
 	return Widget;
 }
 
@@ -119,46 +113,5 @@ void UPrimaryGameLayout::OnWidgetStackTransitioning(UCommonActivatableWidgetCont
 	}
 }
 
-// void UPrimaryGameLayout::InitializeWidgetMappings()
-// {
-// 	// 清空目标数组
-// 	WidgetMappings.Empty();
-// 	UE_LOG(LogTemp, Log, TEXT("[peiTest] GameLayWidgets contains %d elements."), GameLayWidgets.Num());
-// 	UE_LOG(LogTemp, Log, TEXT("[peiTest] GameMenuLayWidgets contains %d elements."), GameMenuLayWidgets.Num());
-// 	UE_LOG(LogTemp, Log, TEXT("[peiTest] MenuLayWidgets contains %d elements."), MenuLayWidgets.Num());
-// 	UE_LOG(LogTemp, Log, TEXT("[peiTest] ModalLayWidgets contains %d elements."), ModalLayWidgets.Num());
-//
-// 	// 给每个层的数据添加 LayerTag
-// 	for (FWidgetMappingData& Mapping : GameLayWidgets)
-// 	{
-// 		Mapping.LayerTag = FGameplayTag::RequestGameplayTag(TEXT("UI.Layer.Game"));
-// 	}
-// 	for (FWidgetMappingData& Mapping : GameMenuLayWidgets)
-// 	{
-// 		Mapping.LayerTag = FGameplayTag::RequestGameplayTag(TEXT("UI.Layer.GameMenu"));
-// 	}
-// 	for (FWidgetMappingData& Mapping : MenuLayWidgets)
-// 	{
-// 		Mapping.LayerTag = FGameplayTag::RequestGameplayTag(TEXT("UI.Layer.Menu"));
-// 	}
-// 	for (FWidgetMappingData& Mapping : ModalLayWidgets)
-// 	{
-// 		Mapping.LayerTag = FGameplayTag::RequestGameplayTag(TEXT("UI.Layer.Modal"));
-// 	}
-//
-// 	// 将四个数组合并到 WidgetMappings 中
-// 	WidgetMappings.Append(GameLayWidgets);
-// 	WidgetMappings.Append(GameMenuLayWidgets);
-// 	WidgetMappings.Append(MenuLayWidgets);
-// 	WidgetMappings.Append(ModalLayWidgets);
-//
-// 	// 可选：排序（根据 LayerTag 或其他字段）
-// 	WidgetMappings.Sort([](const FWidgetMappingData& A, const FWidgetMappingData& B)
-// 	{
-// 		// 比如按 LayerTag 排序
-// 		return A.LayerTag.ToString() < B.LayerTag.ToString();
-// 	});
-//
-// 	UE_LOG(LogTemp, Log, TEXT("[peiTest]Widget mappings initialized and merged successfully."));
-// }
+
 

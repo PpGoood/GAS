@@ -20,23 +20,24 @@ class GAS_API UUIManagerSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
-	void InitPrimaryGameLayout();
+	//void InitPrimaryGameLayout();
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override{return !CastChecked<UGameInstance>(Outer)->IsDedicatedServerInstance();}
 	
+	//UI管理相关
+	TMap<FGameplayTag, UCommonActivatableWidget*> ActiveUIWidgets; // 记录不同层的UI控件
+
+	bool CreatePrimaryGameLayout();
+	
+	UCommonActivatableWidget* OpenUI(FGameplayTag WidgetClassTag);
+	void CloseUI(FGameplayTag WidgetClassTag);
+	
+
+private:
 	UPROPERTY(Config,EditAnywhere)
 	TSoftClassPtr<UPrimaryGameLayout> LayoutClass;
 	
-	bool CreatePrimaryGameLayout();
-
-public:
-	//UI管理相关
-	TMap<FGameplayTag, UCommonActivatableWidget*> ActiveUIWidgets; // 记录不同层的UI控件
-	UCommonActivatableWidget* OpenUI(FGameplayTag WidgetClassTag);
-	void CloseUI(FGameplayTag WidgetClassTag);
-
-private:
 	TObjectPtr<UPrimaryGameLayout> PrimaryGameLayoutObject;
 	FTimerHandle TimerHandle; // 计时器句柄
 	

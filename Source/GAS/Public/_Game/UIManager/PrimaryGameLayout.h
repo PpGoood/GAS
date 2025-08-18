@@ -22,34 +22,6 @@ enum class EAsyncWidgetLayerState : uint8
 	Initialize,
 	AfterPush
 };
-
-//需要注册的UI枚举用于快速查找打开UI
-// UENUM(BlueprintType)
-// enum class EWidgetClass : uint8
-// {
-// 	Test UMETA(DisplayName = "Test"),
-// 	Test2 UMETA(DisplayName = "Test2"),
-// };
-//改用tag实现
-
-// USTRUCT(BlueprintType)
-// struct FWidgetMappingData
-// {
-// 	GENERATED_BODY()
-//
-// 	// 枚举：表示UI类别
-// 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (Categories = "UI.Layer"))
-// 	FGameplayTag WidgetClassTag;
-//
-// 	// 层：UI所在的层
-// 	//UPROPERTY(EditAnywhere,BlueprintReadWrite, meta = (Categories = "UI.Layer"))
-// 	FGameplayTag LayerTag;
-//
-// 	// 类：对应的Widget类
-// 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-// 	TSubclassOf<UCommonActivatableWidget> WidgetClassType;
-// };
-
 /**
  * 
  */
@@ -62,15 +34,6 @@ public:
 	// 存储所有的映射关系
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UIManager")
 	TMap<FGameplayTag,TSubclassOf<UCommonActivatableWidget>> WidgetMappings;	
-	// TArray<FWidgetMappingData> WidgetMappings;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UIManager")
-	// TArray<FWidgetMappingData> GameLayWidgets;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UIManager")
-	// TArray<FWidgetMappingData> GameMenuLayWidgets;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UIManager")
-	// TArray<FWidgetMappingData> MenuLayWidgets;
-	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UIManager")
-	// TArray<FWidgetMappingData> ModalLayWidgets;
 
 	void NativeConstruct() override;
 	
@@ -135,7 +98,8 @@ public:
 
 		if (UCommonActivatableWidgetContainerBase* Layer = GetLayerWidget(LayerName))
 		{
-			return Layer->AddWidget<ActivatableWidgetT>(ActivatableWidgetClass, InitInstanceFunc);
+			ActivatableWidgetT* ActivatableWidget = Layer->AddWidget<ActivatableWidgetT>(ActivatableWidgetClass, InitInstanceFunc);
+			return ActivatableWidget;
 		}
 
 		return nullptr;
@@ -171,7 +135,4 @@ private:
 	// The registered layers for the primary layout.
 	UPROPERTY(Transient, meta = (Categories = "UI.Layer"))
 	TMap<FGameplayTag, TObjectPtr<UCommonActivatableWidgetContainerBase>> Layers;
-
-
-	// void InitializeWidgetMappings();
 };
