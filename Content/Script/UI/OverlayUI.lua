@@ -63,15 +63,21 @@ function M:OnMessage(Row)
     UMG_Message_Cast:ShowMessage(Row.Image, Row.Message)
 end
 
-
 --function M:Initialize(Initializer)
 --end
 
 --function M:PreConstruct(IsDesignTime)
 --end
 
--- function M:Construct()
--- end
+function M:Construct()
+    self.Button_Attribute.OnClicked:Add(self,self.OnAttributeButtonClick)
+end
+
+function M:OnAttributeButtonClick()
+    --打开ui
+    local GameInstance = self:GetGameInstance()
+    GameInstance:OpenUIByString("UI.Layer.GameMenu.AttributeMenuUI")
+end
 
 --function M:Tick(MyGeometry, InDeltaTime)
 --end

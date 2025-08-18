@@ -24,7 +24,7 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	
 	virtual bool ShouldCreateSubsystem(UObject* Outer) const override{return !CastChecked<UGameInstance>(Outer)->IsDedicatedServerInstance();}
-	
+
 	//UI管理相关
 	TMap<FGameplayTag, UCommonActivatableWidget*> ActiveUIWidgets; // 记录不同层的UI控件
 
