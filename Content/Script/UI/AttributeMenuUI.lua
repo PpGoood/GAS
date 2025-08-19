@@ -9,6 +9,28 @@
 ---@type WBP_AttributeMenu_C
 local M = UnLua.Class()
 
+function M:WidgetControllerSet_Event()
+    local ChildWiget = {self.WBP_TextValueRow_Point,
+    self.WBP_TextValueButtonRow_1,
+    self.WBP_TextValueButtonRow_2,
+    self.WBP_TextValueButtonRow_3,
+    self.WBP_TextValueButtonRow_4,
+    self.WBP_TextValueRow_1,
+    self.WBP_TextValueRow_2,
+    self.WBP_TextValueRow_3,
+    self.WBP_TextValueRow_4,
+    self.WBP_TextValueRow_5,
+    self.WBP_TextValueRow_6,
+    self.WBP_TextValueRow_7,
+    self.WBP_TextValueRow_8,
+    self.WBP_TextValueRow_9,
+    self.WBP_TextValueRow_10  
+    }
+    for _, widget in ipairs(ChildWiget) do
+        widget:SetWidgetController(self.WidgetController)
+    end
+end
+
 --function M:Initialize(Initializer)
 --end
 
@@ -20,8 +42,11 @@ function M:Construct()
 end
 
 function M:OnCloseButtonClick()
-    local GameInstance = self:GetGameInstance()
-    GameInstance:CloseUIByString("UI.Layer.GameMenu.AttributeMenuUI")
+    -- local GameInstance = self:GetGameInstance()
+    -- GameInstance:CloseUIByString("UI.Layer.GameMenu.AttributeMenuUI")
+    local PlayerController = UE.UGameplayStatics.GetPlayerController(self,0)
+    local HUD = PlayerController:GetHUD()
+    HUD:CloseUIByString("UI.Layer.GameMenu.AttributeMenuUI")
 end
 
 --function M:Tick(MyGeometry, InDeltaTime)

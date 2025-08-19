@@ -55,7 +55,7 @@ void AMVCHUD::InitControllerParams(APlayerController* PC, APlayerState* PS, UAbi
 UCommonActivatableWidget* AMVCHUD::OpenUI(FGameplayTag WidgetClassTag)
 {
 	//打开UI的时候会动态生成Controller并设置
-	UE_LOG(LogTemp, Display, TEXT("[peiLog]OpenUIByString%s"), *WidgetClassTag.GetTagName().ToString());
+	UE_LOG(LogTemp, Display, TEXT("[PeiLog]OpenUIByString%s"), *WidgetClassTag.GetTagName().ToString());
 	UCommonActivatableWidget* CommonUI = GetGameInstance()->GetSubsystem<UUIManagerSubsystem>()->OpenUI(WidgetClassTag);
 	UMVCWidget* MVCUI = Cast<UMVCWidget>(CommonUI);
 	if (WidgetControllerMap.Find(WidgetClassTag) == nullptr)
@@ -73,18 +73,16 @@ UCommonActivatableWidget* AMVCHUD::OpenUI(FGameplayTag WidgetClassTag)
 
 void AMVCHUD::CloseUI(FGameplayTag WidgetClassTag)
 {
-	UE_LOG(LogTemp, Display, TEXT("[peiLog]OpenUIByString%s"), *WidgetClassTag.GetTagName().ToString());
+	UE_LOG(LogTemp, Display, TEXT("[PeiLog]OpenUIByString%s"), *WidgetClassTag.GetTagName().ToString());
 	GetGameInstance()->GetSubsystem<UUIManagerSubsystem>()->CloseUI(WidgetClassTag);
 }
 
 UCommonActivatableWidget* AMVCHUD::OpenUIByString(FString WidgetClassString)
 {
-	UE_LOG(LogTemp, Display, TEXT("[peiLog]OpenUIByString%s"), *WidgetClassString);
 	return OpenUI(FGameplayTag::RequestGameplayTag(FName(*WidgetClassString)));
 }
 
 void AMVCHUD::CloseUIByString(FString WidgetClassString)
 {
-	UE_LOG(LogTemp, Display, TEXT("[peiLog]OpenUIByString%s"), *WidgetClassString);
 	CloseUI(FGameplayTag::RequestGameplayTag(FName(*WidgetClassString)));
 }

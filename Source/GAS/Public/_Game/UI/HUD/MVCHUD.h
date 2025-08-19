@@ -37,6 +37,9 @@ public:
 	void CloseUIByString(FString WidgetClassString);
 
 	UMVCController* GetWidgetController(FGameplayTag WidgetClassTag);
+
+	UPROPERTY(BlueprintReadOnly)
+	TMap<FGameplayTag,TObjectPtr<UMVCController>> WidgetControllerMap;
 private:
 
 	// UPROPERTY()
@@ -45,11 +48,8 @@ private:
 	// UPROPERTY(EditAnywhere)
 	// TSubclassOf<UOverlayController> OverlayWidgetControllerClass;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditDefaultsOnly)
 	TMap<FGameplayTag,TSubclassOf<UMVCController>> WidgetControllerClassMap;
-
-	UPROPERTY()
-	TMap<FGameplayTag,TObjectPtr<UMVCController>> WidgetControllerMap;
 
 	FWidgetControllerParams WidgetControllerParams;
 };

@@ -6,14 +6,33 @@
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
+#include "_Game/GameplayTagsInstance.h"
 
 UMyAttributeSet::UMyAttributeSet()
 {
 	// 由GE进行初始化不需要每次编译C++代码
-	InitHealth(1.f);
+	//InitHealth(1.f);
 	// InitMaxHealth(100.f);
-	InitMana(1.f);
+	//InitMana(1.f);
 	// InitMaxMana(100.f);
+	//Test
+
+	//将委托添加到Map中
+
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Primary_Strength, &GetStrengthAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Primary_Intelligence, &GetIntelligenceAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Primary_Resilience, &GetResilienceAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Primary_Vigor, &GetVigorAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_Armor, &GetArmorAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_ArmorPenetration, &GetArmorPenetrationAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_BlockChance, &GetBlockChanceAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_CriticalHitChance, &GetCriticalHitChanceAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_CriticalHitDamage, &GetCriticalHitDamageAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_CriticalHitResistance, &GetCriticalHitResistanceAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_HealthRegeneration, &GetHealthRegenerationAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_ManaRegeneration, &GetManaRegenerationAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_MaxHealth, &GetMaxHealthAttribute);
+	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_MaxMana, &GetMaxManaAttribute);
 }
 
 void UMyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -153,6 +172,7 @@ void UMyAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) co
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UMyAttributeSet, MaxMana, OldMaxMana);
 }
 
+//将信息用结构体记录
 void UMyAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props)
 {
 	//Source 效果的所有者   Target 效果应用的目标

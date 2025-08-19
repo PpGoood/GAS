@@ -23,7 +23,8 @@ struct FGASAttributeInfo
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly)
 	FText AttributeDescription = FText();
-	
+
+	UPROPERTY(BlueprintReadOnly)
 	float AttributeValue = 0.0f;
 };
 

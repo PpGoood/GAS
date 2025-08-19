@@ -62,6 +62,9 @@ public:
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
+	//属性改变分发委托
+	//改为传入函数的指针
+	TMap<FGameplayTag, FGameplayAttribute(*)()> TagsToAttributes;
 	//必要属性
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Health, Category="Vital Attributes")
 	FGameplayAttributeData Health;

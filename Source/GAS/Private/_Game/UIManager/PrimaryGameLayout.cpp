@@ -55,7 +55,7 @@ UCommonActivatableWidget* UPrimaryGameLayout::OpenUI(FGameplayTag WidgetClassTag
 	TSubclassOf<UCommonActivatableWidget> FoundWidgetClass = *WidgetMappings.Find(WidgetClassTag);
 	if (FoundWidgetClass == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[peiTest]No mapping found for WidgetClass: %s"), *WidgetClassTag.GetTagName().ToString());
+		UE_LOG(LogTemp, Warning, TEXT("[PeiLog]PrimaryGameLayout No mapping found for WidgetClass: %s"), *WidgetClassTag.GetTagName().ToString());
 		return nullptr;
 	}
 	
@@ -67,12 +67,12 @@ UCommonActivatableWidget* UPrimaryGameLayout::OpenUI(FGameplayTag WidgetClassTag
 	
 	if (!Widget)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[peiTest]Failed to push widget to layer: %s"), *LayerTag.ToString());
+		UE_LOG(LogTemp, Warning, TEXT("[PeiLog]PrimaryGameLayout Failed to push widget to layer: %s"), *LayerTag.ToString());
 		return nullptr;
 	}
 	
 	// 4. 返回 Widget 指针
-	UE_LOG(LogTemp, Log, TEXT("[peiTest]Successfully opened UI: %s on layer: %s"), *Widget->GetName(), *LayerTag.ToString());
+	UE_LOG(LogTemp, Log, TEXT("[PeiLog]PrimaryGameLayout Successfully opened UI: %s on layer: %s"), *Widget->GetName(), *LayerTag.ToString());
 	return Widget;
 }
 

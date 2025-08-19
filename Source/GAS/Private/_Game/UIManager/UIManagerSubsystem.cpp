@@ -17,7 +17,7 @@ bool UUIManagerSubsystem::CreatePrimaryGameLayout()
 	// 假设 LayoutClass 是 TSoftClassPtr<UPrimaryGameLayout>
 	if (LayoutClass.IsNull())
 	{
-		UE_LOG(LogTemp, Error, TEXT("[peiTest]LayoutClass is null."));
+		UE_LOG(LogTemp, Error, TEXT("[PeiLog]UUIManagerSubsystem LayoutClass is null."));
 		return false;
 	}
 
@@ -28,7 +28,7 @@ bool UUIManagerSubsystem::CreatePrimaryGameLayout()
 	
 	if (!PlayerController)
 	{
-		UE_LOG(LogTemp, Error, TEXT("[peiTest]Failed find PlayerController"));
+		UE_LOG(LogTemp, Error, TEXT("[PeiLog]UUIManagerSubsystem Failed find PlayerController"));
 		return false;
 	}
 	
@@ -36,11 +36,11 @@ bool UUIManagerSubsystem::CreatePrimaryGameLayout()
 	if (PrimaryGameLayoutObject)
 	{
 		PrimaryGameLayoutObject->AddToViewport();
-		UE_LOG(LogTemp, Error, TEXT("[peiTest]Success to load the UPrimaryGameLayout class"));
+		UE_LOG(LogTemp, Error, TEXT("[PeiLog]UUIManagerSubsystem Success to load the UPrimaryGameLayout class"));
 		return true;
 	}
 
-	UE_LOG(LogTemp, Error, TEXT("[peiTest]Failed to load the UPrimaryGameLayout class"));
+	UE_LOG(LogTemp, Error, TEXT("[PeiLog]UUIManagerSubsystem Failed to load the UPrimaryGameLayout class"));
 	return false;
 }
 
@@ -48,7 +48,7 @@ UCommonActivatableWidget* UUIManagerSubsystem::OpenUI(FGameplayTag WidgetClassTa
 {
 	if (!PrimaryGameLayoutObject)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[peiTest]PrimaryGameLayout is null."));
+		UE_LOG(LogTemp, Warning, TEXT("[PeiLog]UUIManagerSubsystem PrimaryGameLayout is null."));
 		return nullptr;
 	}
 
@@ -56,7 +56,7 @@ UCommonActivatableWidget* UUIManagerSubsystem::OpenUI(FGameplayTag WidgetClassTa
 	UCommonActivatableWidget* Widget = PrimaryGameLayoutObject->OpenUI(WidgetClassTag);
 	if (!Widget)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[peiTest]Failed to push widget to layer."));
+		UE_LOG(LogTemp, Warning, TEXT("[PeiLog]UUIManagerSubsystem Failed to push widget to layer."));
 		return nullptr;
 	}
 
@@ -64,7 +64,7 @@ UCommonActivatableWidget* UUIManagerSubsystem::OpenUI(FGameplayTag WidgetClassTa
 	ActiveUIWidgets.FindOrAdd(WidgetClassTag) = Widget;
 
 	// 使用枚举的值输出日志
-	UE_LOG(LogTemp, Log, TEXT("[peiTest]Opened UI: %s"), *WidgetClassTag.GetTagName().ToString());
+	UE_LOG(LogTemp, Log, TEXT("[PeiLog]UUIManagerSubsystem Opened UI: %s"), *WidgetClassTag.GetTagName().ToString());
 	return Widget;
 }
 
@@ -72,7 +72,7 @@ void UUIManagerSubsystem::CloseUI(FGameplayTag WidgetClassTag)
 {
 	if (!PrimaryGameLayoutObject)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("PrimaryGameLayoutObject is null."));
+		UE_LOG(LogTemp, Warning, TEXT("[PeiLog]UUIManagerSubsystem PrimaryGameLayoutObject is null."));
 		return;
 	}
 
@@ -80,7 +80,7 @@ void UUIManagerSubsystem::CloseUI(FGameplayTag WidgetClassTag)
 	UCommonActivatableWidget* FoundWidget = ActiveUIWidgets.FindRef(WidgetClassTag);
 	if (!FoundWidget)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No active widget found for WidgetClass: %s."), *WidgetClassTag.GetTagName().ToString());
+		UE_LOG(LogTemp, Warning, TEXT("[PeiLog]UUIManagerSubsystem No active widget found for WidgetClass: %s."), *WidgetClassTag.GetTagName().ToString());
 		return;
 	}
 
@@ -88,14 +88,14 @@ void UUIManagerSubsystem::CloseUI(FGameplayTag WidgetClassTag)
 	if (PrimaryGameLayoutObject)
 	{
 		PrimaryGameLayoutObject->CloseUI(FoundWidget);
-		UE_LOG(LogTemp, Log, TEXT("Closed UI: %s"), *FoundWidget->GetName());
+		UE_LOG(LogTemp, Log, TEXT("[PeiLog]UUIManagerSubsystem Closed UI: %s"), *FoundWidget->GetName());
 	}
 
 	// 从激活列表中移除
 	ActiveUIWidgets.Remove(WidgetClassTag);
 
 	// 确保从 UI 列表中移除并记录
-	UE_LOG(LogTemp, Log, TEXT("Successfully removed WidgetClass: %s from Active UI list."), *WidgetClassTag.GetTagName().ToString());
+	UE_LOG(LogTemp, Log, TEXT("[PeiLog]UUIManagerSubsystem Successfully removed WidgetClass: %s from Active UI list."), *WidgetClassTag.GetTagName().ToString());
 }
 
 void UUIManagerSubsystem::DelayFun()
