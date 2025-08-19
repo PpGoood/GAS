@@ -7,7 +7,19 @@ void UMyAbilitySystemComponent::InitAbilitySystemComponent()
 {
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this,&UMyAbilitySystemComponent::EffectApplied);
 }
-//GE被应用时候委托调用方法
+
+void UMyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities)
+{
+	for (const auto& Ability :  Abilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability,1);
+		//GiveAbility(AbilitySpec);
+		UE_LOG(LogTemp, Log, TEXT("[PeiLog]AbilitiesTest") );
+		GiveAbilityAndActivateOnce(AbilitySpec);
+	}
+}
+
+//GE被应用时候委托调用方法,用于广播标签
 void UMyAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec,
 	FActiveGameplayEffectHandle GEHandle)
 {

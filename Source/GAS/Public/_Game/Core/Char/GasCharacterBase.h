@@ -7,6 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "GasCharacterBase.generated.h"
 
+class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;
 
@@ -46,6 +47,11 @@ protected:
 	void InitializeDefaultAttributes() const;
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectClass,float Level) const;
+
+	void AddCharacterAbilities();
 private:
 	virtual void InitAbilityActorInfo(){};
+
+	UPROPERTY(EditAnywhere,Category="Attributes|Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartAbilities;
 };

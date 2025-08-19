@@ -33,6 +33,9 @@ void APlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
 	InitAbilityActorInfo();
+	
+	//Test
+	AddCharacterAbilities();
 }
 //客户端
 void APlayerCharacter::OnRep_PlayerState()

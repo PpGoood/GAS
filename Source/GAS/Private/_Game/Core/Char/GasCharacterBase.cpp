@@ -3,6 +3,7 @@
 
 #include "_Game/Core/Char/GasCharacterBase.h"
 #include "AbilitySystemComponent.h"
+#include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 
 // Sets default values
 AGasCharacterBase::AGasCharacterBase()
@@ -37,5 +38,13 @@ void AGasCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectCla
 	EffectContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle EffectSpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(EffectClass,Level,EffectContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+}
+
+void AGasCharacterBase::AddCharacterAbilities()
+{
+	//添加能力只能在服务器进行
+	if (!HasAuthority()) return;
+	UMyAbilitySystemComponent* ASC = Cast<UMyAbilitySystemComponent>(AbilitySystemComponent);
+	ASC->AddCharacterAbilities(StartAbilities);
 }
 
