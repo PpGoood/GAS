@@ -16,7 +16,7 @@ UCLASS()
 class GAS_API UGASGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
-
+public:
 	UFUNCTION(BlueprintCallable)
 	UCommonActivatableWidget* OpenUI(FGameplayTag WidgetClassTag);
 	UFUNCTION(BlueprintCallable)

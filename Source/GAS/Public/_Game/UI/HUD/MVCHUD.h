@@ -19,19 +19,39 @@ class GAS_API AMVCHUD : public AHUD
 
 public:
 	
-	UPROPERTY()
-	TObjectPtr<UMVCWidget> OverlayWidget;
+	// UPROPERTY()
+	// TObjectPtr<UMVCWidget> OverlayWidget;
 
-	UOverlayController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
+	// UOverlayController* GetOverlayWidgetController(const FWidgetControllerParams& WCParams);
 
-	void InitPrimary(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
+	void InitControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UAttributeSet* AS);
 
-	
+	UFUNCTION(BlueprintCallable)
+	UCommonActivatableWidget* OpenUI(FGameplayTag WidgetClassTag);
+	UFUNCTION(BlueprintCallable)
+	void CloseUI(FGameplayTag WidgetClassTag);
+
+	UFUNCTION(BlueprintCallable)
+	UCommonActivatableWidget* OpenUIByString(FString WidgetClassString);
+	UFUNCTION(BlueprintCallable)
+	void CloseUIByString(FString WidgetClassString);
+
+	UMVCController* GetWidgetController(FGameplayTag WidgetClassTag);
 private:
 
-	UPROPERTY()
-	TObjectPtr<UOverlayController> OverlayWidgetController;
+	// UPROPERTY()
+	// TObjectPtr<UOverlayController> OverlayWidgetController;
+	//
+	// UPROPERTY(EditAnywhere)
+	// TSubclassOf<UOverlayController> OverlayWidgetControllerClass;
 
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UOverlayController> OverlayWidgetControllerClass;
+	TMap<FGameplayTag,TSubclassOf<UMVCController>> WidgetControllerClassMap;
+
+	UPROPERTY()
+	TMap<FGameplayTag,TObjectPtr<UMVCController>> WidgetControllerMap;
+
+	FWidgetControllerParams WidgetControllerParams;
 };
+
+

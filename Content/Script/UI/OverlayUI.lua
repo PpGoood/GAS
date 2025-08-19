@@ -75,8 +75,11 @@ end
 
 function M:OnAttributeButtonClick()
     --打开ui
-    local GameInstance = self:GetGameInstance()
-    GameInstance:OpenUIByString("UI.Layer.GameMenu.AttributeMenuUI")
+    -- local GameInstance = self:GetGameInstance()
+    -- GameInstance:OpenUIByString("UI.Layer.GameMenu.AttributeMenuUI")
+    local PlayerController = UE.UGameplayStatics.GetPlayerController(self,0)
+    local HUD = PlayerController:GetHUD()
+    HUD:OpenUIByString("UI.Layer.GameMenu.AttributeMenuUI")
 end
 
 --function M:Tick(MyGeometry, InDeltaTime)
