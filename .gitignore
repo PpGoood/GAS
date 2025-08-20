@@ -66,3 +66,5 @@ rider.project*
 
 # 忽略 UnLua 插件中的 obj 文件夹
 /Plugins/UnLua/Source/UnLuaDefaultParamCollectorUbtPlugin/obj/
+
+*.sln
