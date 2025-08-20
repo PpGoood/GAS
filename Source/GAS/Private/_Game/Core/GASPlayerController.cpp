@@ -102,15 +102,27 @@ void AGASPlayerController::Move(const FInputActionValue& InputActionValue)
 
 void AGASPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(1,3.f,FColor::Red,*InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(1,3.f,FColor::Red,*InputTag.ToString());
 }
 
 void AGASPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(2,3.f,FColor::Blue,*InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(2,3.f,FColor::Blue,*InputTag.ToString());
+	if (GetMyAbilitySystemComponent() == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[PeiLog]AGASPlayerController GetMyAbilitySystemComponent is nullptr"));
+		return;
+	}
+	GetMyAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
 }
 
 void AGASPlayerController::AbilityInputHeld(FGameplayTag InputTag)
 {
-	GEngine->AddOnScreenDebugMessage(3,3.f,FColor::Green,*InputTag.ToString());
+	//GEngine->AddOnScreenDebugMessage(3,3.f,FColor::Green,*InputTag.ToString());
+	if (GetMyAbilitySystemComponent() == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("[PeiLog]AGASPlayerController GetMyAbilitySystemComponent is nullptr"));
+		return;
+	}
+	GetMyAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
 }

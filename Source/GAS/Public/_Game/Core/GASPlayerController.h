@@ -3,10 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AbilitySystem/MyAbilitySystemComponent.h"
+#include "Char/GasCharacterBase.h"
 #include "GameFramework/PlayerController.h"
 #include "_Game/Interaction/EnemyInterface.h"
 #include "GASPlayerController.generated.h"
 
+class AGasCharacterBase;
 struct FGameplayTag;
 class UInputDataAsset;
 class IEnemyInterface;
@@ -47,4 +50,18 @@ private:
 	void AbilityInputTagPressed(FGameplayTag InputTag);
 	void AbilityInputTagReleased(FGameplayTag InputTag);
 	void AbilityInputHeld(FGameplayTag InputTag);
+
+	UPROPERTY()
+	TObjectPtr<UMyAbilitySystemComponent> MyAbilitySystemComponent;
+
+	UMyAbilitySystemComponent* GetMyAbilitySystemComponent()
+	{
+		if (MyAbilitySystemComponent != nullptr)
+		{
+			return MyAbilitySystemComponent;
+		}
+
+		MyAbilitySystemComponent = Cast<UMyAbilitySystemComponent>(GetPawn<AGasCharacterBase>()->GetAbilitySystemComponent());
+		return MyAbilitySystemComponent;
+	};
 };

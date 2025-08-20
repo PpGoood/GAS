@@ -3,6 +3,8 @@
 
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 
+#include "_Game/Core/AbilitySystem/Abilities/GASGameplayAbility.h"
+
 void UMyAbilitySystemComponent::InitAbilitySystemComponent()
 {
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this,&UMyAbilitySystemComponent::EffectApplied);
@@ -12,10 +14,42 @@ void UMyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 {
 	for (const auto& Ability :  Abilities)
 	{
-		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability,1);
-		//GiveAbility(AbilitySpec);
-		UE_LOG(LogTemp, Log, TEXT("[PeiLog]AbilitiesTest") );
-		GiveAbilityAndActivateOnce(AbilitySpec);
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(Ability, 1);
+		if (const UGASGameplayAbility* GASAbility = Cast<UGASGameplayAbility>(AbilitySpec.Ability))
+		{
+			//添加隐射的tag，可以替换删除，这样能够修改键位
+			AbilitySpec.GetDynamicSpecSourceTags().AddTag(GASAbility->DefaultAbilityTag);
+			GiveAbility(AbilitySpec);
+		}
+	}
+}
+
+void UMyAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid())return;
+
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))return;
+
+		//用于触发InputPressed回调，在GA可以实现 激活的第一次不会触发因为会判断IsActive
+		AbilitySpecInputPressed(AbilitySpec);
+		if (!AbilitySpec.IsActive())
+		{
+			TryActivateAbility(AbilitySpec.Handle);
+		}
+	}
+}
+
+void UMyAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
+{
+	if (!InputTag.IsValid())return;
+
+	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))return;
+		//用于触发InputReleased回调，在GA可以实现
+		AbilitySpecInputReleased(AbilitySpec);
 	}
 }
 
