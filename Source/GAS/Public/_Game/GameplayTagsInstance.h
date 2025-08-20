@@ -48,6 +48,12 @@ public:
 	FGameplayTag UI_Layer_GameMenu_AttributeMenuUI; // UI.Layer.GameMenu.AttributeMenuUI
 	FGameplayTag UI_Layer_Menu;                   // UI.Layer.Menu
 	FGameplayTag UI_Layer_Modal;                  // UI.Layer.Modal
+	FGameplayTag InputTag_LMB;
+	FGameplayTag InputTag_RMB;
+	FGameplayTag InputTag_1;
+	FGameplayTag InputTag_2;
+	FGameplayTag InputTag_3;
+	FGameplayTag InputTag_4;
 private:
 	// 私有构造函数和析构函数，防止外部创建实例
 	GameplayTagsInstance() = default;

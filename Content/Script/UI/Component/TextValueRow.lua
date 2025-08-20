@@ -29,6 +29,9 @@ function M:UpdateWiget(Info)
     end
 end
 -- function M:Construct()
+--     local PlayerController = UE.UGameplayStatics.GetPlayerController(self,0)
+--     local HUD = PlayerController:GetHUD()
+--     HUD:CloseUIByString("UI.Layer.GameMenu.AttributeMenuUI")
 -- end
 
 --function M:Tick(MyGeometry, InDeltaTime)

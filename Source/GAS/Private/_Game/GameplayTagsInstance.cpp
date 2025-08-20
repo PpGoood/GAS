@@ -41,6 +41,15 @@ void GameplayTagsInstance::InitNativeGameplayTags()
 	UI_Layer_GameMenu_AttributeMenuUI = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("UI.Layer.GameMenu.AttributeMenuUI"), FString("属性菜单UI"));
 	UI_Layer_Menu = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("UI.Layer.Menu"), FString("普通菜单层"));
 	UI_Layer_Modal = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("UI.Layer.Modal"), FString("模态层"));
+
+	// 输入标签赋值
+	InputTag_LMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.Action.LMB"), FString("左键"));
+	InputTag_RMB = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.Action.RMB"), FString("右键"));
+	InputTag_1 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.Action.1"), FString("键位1"));
+	InputTag_2 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.Action.2"), FString("键位2"));
+	InputTag_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.Action.3"), FString("键位3"));
+	InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.Action.4"), FString("键位4"));
+
 }
 
 

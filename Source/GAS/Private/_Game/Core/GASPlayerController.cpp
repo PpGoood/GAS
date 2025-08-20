@@ -22,7 +22,7 @@ void AGASPlayerController::BeginPlay()
 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
 	
 	if (Subsystem)
-	{
+	{ 
 		Subsystem->AddMappingContext(InputContext,0);
 	}
 
