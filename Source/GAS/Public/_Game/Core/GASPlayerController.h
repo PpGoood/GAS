@@ -7,6 +7,8 @@
 #include "_Game/Interaction/EnemyInterface.h"
 #include "GASPlayerController.generated.h"
 
+struct FGameplayTag;
+class UInputDataAsset;
 class IEnemyInterface;
 struct FInputActionValue;
 class UInputAction;
@@ -33,9 +35,16 @@ private:
 	UPROPERTY(EditAnywhere,Category="Input")
 	TObjectPtr<UInputAction> MoveAction;
 
+	UPROPERTY(EditDefaultsOnly,Category="Input")
+	TObjectPtr<UInputDataAsset> InputDataAsset;
+
 	void CursorTrace();
 	IEnemyInterface* LastHighlightEnemy;
 	IEnemyInterface* CurHightlightEnemy;
 	
 	void Move(const struct FInputActionValue& InputActionValue);
+
+	void AbilityInputTagPressed(FGameplayTag InputTag);
+	void AbilityInputTagReleased(FGameplayTag InputTag);
+	void AbilityInputHeld(FGameplayTag InputTag);
 };

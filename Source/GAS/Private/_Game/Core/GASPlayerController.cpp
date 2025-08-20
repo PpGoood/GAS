@@ -3,7 +3,7 @@
 
 #include "_Game/Core/GASPlayerController.h"
 #include "EnhancedInput/Public/EnhancedInputSubsystems.h"
-#include "EnhancedInput/Public/EnhancedInputComponent.h"
+#include "_Game/Input/GASInputComponent.h"
 #include "_Game/Interaction/EnemyInterface.h"
 
 AGASPlayerController::AGASPlayerController()
@@ -41,8 +41,11 @@ void AGASPlayerController::SetupInputComponent()
 {
 	Super::SetupInputComponent();
 
-	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
-	EnhancedInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this,&AGASPlayerController::Move);
+	//使用自定义的input组件，可以支持gameplaytag的触发
+	UGASInputComponent* CustomInputComponent = CastChecked<UGASInputComponent>(InputComponent);
+	CustomInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this,&ThisClass::Move);
+	//用自定义的DataAsset，让事件输入的时候可以转发标签
+	CustomInputComponent->BindAbilityActions(InputDataAsset,this,&ThisClass::AbilityInputTagPressed,&ThisClass::AbilityInputTagReleased,&ThisClass::AbilityInputHeld);
 }
 
 void AGASPlayerController::Tick(float DeltaSeconds)
@@ -95,4 +98,19 @@ void AGASPlayerController::Move(const FInputActionValue& InputActionValue)
 		ControllerPawn->AddMovementInput(ForwardDirection, Vector2.Y);
 		ControllerPawn->AddMovementInput(RightDirection,  Vector2.X);
 	}
+}
+
+void AGASPlayerController::AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(1,3.f,FColor::Red,*InputTag.ToString());
+}
+
+void AGASPlayerController::AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(2,3.f,FColor::Blue,*InputTag.ToString());
+}
+
+void AGASPlayerController::AbilityInputHeld(FGameplayTag InputTag)
+{
+	GEngine->AddOnScreenDebugMessage(3,3.f,FColor::Green,*InputTag.ToString());
 }
