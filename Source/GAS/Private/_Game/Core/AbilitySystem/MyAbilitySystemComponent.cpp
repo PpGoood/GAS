@@ -7,7 +7,7 @@
 
 void UMyAbilitySystemComponent::InitAbilitySystemComponent()
 {
-	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this,&UMyAbilitySystemComponent::EffectApplied);
+	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this,&UMyAbilitySystemComponent::ClientEffectApplied);
 }
 
 void UMyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities)
@@ -54,7 +54,7 @@ void UMyAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& Inpu
 }
 
 //GE被应用时候委托调用方法,用于广播标签
-void UMyAbilitySystemComponent::EffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec,
+void UMyAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec,
 	FActiveGameplayEffectHandle GEHandle)
 {
 

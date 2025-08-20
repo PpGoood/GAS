@@ -23,7 +23,7 @@ void AMyPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>&
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
-	DOREPLIFETIME_CONDITION_NOTIFY(AMyPlayerState, Level, COND_None, REPNOTIFY_Always);
+	// DOREPLIFETIME_CONDITION_NOTIFY(AMyPlayerState, Level, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME(AMyPlayerState,Level);
 }
 
