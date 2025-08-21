@@ -18,7 +18,7 @@ void UMyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 		if (const UGASGameplayAbility* GASAbility = Cast<UGASGameplayAbility>(AbilitySpec.Ability))
 		{
 			//添加隐射的tag，可以替换删除，这样能够修改键位
-			AbilitySpec.GetDynamicSpecSourceTags().AddTag(GASAbility->DefaultAbilityTag);
+			AbilitySpec.GetDynamicSpecSourceTags().AddTag(GASAbility->DefaultInputAbilityTag);
 			GiveAbility(AbilitySpec);
 		}
 	}
@@ -30,6 +30,7 @@ void UMyAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag
 
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
+		UE_LOG(LogTemp,Log,TEXT("[PeiLog]UMyAbilitySystemComponent 的tag[%s] %d"),*InputTag.ToString(),AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag));
 		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))return;
 
 		//用于触发InputPressed回调，在GA可以实现 激活的第一次不会触发因为会判断IsActive

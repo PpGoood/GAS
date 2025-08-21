@@ -6,7 +6,6 @@
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
-// This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UCombatInterface : public UInterface
 {
@@ -21,5 +20,7 @@ class GAS_API ICombatInterface
 	GENERATED_BODY()
 public:	
 	virtual int32 GetPlayerLevel(){return 0;}
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
+
+	//用于返回武器插槽的位置，用来生成特效
+	virtual FVector GetCombatSocketLocation(){return FVector::ZeroVector;}
 };

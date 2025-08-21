@@ -12,7 +12,7 @@
  * 
  */
 UCLASS()
-class GAS_API AEnemyCharacter : public AGasCharacterBase,public IEnemyInterface,public ICombatInterface
+class GAS_API AEnemyCharacter : public AGasCharacterBase,public IEnemyInterface
 {
 	GENERATED_BODY()
 	

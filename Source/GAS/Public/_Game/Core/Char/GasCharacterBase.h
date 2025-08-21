@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "_Game/Interaction/CombatInterface.h"
 #include "GasCharacterBase.generated.h"
 
 class UGameplayAbility;
@@ -12,7 +13,7 @@ class UGameplayEffect;
 class UAttributeSet;
 
 UCLASS(Abstract)
-class GAS_API AGasCharacterBase : public ACharacter,public IAbilitySystemInterface
+class GAS_API AGasCharacterBase : public ACharacter,public IAbilitySystemInterface,public ICombatInterface
 {
 	GENERATED_BODY()
 
@@ -27,6 +28,9 @@ protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Combat")
 	TObjectPtr<USkeletalMeshComponent> WeaponMeshComponent;
+
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Combat")
+	FName WeaponTipSocketName;
 
 	//和GAS相关
 	UPROPERTY()
@@ -49,6 +53,8 @@ protected:
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectClass,float Level) const;
 
 	void AddCharacterAbilities();
+
+	virtual FVector GetCombatSocketLocation() override;
 private:
 	virtual void InitAbilityActorInfo(){};
 

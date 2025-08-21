@@ -48,3 +48,9 @@ void AGasCharacterBase::AddCharacterAbilities()
 	ASC->AddCharacterAbilities(StartAbilities);
 }
 
+FVector AGasCharacterBase::GetCombatSocketLocation()
+{
+	check(WeaponMeshComponent);
+	return WeaponMeshComponent->GetSocketLocation(WeaponTipSocketName);
+}
+

@@ -11,7 +11,7 @@
  * 
  */
 UCLASS()
-class GAS_API APlayerCharacter : public AGasCharacterBase,public ICombatInterface
+class GAS_API APlayerCharacter : public AGasCharacterBase
 {
 	GENERATED_BODY()
 public:
