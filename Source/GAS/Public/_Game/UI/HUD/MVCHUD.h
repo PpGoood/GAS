@@ -32,9 +32,9 @@ public:
 	void CloseUI(FGameplayTag WidgetClassTag);
 
 	UFUNCTION(BlueprintCallable)
-	UCommonActivatableWidget* OpenUIByString(FString WidgetClassString);
+	UCommonActivatableWidget* OpenUIByString(FString& WidgetClassString);
 	UFUNCTION(BlueprintCallable)
-	void CloseUIByString(FString WidgetClassString);
+	void CloseUIByString(FString& WidgetClassString);
 
 	UMVCController* GetWidgetController(FGameplayTag WidgetClassTag);
 

@@ -77,12 +77,12 @@ void AMVCHUD::CloseUI(FGameplayTag WidgetClassTag)
 	GetGameInstance()->GetSubsystem<UUIManagerSubsystem>()->CloseUI(WidgetClassTag);
 }
 
-UCommonActivatableWidget* AMVCHUD::OpenUIByString(FString WidgetClassString)
+UCommonActivatableWidget* AMVCHUD::OpenUIByString(FString& WidgetClassString)
 {
-	return OpenUI(FGameplayTag::RequestGameplayTag(FName(*WidgetClassString)));
+	return OpenUI(FGameplayTag::RequestGameplayTag(FName(WidgetClassString)));
 }
 
-void AMVCHUD::CloseUIByString(FString WidgetClassString)
+void AMVCHUD::CloseUIByString(FString& WidgetClassString)
 {
-	CloseUI(FGameplayTag::RequestGameplayTag(FName(*WidgetClassString)));
+	CloseUI(FGameplayTag::RequestGameplayTag(FName(WidgetClassString)));
 }
