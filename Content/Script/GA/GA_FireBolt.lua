@@ -17,7 +17,7 @@ function M:K2_ActivateAbility()
         nil, 
         self.FireAnim,
         UE.UBlueprintGameplayTagLibraryUtil.GetTagFromString("Event.Montage.FireBolt"),
-        0.1, 
+        1, 
         nil,
         true, 
         1.0)
@@ -51,5 +51,7 @@ end
 
 function M:OnEventReceived()
     UE.UKismetSystemLibrary.PrintString(WorldContectObject,"收到了标签哦")
+    self:SpawnProjectile()
+    self:K2_EndAbility()
 end
 return M

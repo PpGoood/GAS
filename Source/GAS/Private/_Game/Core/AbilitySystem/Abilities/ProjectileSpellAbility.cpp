@@ -2,19 +2,21 @@
 
 
 #include "_Game/Core/AbilitySystem/Abilities/ProjectileSpellAbility.h"
-
-#include "Kismet/KismetSystemLibrary.h"
 #include "_Game/Interaction/CombatInterface.h"
 #include "_Game/Projectile/ProjectileBase.h"
+
 
 void UProjectileSpellAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
                                               const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo,
                                               const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+}
 
-	if (!HasAuthority(&ActivationInfo))return;
-
+void UProjectileSpellAbility::SpawnProjectile()
+{
+	if (!GetAvatarActorFromActorInfo()->HasAuthority())return;
+	
 	ICombatInterface* CombatInterFace = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
 	
 	if (CombatInterFace == nullptr)return;
