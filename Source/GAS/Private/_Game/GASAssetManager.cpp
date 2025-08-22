@@ -3,6 +3,7 @@
 
 #include "_Game/GASAssetManager.h"
 
+#include "AbilitySystemGlobals.h"
 #include "_Game/GameplayTagsInstance.h"
 
 UGASAssetManager& UGASAssetManager::Get()
@@ -18,4 +19,7 @@ void UGASAssetManager::StartInitialLoading()
 	Super::StartInitialLoading();
 
 	GameplayTagsInstance::GetInstance().InitNativeGameplayTags();
+
+	//初始化数据，用来ASG的数据交互 5.4版本之后不需要调用 引擎自动调用初始化函数
+	//UAbilitySystemGlobals::Get().InitGlobalData();
 }

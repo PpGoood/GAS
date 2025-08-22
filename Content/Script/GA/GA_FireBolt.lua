@@ -9,23 +9,23 @@
 ---@type GA_FireBolt_C
 local M = UnLua.Class()
 
-function M:K2_ActivateAbility()
-    UE.UKismetSystemLibrary.PrintString(WorldContectObject,"准备播放动画ActivateTest")
+-- function M:K2_ActivateAbility()
+--     UE.UKismetSystemLibrary.PrintString(WorldContectObject,"准备播放动画ActivateTest")
 
-    local Proxy = UE.UGAS_PlayMontageAndWaitForEvent.PlayMontageAndWaitForEvent(
-        self, 
-        nil, 
-        self.FireAnim,
-        UE.UBlueprintGameplayTagLibraryUtil.GetTagFromString("Event.Montage.FireBolt"),
-        1, 
-        nil,
-        true, 
-        1.0)
+--     local Proxy = UE.UGAS_PlayMontageAndWaitForEvent.PlayMontageAndWaitForEvent(
+--         self, 
+--         nil, 
+--         self.FireAnim,
+--         UE.UBlueprintGameplayTagLibraryUtil.GetTagFromString("Event.Montage.FireBolt"),
+--         1, 
+--         nil,
+--         true, 
+--         1.0)
     
-    Proxy.EventReceived:Add(self,self.OnEventReceived)
-    Proxy:ReadyForActivation()
+--     Proxy.EventReceived:Add(self,self.OnEventReceived)
+--     Proxy:ReadyForActivation()
 
-end
+-- end
 
 -- eg
 -- function M:K2_ActivateAbility()
