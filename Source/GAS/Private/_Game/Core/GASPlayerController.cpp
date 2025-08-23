@@ -57,6 +57,10 @@ void AGASPlayerController::SetupInputComponent()
 	//使用自定义的input组件，可以支持gameplaytag的触发
 	UGASInputComponent* CustomInputComponent = CastChecked<UGASInputComponent>(InputComponent);
 	CustomInputComponent->BindAction(MoveAction,ETriggerEvent::Triggered,this,&ThisClass::Move);
+	//绑定Shift按键事件
+	CustomInputComponent->BindAction(ShiftAction, ETriggerEvent::Started, this, &ThisClass::ShiftPressed);
+	CustomInputComponent->BindAction(ShiftAction, ETriggerEvent::Completed, this, &ThisClass::ShiftReleased);
+	
 	//用自定义的DataAsset，让事件输入的时候可以转发标签
 	CustomInputComponent->BindAbilityActions(InputDataAsset,this,&ThisClass::AbilityInputTagPressed,&ThisClass::AbilityInputTagReleased,&ThisClass::AbilityInputTagHeld);
 }
@@ -109,7 +113,7 @@ void AGASPlayerController::AbilityInputTagReleased(const FGameplayTag InputTag)
 		return;
 	}
 
-	if(bTargeting)
+	if(bTargeting || bShiftKeyDown)
 	{
 		if(GetMyAbilitySystemComponent()) GetMyAbilitySystemComponent()->AbilityInputTagReleased(InputTag);
 	}
@@ -153,7 +157,7 @@ void AGASPlayerController::AbilityInputTagHeld(const FGameplayTag InputTag)
 		return;
 	}
 
-	if(bTargeting)
+	if(bTargeting || bShiftKeyDown)
 	{
 		if(GetMyAbilitySystemComponent()) GetMyAbilitySystemComponent()->AbilityInputTagHeld(InputTag);
 	}

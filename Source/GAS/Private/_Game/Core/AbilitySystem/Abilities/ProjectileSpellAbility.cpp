@@ -13,17 +13,22 @@ void UProjectileSpellAbility::ActivateAbility(const FGameplayAbilitySpecHandle H
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
-void UProjectileSpellAbility::SpawnProjectile()
+void UProjectileSpellAbility::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
 	if (!GetAvatarActorFromActorInfo()->HasAuthority())return;
 	
 	ICombatInterface* CombatInterFace = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
 	
 	if (CombatInterFace == nullptr)return;
-	//TODO 设置旋转
+	
 	const FVector SocketLocation = CombatInterFace->GetCombatSocketLocation();
+	FRotator SpawnRotation = (ProjectileTargetLocation - SocketLocation).Rotation();
+	SpawnRotation.Pitch = 0.f;
+	
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SocketLocation);
+	SpawnTransform.SetRotation(SpawnRotation.Quaternion());
+	
 	//需要手动调用生成完成	
 	AProjectileBase* Projectile = GetWorld()->SpawnActorDeferred<AProjectileBase>(
 		ProjectileClass,
