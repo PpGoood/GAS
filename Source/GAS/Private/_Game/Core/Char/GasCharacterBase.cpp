@@ -3,6 +3,7 @@
 
 #include "_Game/Core/Char/GasCharacterBase.h"
 #include "AbilitySystemComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 
 // Sets default values
@@ -10,6 +11,9 @@ AGasCharacterBase::AGasCharacterBase()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
+
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECC_Camera,ECR_Ignore);
 	
 	WeaponMeshComponent = CreateDefaultSubobject<USkeletalMeshComponent>(FName("WeaponMeshComponent"));
 	WeaponMeshComponent->SetupAttachment(GetMesh(),FName("WeaponHandSocket"));
