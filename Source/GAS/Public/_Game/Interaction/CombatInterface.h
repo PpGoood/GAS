@@ -6,7 +6,7 @@
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
-UINTERFACE(MinimalAPI)
+UINTERFACE(MinimalAPI,BlueprintType)
 class UCombatInterface : public UInterface
 {
 	GENERATED_BODY()
@@ -23,4 +23,7 @@ public:
 
 	//用于返回武器插槽的位置，用来生成特效
 	virtual FVector GetCombatSocketLocation(){return FVector::ZeroVector;}
+
+	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
+	void UpdateFacingTarget(const FVector& TargetLocation);
 };
