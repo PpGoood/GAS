@@ -17,6 +17,9 @@ AEnemyCharacter::AEnemyCharacter()
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	
 	AttributeSet = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSet"));
+
+	HealthBar = CreateDefaultSubobject<UWidgetComponent>("HealthBar");
+	HealthBar->SetupAttachment(GetRootComponent());
 }
 
 void AEnemyCharacter::HighlightActor()
@@ -45,4 +48,44 @@ void AEnemyCharacter::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->InitAbilitySystemComponent();
+	
+	InitializeDefaultAttributes();
+	InitWidget();
+}
+
+void AEnemyCharacter::InitWidget()
+{
+	if(UMVCWidget* UserWidget = Cast<UMVCWidget>(HealthBar->GetUserWidgetObject()))
+	{
+		UserWidget->SetWidgetController(this);
+		BroadcastInitialValues();
+		BindCallbacksToDependencies();
+	}
+}
+
+void AEnemyCharacter::BroadcastInitialValues()
+{
+	const UMyAttributeSet* AttributeSetBase = CastChecked<UMyAttributeSet>(AttributeSet);
+	if (AttributeSetBase == nullptr)return;
+	
+	OnHealthChanged.Broadcast(AttributeSetBase->GetHealth());
+	OnMaxHealthChanged.Broadcast(AttributeSetBase->GetMaxHealth());
+}
+
+void AEnemyCharacter::BindCallbacksToDependencies()
+{
+	const UMyAttributeSet* AttributeSetBase = CastChecked<UMyAttributeSet>(AttributeSet);
+	if (AttributeSetBase == nullptr)return;
+	
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
+		AttributeSetBase->GetHealthAttribute()).AddLambda( [this](const FOnAttributeChangeData& Data){
+			UE_LOG(LogTemp, Display, TEXT("[PeiLog]Health Changed %f"), Data.NewValue);
+			OnHealthChanged.Broadcast(Data.NewValue);
+		});
+
+	AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(
+		AttributeSetBase->GetMaxHealthAttribute()).AddLambda( [this](const FOnAttributeChangeData& Data){
+			OnMaxHealthChanged.Broadcast(Data.NewValue);  
+		});
+
 }
