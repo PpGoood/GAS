@@ -2,11 +2,13 @@
 
 
 #include "_Game/Projectile/ProjectileBase.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
-#include "GAS/GAS.h"
 
 AProjectileBase::AProjectileBase()
 {
@@ -15,8 +17,6 @@ AProjectileBase::AProjectileBase()
 	
 	SphereComponent = CreateDefaultSubobject<USphereComponent>(FName("Sphere"));
 	SetRootComponent(SphereComponent);
-
-	SphereComponent->SetCollisionObjectType(ECC_Projectile);
 	SphereComponent->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	SphereComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
 	SphereComponent->SetCollisionResponseToChannel(ECC_WorldDynamic,ECR_Overlap);
@@ -41,15 +41,29 @@ void AProjectileBase::BeginPlay()
 
 void AProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
+
 	PlayImpact();
-	bHit = true;
-	Destroy();
+
+	//在重叠后，销毁自身
+	if(HasAuthority())
+	{
+		if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+		{
+			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+		}
+		Destroy();
+	}
+	else
+	{
+		//如果对actor没有权威性，将bHit设置为true，证明当前已经播放了击中特效
+		bHit = true;
+	}
 }
 
 void AProjectileBase::Destroyed()
 {
 	//如果没有权威性，并且bHit没有修改为true，证明当前没有触发Overlap事件，在销毁前播放击中特效
-	if(!bHit)
+	if(!bHit && !HasAuthority())
 	{
 		PlayImpact();
 	}

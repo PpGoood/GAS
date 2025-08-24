@@ -2,6 +2,9 @@
 
 
 #include "_Game/Core/AbilitySystem/Abilities/ProjectileSpellAbility.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "_Game/Interaction/CombatInterface.h"
 #include "_Game/Projectile/ProjectileBase.h"
 
@@ -37,6 +40,10 @@ void UProjectileSpellAbility::SpawnProjectile(const FVector& ProjectileTargetLoc
 		Cast<APawn>(GetAvatarActorFromActorInfo()),
 		ESpawnActorCollisionHandlingMethod::AlwaysSpawn
 	);
-	//TODO 给ProjectileGE
+
+	const UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+	const FGameplayEffectSpecHandle SpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass,GetAbilityLevel(),SourceASC->MakeEffectContext());
+
+	Projectile->DamageEffectSpecHandle = SpecHandle;
 	Projectile->FinishSpawning(SpawnTransform);	
 }

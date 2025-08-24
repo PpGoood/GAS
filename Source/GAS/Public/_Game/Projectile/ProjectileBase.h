@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 #include "GameFramework/Actor.h"
 #include "NiagaraComponent.h"
 #include "Components/AudioComponent.h"
@@ -21,11 +22,12 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
-	
 
+	UPROPERTY(BlueprintReadWrite,meta=( ExposeOnSpawn = true ))
+	FGameplayEffectSpecHandle DamageEffectSpecHandle;
 protected:
 	UPROPERTY(EditDefaultsOnly,Category="Projectiles|Properties")
-	float LifeSpan = 5.f;
+	float LifeSpan = 5.f; 
 	
 	virtual void BeginPlay() override;
 
