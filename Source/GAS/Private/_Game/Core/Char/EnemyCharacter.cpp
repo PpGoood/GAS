@@ -62,6 +62,12 @@ void AEnemyCharacter::InitDefaultAbilities()
 	UGASBlueprintFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 }
 
+void AEnemyCharacter::Die()
+{
+	SetLifeSpan(LifeSpan);
+	Super::Die();
+}
+
 void AEnemyCharacter::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);

@@ -28,9 +28,12 @@ public:
 	/** CombatInterface **/
 	 
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
-
+	//和GAS相关
+	UPROPERTY()
+	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	UPROPERTY()
+	TObjectPtr<UAttributeSet> AttributeSet;
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Custom|Combat")
 	TObjectPtr<USkeletalMeshComponent> WeaponMeshComponent;
 
@@ -46,12 +49,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category="Custom|Combat")
 	float BaseWalkSpeed = 250.f; //当前角色的最大移动速度
-
-	//和GAS相关
-	UPROPERTY()
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
-	UPROPERTY()
-	TObjectPtr<UAttributeSet> AttributeSet;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Combat")
+	float LifeSpan = 5.f;
 
 	//使用GE对AttributeSet初始化
 	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Custom|Attributes")
@@ -62,9 +62,16 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Custom|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
-
+	
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectClass,float Level) const;
 
+	UFUNCTION(NetMulticast, Reliable)
+	virtual void MulticastHandleDeath();
+	
+	virtual void BeginPlay() override;
+
+	virtual void Die() override;
+	
 	virtual void InitAbilityActorInfo(){};
 
 	virtual void InitBindEvent();

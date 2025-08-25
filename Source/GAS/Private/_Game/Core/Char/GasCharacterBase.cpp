@@ -35,9 +35,6 @@ void AGasCharacterBase::BeginPlay()
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 }
 
-
-
-
 void AGasCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectClass, float Level) const
 {
 	if (GetAbilitySystemComponent() == nullptr) return;
@@ -47,6 +44,30 @@ void AGasCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectCla
 	EffectContextHandle.AddSourceObject(this);
 	const FGameplayEffectSpecHandle EffectSpecHandle = GetAbilitySystemComponent()->MakeOutgoingSpec(EffectClass,Level,EffectContextHandle);
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
+}
+
+void AGasCharacterBase::Die()
+{
+	//将武器从角色身上分离
+	WeaponMeshComponent->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	MulticastHandleDeath();
+}
+
+void AGasCharacterBase::MulticastHandleDeath_Implementation()
+{
+	//开启武器物理效果
+	WeaponMeshComponent->SetSimulatePhysics(true); //开启模拟物理效果
+	WeaponMeshComponent->SetEnableGravity(true); //开启重力效果
+	WeaponMeshComponent->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly); //开启物理碰撞通道
+
+	//开启角色物理效果
+	GetMesh()->SetSimulatePhysics(true); //开启模拟物理效果
+	GetMesh()->SetEnableGravity(true); //开启重力效果
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly); //开启物理碰撞通道
+	GetMesh()->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block); //开启角色与静态物体产生碰撞
+
+	//关闭角色碰撞体碰撞通道，避免其对武器和角色模拟物理效果产生影响
+	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AGasCharacterBase::InitDefaultAttributes() const

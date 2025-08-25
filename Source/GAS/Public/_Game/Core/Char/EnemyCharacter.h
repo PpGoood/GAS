@@ -53,6 +53,8 @@ protected:
 	virtual void InitDefaultAttributes() const override;
 	virtual void InitDefaultAbilities() override;
 
+	virtual void Die() override;
+
 private:
 	void InitWidget();
 	void BroadcastInitialValues();

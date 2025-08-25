@@ -7,6 +7,7 @@
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "_Game/GameplayTagsInstance.h"
+#include "_Game/Interaction/CombatInterface.h"
 
 UMyAttributeSet::UMyAttributeSet()
 {
@@ -99,12 +100,21 @@ void UMyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 		const float NewHealth = GetHealth() - TempIncompingDamage;
 		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 
-		const bool IsDied = TempIncompingDamage <= 0;
+		const bool IsDied = NewHealth <= 0;
 		if(!IsDied)
 		{
 			FGameplayTagContainer TagContainer;
 			TagContainer.AddTag(GameplayTagsInstance::GetInstance().Effects_HitReact);
 			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); //根据tag标签激活技能
+		}
+		else
+		{
+			//调用死亡函数
+			ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetAvatarActor);
+			if(CombatInterface)
+			{
+				CombatInterface->Die();
+			}
 		}
 		
 	}
