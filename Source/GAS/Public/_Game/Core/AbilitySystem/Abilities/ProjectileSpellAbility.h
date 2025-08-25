@@ -17,16 +17,16 @@ class GAS_API UProjectileSpellAbility : public UGASGameplayAbility
 
 protected:
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Ability")
 	TSubclassOf<AProjectileBase> ProjectileClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ability")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Ability")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
 	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
-	UFUNCTION(BlueprintCallable, Category = "Ability")
+	UFUNCTION(BlueprintCallable, Category = "Custom|Ability")
 	void SpawnProjectile(const FVector& ProjectileTargetLocation);
 
 };

@@ -66,77 +66,82 @@ public:
 	//改为传入函数的指针
 	TMap<FGameplayTag, FGameplayAttribute(*)()> TagsToAttributes;
 	//必要属性
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Health, Category="Vital Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Health, Category="Custom|Vital Attributes")
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Health);
 
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Mana, Category="Vital Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Mana, Category="Custom|Vital Attributes")
 	FGameplayAttributeData Mana;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Mana);
 	
 	//主要属性
 
 	//增加物理伤害
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Strength, Category="Primary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Strength, Category="Custom|Primary Attributes")
 	FGameplayAttributeData Strength;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Strength);
 
 	//增加魔法伤害
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Intelligence, Category="Primary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Intelligence, Category="Custom|Primary Attributes")
 	FGameplayAttributeData Intelligence;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Intelligence);
 	
 	//增加护甲和护甲穿透
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Resilience, Category="Primary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Resilience, Category="Custom|Primary Attributes")
 	FGameplayAttributeData Resilience;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Resilience);
 
 	//增加生命值
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Vigor, Category="Primary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Vigor, Category="Custom|Primary Attributes")
 	FGameplayAttributeData Vigor;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Vigor);
 
 	//次级属性
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Armor, Category="Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Armor, Category="Custom|Secondary Attributes")
 	FGameplayAttributeData Armor;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Armor);
 
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_ArmorPenetration, Category="Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_ArmorPenetration, Category="Custom|Secondary Attributes")
 	FGameplayAttributeData ArmorPenetration;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, ArmorPenetration);
 
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_BlockChance, Category="Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_BlockChance, Category="Custom|Secondary Attributes")
 	FGameplayAttributeData BlockChance;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, BlockChance);
 
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_CriticalHitChance, Category="Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_CriticalHitChance, Category="Custom|Secondary Attributes")
 	FGameplayAttributeData CriticalHitChance;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, CriticalHitChance);
 
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_CriticalHitDamage, Category="Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_CriticalHitDamage, Category="Custom|Secondary Attributes")
 	FGameplayAttributeData CriticalHitDamage;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, CriticalHitDamage);
 
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_CriticalHitResistance, Category="Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_CriticalHitResistance, Category="Custom|Secondary Attributes")
 	FGameplayAttributeData CriticalHitResistance;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, CriticalHitResistance);
 
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_HealthRegeneration, Category="Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_HealthRegeneration, Category="Custom|Secondary Attributes")
 	FGameplayAttributeData HealthRegeneration;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, HealthRegeneration);
 
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_ManaRegeneration, Category="Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_ManaRegeneration, Category="Custom|Secondary Attributes")
 	FGameplayAttributeData ManaRegeneration;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, ManaRegeneration);
 
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_MaxHealth, Category="Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_MaxHealth, Category="Custom|Secondary Attributes")
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, MaxHealth);
 	
-	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_MaxMana, Category="Secondary Attributes")
+	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_MaxMana, Category="Custom|Secondary Attributes")
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, MaxMana);
 
+	//此数据只在服务端做计算，不用复制
+	UPROPERTY(BlueprintReadOnly,Category="Custom|Mera Attributes")
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, IncomingDamage);
+	
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
 

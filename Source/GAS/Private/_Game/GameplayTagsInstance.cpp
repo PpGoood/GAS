@@ -50,6 +50,8 @@ void GameplayTagsInstance::InitNativeGameplayTags()
 	InputTag_3 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.Action.3"), FString("键位3"));
 	InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.Action.4"), FString("键位4"));
 
+	Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("伤害"));
+
 }
 
 

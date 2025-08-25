@@ -89,6 +89,19 @@ void UMyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.f, GetMaxMana()));
 	}
+
+	if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		const float TempIncompingDamage = GetIncomingDamage();
+		SetIncomingDamage(0.f);
+		if (TempIncompingDamage <= 0 )return;
+
+		const float NewHealth = GetHealth() - TempIncompingDamage;
+		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+
+		const bool bFatal = TempIncompingDamage <= 0;
+		
+	}
 }
 
 void UMyAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const
