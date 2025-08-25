@@ -21,6 +21,8 @@
 
 # Allow Lua scripts in Content dir
 !/Content/**/*.lua
+# Allow csv in Content dir
+!/Content/**/*.csv
 
 # Allow any files from /RawContent dir.
 # Any file in /RawContent dir will be managed by git lfs.
