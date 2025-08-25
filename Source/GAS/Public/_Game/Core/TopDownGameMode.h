@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "TopDownGameMode.generated.h"
 
+class UCharacterClassInfo;
 /**
  * 
  */
@@ -13,5 +14,9 @@ UCLASS()
 class GAS_API ATopDownGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+public:
+
+	UPROPERTY(EditDefaultsOnly,Category="Character Class Defaults")
+	TObjectPtr<UCharacterClassInfo> CharacterClassInfo;
 };

@@ -4,12 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Components/WidgetComponent.h"
+#include "_Game/Core/AbilitySystem/Data/CharacterClassInfo.h"
 #include "_Game/Core/Char/GasCharacterBase.h"
 #include "_Game/Interaction/CombatInterface.h"
 #include "_Game/Interaction/EnemyInterface.h"
 #include "_Game/UI/WidgetController/OverlayController.h"
 #include "EnemyCharacter.generated.h"
 
+enum class ECharacterClassType : uint8;
 /**
  * 
  */
@@ -38,12 +40,17 @@ public:
 	FOnAttributeChangedSignature OnMaxHealthChanged;
 
 protected:
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="GAS|Attributes")
+	ECharacterClassType CharacterClassType = ECharacterClassType::Warrior;
+	
 	virtual void BeginPlay() override;
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Attributes")
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="GAS|Attributes")
 	int32 Level = 1;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Widget")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="GAS|Widget")
 	TObjectPtr<UWidgetComponent> HealthBar;
+
+	virtual void InitializeDefaultAttributes() const override;
 private:
 	
 	virtual void InitAbilityActorInfo() override;

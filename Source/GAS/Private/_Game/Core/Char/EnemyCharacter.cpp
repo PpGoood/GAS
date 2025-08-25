@@ -6,6 +6,7 @@
 #include "GAS/GAS.h"
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 #include "_Game/Core/AbilitySystem/MyAttributeSet.h"
+#include "_Game/Util/GASBlueprintFunctionLibrary.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -42,6 +43,11 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 
 	InitAbilityActorInfo();
+}
+
+void AEnemyCharacter::InitializeDefaultAttributes() const
+{
+	UGASBlueprintFunctionLibrary::InitializeDefaultAttributes(this,CharacterClassType,Level,AbilitySystemComponent);
 }
 
 void AEnemyCharacter::InitAbilityActorInfo()
