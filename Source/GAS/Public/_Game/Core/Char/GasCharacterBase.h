@@ -26,11 +26,18 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Combat")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Custom|Combat")
 	TObjectPtr<USkeletalMeshComponent> WeaponMeshComponent;
 
-	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Combat")
+	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Custom|Combat")
 	FName WeaponTipSocketName;
+
+	//是否是受击状态
+	UPROPERTY(BlueprintReadOnly, Category="Custom|Combat")
+	bool bHitReacting = false; //当前是否处于被攻击状态
+
+	UPROPERTY(BlueprintReadOnly, Category="Custom|Combat")
+	float BaseWalkSpeed = 250.f; //当前角色的最大移动速度
 
 	//和GAS相关
 	UPROPERTY()
@@ -39,25 +46,27 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 
 	//使用GE对AttributeSet初始化
-	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Attributes")
+	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Custom|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
 	
-	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Attributes")
+	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Custom|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultPrimaryAttributes;
 
-	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Attributes")
+	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Custom|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 
 	virtual void InitializeDefaultAttributes() const;
 
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectClass,float Level) const;
 
-	void AddCharacterAbilities();
+	virtual void InitCharacterAbilities();
 
 	virtual FVector GetCombatSocketLocation() override;
+
+	virtual void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 private:
 	virtual void InitAbilityActorInfo(){};
 
-	UPROPERTY(EditAnywhere,Category="Attributes|Abilities")
+	UPROPERTY(EditAnywhere,Category="Custom|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartAbilities;
 };

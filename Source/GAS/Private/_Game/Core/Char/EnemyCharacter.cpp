@@ -7,6 +7,7 @@
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 #include "_Game/Core/AbilitySystem/MyAttributeSet.h"
 #include "_Game/Util/GASBlueprintFunctionLibrary.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
@@ -41,8 +42,13 @@ void AEnemyCharacter::UnHighlightActor()
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
 	InitAbilityActorInfo();
+	//初始化属性和技能都走的AssetData
+	InitializeDefaultAttributes();
+	InitCharacterAbilities();
+	//加载血条
+	InitWidget();
 }
 
 void AEnemyCharacter::InitializeDefaultAttributes() const
@@ -50,13 +56,15 @@ void AEnemyCharacter::InitializeDefaultAttributes() const
 	UGASBlueprintFunctionLibrary::InitializeDefaultAttributes(this,CharacterClassType,Level,AbilitySystemComponent);
 }
 
+void AEnemyCharacter::InitCharacterAbilities()
+{
+	UGASBlueprintFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+}
+
 void AEnemyCharacter::InitAbilityActorInfo()
 {
 	AbilitySystemComponent->InitAbilityActorInfo(this,this);
 	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->InitAbilitySystemComponent();
-	
-	InitializeDefaultAttributes();
-	InitWidget();
 }
 
 void AEnemyCharacter::InitWidget()

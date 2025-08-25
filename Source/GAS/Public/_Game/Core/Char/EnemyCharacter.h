@@ -33,24 +33,25 @@ public:
 	/** CombatInterface **/
 
 	//接口
-	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	UPROPERTY(BlueprintAssignable, Category="Custom|Attributes")
 	FOnAttributeChangedSignature OnHealthChanged;
 
-	UPROPERTY(BlueprintAssignable, Category="GAS|Attributes")
+	UPROPERTY(BlueprintAssignable, Category="Custom|Attributes")
 	FOnAttributeChangedSignature OnMaxHealthChanged;
 
 protected:
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="GAS|Attributes")
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Custom|Attributes")
 	ECharacterClassType CharacterClassType = ECharacterClassType::Warrior;
 	
 	virtual void BeginPlay() override;
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="GAS|Attributes")
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Custom|Attributes")
 	int32 Level = 1;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="GAS|Widget")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Widget")
 	TObjectPtr<UWidgetComponent> HealthBar;
 
 	virtual void InitializeDefaultAttributes() const override;
+	virtual void InitCharacterAbilities() override;
 private:
 	
 	virtual void InitAbilityActorInfo() override;

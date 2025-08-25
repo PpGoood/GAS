@@ -5,7 +5,9 @@
 #include "AbilitySystemComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GAS/GAS.h"
+#include "_Game/GameplayTagsInstance.h"
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AGasCharacterBase::AGasCharacterBase()
 {
@@ -25,6 +27,8 @@ AGasCharacterBase::AGasCharacterBase()
 void AGasCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+	AbilitySystemComponent->RegisterGameplayTagEvent(GameplayTagsInstance::GetInstance().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::HitReactTagChanged);
+	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 }
 
 void AGasCharacterBase::InitializeDefaultAttributes() const
@@ -45,7 +49,7 @@ void AGasCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectCla
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }
 
-void AGasCharacterBase::AddCharacterAbilities()
+void AGasCharacterBase::InitCharacterAbilities()
 {
 	//添加能力只能在服务器进行
 	if (!HasAuthority()) return;
@@ -57,5 +61,12 @@ FVector AGasCharacterBase::GetCombatSocketLocation()
 {
 	check(WeaponMeshComponent);
 	return WeaponMeshComponent->GetSocketLocation(WeaponTipSocketName);
+}
+
+void AGasCharacterBase::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bHitReacting = NewCount > 0;
+	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
+	//激活技能和关闭技能逻辑
 }
 
