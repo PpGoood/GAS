@@ -45,7 +45,7 @@ void UGASBlueprintFunctionLibrary::GiveStartupAbilities(const UObject* WorldCont
 	if (GameMode == nullptr) return;
 
 	const AActor* AvatarActor = ASC->GetAvatarActor();
-
+	if (!AvatarActor->HasAuthority()) return;
 	//从实例获取到关卡角色的配置
 	UCharacterClassInfo* CharacterClassInfo = GameMode->CharacterClassInfo;
 

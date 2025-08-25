@@ -32,16 +32,14 @@ APlayerCharacter::APlayerCharacter()
 void APlayerCharacter::PossessedBy(AController* NewController)
 {
 	Super::PossessedBy(NewController);
-	InitAbilityActorInfo();
+	InitDefault();
 	
-	//Test
-	InitCharacterAbilities();
 }
 //客户端
 void APlayerCharacter::OnRep_PlayerState()
 {
 	Super::OnRep_PlayerState();
-	InitAbilityActorInfo();
+	InitDefault();
 }
 
 int32 APlayerCharacter::GetPlayerLevel()
@@ -69,6 +67,12 @@ void APlayerCharacter::InitAbilityActorInfo()
 		}
 	}
 	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->InitAbilitySystemComponent();
+	
+}
 
-	InitializeDefaultAttributes();
+void APlayerCharacter::InitDefault()
+{
+	InitAbilityActorInfo();
+	InitDefaultAttributes();
+	InitDefaultAbilities();
 }

@@ -44,19 +44,20 @@ void AEnemyCharacter::BeginPlay()
 	Super::BeginPlay();
 	
 	InitAbilityActorInfo();
+	InitBindEvent();
 	//初始化属性和技能都走的AssetData
-	InitializeDefaultAttributes();
-	InitCharacterAbilities();
+	InitDefaultAttributes();
+	InitDefaultAbilities();
 	//加载血条
 	InitWidget();
 }
 
-void AEnemyCharacter::InitializeDefaultAttributes() const
+void AEnemyCharacter::InitDefaultAttributes() const
 {
 	UGASBlueprintFunctionLibrary::InitializeDefaultAttributes(this,CharacterClassType,Level,AbilitySystemComponent);
 }
 
-void AEnemyCharacter::InitCharacterAbilities()
+void AEnemyCharacter::InitDefaultAbilities()
 {
 	UGASBlueprintFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 }

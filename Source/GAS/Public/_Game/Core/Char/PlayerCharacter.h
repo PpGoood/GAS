@@ -23,6 +23,7 @@ public:
 	virtual int32 GetPlayerLevel() override;
 	/** ICombatInterface **/
 
-private:
 	virtual void InitAbilityActorInfo() override;
+private:
+	void InitDefault();
 };

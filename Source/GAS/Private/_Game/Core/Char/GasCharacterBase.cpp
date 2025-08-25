@@ -24,19 +24,19 @@ AGasCharacterBase::AGasCharacterBase()
 	WeaponMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+UAnimMontage* AGasCharacterBase::GetHitReactMontage_Implementation()
+{
+	return HitReactMontage;
+}
+
 void AGasCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	AbilitySystemComponent->RegisterGameplayTagEvent(GameplayTagsInstance::GetInstance().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::HitReactTagChanged);
 	GetCharacterMovement()->MaxWalkSpeed = BaseWalkSpeed;
 }
 
-void AGasCharacterBase::InitializeDefaultAttributes() const
-{
-	ApplyEffectToSelf(DefaultPrimaryAttributes,1);
-	ApplyEffectToSelf(DefaultSecondaryAttributes,1);
-	ApplyEffectToSelf(DefaultVitalAttributes,1);
-}
+
+
 
 void AGasCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectClass, float Level) const
 {
@@ -49,7 +49,14 @@ void AGasCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectCla
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }
 
-void AGasCharacterBase::InitCharacterAbilities()
+void AGasCharacterBase::InitDefaultAttributes() const
+{
+	ApplyEffectToSelf(DefaultPrimaryAttributes,1);
+	ApplyEffectToSelf(DefaultSecondaryAttributes,1);
+	ApplyEffectToSelf(DefaultVitalAttributes,1);
+}
+
+void AGasCharacterBase::InitDefaultAbilities()
 {
 	//添加能力只能在服务器进行
 	if (!HasAuthority()) return;
@@ -65,8 +72,16 @@ FVector AGasCharacterBase::GetCombatSocketLocation()
 
 void AGasCharacterBase::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
+	//添加了受击标签后玩家的受击表现
 	bHitReacting = NewCount > 0;
 	GetCharacterMovement()->MaxWalkSpeed = bHitReacting ? 0.f : BaseWalkSpeed;
-	//激活技能和关闭技能逻辑
 }
+
+void AGasCharacterBase::InitBindEvent()
+{
+	AbilitySystemComponent->RegisterGameplayTagEvent(GameplayTagsInstance::GetInstance().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::HitReactTagChanged);
+}
+
+
+
 

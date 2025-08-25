@@ -99,7 +99,13 @@ void UMyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 		const float NewHealth = GetHealth() - TempIncompingDamage;
 		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 
-		const bool bFatal = TempIncompingDamage <= 0;
+		const bool IsDied = TempIncompingDamage <= 0;
+		if(!IsDied)
+		{
+			FGameplayTagContainer TagContainer;
+			TagContainer.AddTag(GameplayTagsInstance::GetInstance().Effects_HitReact);
+			Props.TargetASC->TryActivateAbilitiesByTag(TagContainer); //根据tag标签激活技能
+		}
 		
 	}
 }

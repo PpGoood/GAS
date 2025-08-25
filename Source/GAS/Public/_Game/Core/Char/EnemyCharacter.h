@@ -31,8 +31,7 @@ public:
 	/** CombatInterface **/
 	virtual int32 GetPlayerLevel() override{return  Level;}
 	/** CombatInterface **/
-
-	//接口
+	
 	UPROPERTY(BlueprintAssignable, Category="Custom|Attributes")
 	FOnAttributeChangedSignature OnHealthChanged;
 
@@ -49,12 +48,12 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Widget")
 	TObjectPtr<UWidgetComponent> HealthBar;
-
-	virtual void InitializeDefaultAttributes() const override;
-	virtual void InitCharacterAbilities() override;
-private:
 	
 	virtual void InitAbilityActorInfo() override;
+	virtual void InitDefaultAttributes() const override;
+	virtual void InitDefaultAbilities() override;
+
+private:
 	void InitWidget();
 	void BroadcastInitialValues();
 	void BindCallbacksToDependencies();

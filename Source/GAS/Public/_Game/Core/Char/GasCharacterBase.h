@@ -8,6 +8,7 @@
 #include "_Game/Interaction/CombatInterface.h"
 #include "GasCharacterBase.generated.h"
 
+struct FGameplayTag;
 class UGameplayAbility;
 class UGameplayEffect;
 class UAttributeSet;
@@ -18,10 +19,14 @@ class GAS_API AGasCharacterBase : public ACharacter,public IAbilitySystemInterfa
 	GENERATED_BODY()
 
 public:
-	// Sets default values for this character's properties
 	AGasCharacterBase();
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override {return AbilitySystemComponent;}
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
+
+	/** CombatInterface **/
+	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	/** CombatInterface **/
+	 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -31,6 +36,9 @@ protected:
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Custom|Combat")
 	FName WeaponTipSocketName;
+
+	UPROPERTY(EditAnywhere, Category="Custom|Combat")
+	TObjectPtr<UAnimMontage> HitReactMontage;
 
 	//是否是受击状态
 	UPROPERTY(BlueprintReadOnly, Category="Custom|Combat")
@@ -55,18 +63,20 @@ protected:
 	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Custom|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
 
-	virtual void InitializeDefaultAttributes() const;
-
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectClass,float Level) const;
 
-	virtual void InitCharacterAbilities();
+	virtual void InitAbilityActorInfo(){};
+
+	virtual void InitBindEvent();
+	
+	virtual void InitDefaultAttributes() const;
+	
+	virtual void InitDefaultAbilities();
 
 	virtual FVector GetCombatSocketLocation() override;
 
 	virtual void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 private:
-	virtual void InitAbilityActorInfo(){};
-
 	UPROPERTY(EditAnywhere,Category="Custom|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartAbilities;
 };
