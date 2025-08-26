@@ -9,23 +9,63 @@
 ---@type GA_FireBolt_C
 local M = UnLua.Class()
 
--- function M:K2_ActivateAbility()
---     UE.UKismetSystemLibrary.PrintString(WorldContectObject,"准备播放动画ActivateTest")
+function M:K2_ActivateAbility()
+    UE.UKismetSystemLibrary.PrintString(WorldContectObject,"准备播放动画ActivateTest")
 
---     local Proxy = UE.UGAS_PlayMontageAndWaitForEvent.PlayMontageAndWaitForEvent(
---         self, 
---         nil, 
---         self.FireAnim,
---         UE.UBlueprintGameplayTagLibraryUtil.GetTagFromString("Event.Montage.FireBolt"),
---         1, 
---         nil,
---         true, 
---         1.0)
+    local TaskMouse = UE.UUnderMouseDataAbilityTask.CreateUnderMouseDataAbilityTask(self)
+    TaskMouse.OnMouseDataAbilityTask:Add(self,self.OnDelegateTrgger)
+    TaskMouse:ReadyForActivation()
+
+end
+
+function M:OnDelegateTrgger(data)
+    self:GetMouseTargetLocation(data)
+    self:SetPlayerFacingTarget(self.Location)
+    self:PlayAnim()
+end
+
+function M:GetMouseTargetLocation(data)
+    local data = UE.UAbilitySystemBlueprintLibrary.GetHitResultFromTargetData(data)
+    self.Location = data.Location
+end
+
+--用于MotionWarping改变转向
+function M:SetPlayerFacingTarget(Location)
+    local character = self:GetAvatarActorFromActorInfo()
+    character:UpdateFacingTarget(Location)
+end
+
+function M:PlayAnim()
+    local TaskAnim = UE.UGAS_PlayMontageAndWaitForEvent.PlayMontageAndWaitForEvent(
+        self, 
+        nil, 
+        self.FireAnim,
+        UE.UBlueprintGameplayTagLibraryUtil.GetTagFromString("Event.Montage.FireBolt"),
+        1, 
+        nil,
+        true, 
+        1.0)
     
---     Proxy.EventReceived:Add(self,self.OnEventReceived)
---     Proxy:ReadyForActivation()
+    TaskAnim.EventReceived:Add(self,self.OnEventReceived)
+    TaskAnim:ReadyForActivation()
+end
 
--- end
+function M:OnEventReceived()
+    UE.UKismetSystemLibrary.PrintString(WorldContectObject,"收到了标签哦")
+    self:SpawnProjectile(self.Location)
+    self:DelayEndAbility(0.5)
+end
+
+function M:DelayEndAbility(Induration)
+    coroutine.resume(coroutine.create(
+        function(WorldContectObject,duration)    
+           self:K2_EndAbility()
+        end
+    ),
+    self,Induration)
+end
+return M
+
 
 -- eg
 -- function M:K2_ActivateAbility()
@@ -48,10 +88,3 @@ local M = UnLua.Class()
 -- function M:FireComplete()
 --     self:K2_EndAbility()
 -- end
-
-function M:OnEventReceived()
-    UE.UKismetSystemLibrary.PrintString(WorldContectObject,"收到了标签哦")
-    self:SpawnProjectile()
-    self:K2_EndAbility()
-end
-return M

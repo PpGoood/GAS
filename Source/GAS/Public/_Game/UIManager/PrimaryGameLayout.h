@@ -71,8 +71,7 @@ public:
 				StateFunc(EAsyncWidgetLayerState::AfterPush, Widget);
 			})
 		);
-
-		// Setup a cancel delegate so that we can resume input if this handler is canceled.
+		
 		StreamingHandle->BindCancelDelegate(FStreamableDelegate::CreateWeakLambda(this,
 			[this, StateFunc,SuspendInputToken]()
 			{
@@ -104,11 +103,9 @@ public:
 
 		return nullptr;
 	}
-
-	// Find the widget if it exists on any of the layers and remove it from the layer.
+	
 	void FindAndRemoveWidgetFromLayer(UCommonActivatableWidget* ActivatableWidget);
-
-	// Get the layer widget for the given layer tag.
+	
 	UCommonActivatableWidgetContainerBase* GetLayerWidget(FGameplayTag LayerName);
 
 	//方便UI管理器调用
