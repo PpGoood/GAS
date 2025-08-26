@@ -46,13 +46,6 @@ void AGasCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectCla
 	GetAbilitySystemComponent()->ApplyGameplayEffectSpecToSelf(*EffectSpecHandle.Data.Get());
 }
 
-void AGasCharacterBase::Die()
-{
-	//将武器从角色身上分离
-	WeaponMeshComponent->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
-	MulticastHandleDeath();
-}
-
 void AGasCharacterBase::MulticastHandleDeath_Implementation()
 {
 	//开启武器物理效果
@@ -68,6 +61,8 @@ void AGasCharacterBase::MulticastHandleDeath_Implementation()
 
 	//关闭角色碰撞体碰撞通道，避免其对武器和角色模拟物理效果产生影响
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	Dissolve();
 }
 
 void AGasCharacterBase::InitDefaultAttributes() const
@@ -103,6 +98,34 @@ void AGasCharacterBase::InitBindEvent()
 	AbilitySystemComponent->RegisterGameplayTagEvent(GameplayTagsInstance::GetInstance().Effects_HitReact, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::HitReactTagChanged);
 }
 
+void AGasCharacterBase::Die()
+{
+	//将武器从角色身上分离
+	WeaponMeshComponent->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
+	MulticastHandleDeath();
+}
 
+void AGasCharacterBase::Dissolve()
+{
+	TArray<UMaterialInstanceDynamic*> MatArray;
+	//设置角色溶解
+	if(IsValid(DissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(DissolveMaterialInstance, this);
+		GetMesh()->SetMaterial(0, DynamicMatInst);
+		MatArray.Add(DynamicMatInst);
+	}
+
+	//设置武器溶解
+	if(IsValid(WeaponDissolveMaterialInstance))
+	{
+		UMaterialInstanceDynamic* DynamicMatInst = UMaterialInstanceDynamic::Create(WeaponDissolveMaterialInstance, this);
+		WeaponMeshComponent->SetMaterial(0, DynamicMatInst);
+		MatArray.Add(DynamicMatInst);
+	}
+
+	//调用时间轴渐变溶解
+	StartDissolveTimeline(MatArray);
+}
 
 

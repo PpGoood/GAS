@@ -33,7 +33,8 @@ protected:
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UAttributeSet> AttributeSet;
-	
+
+	//战斗
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Custom|Combat")
 	TObjectPtr<USkeletalMeshComponent> WeaponMeshComponent;
 
@@ -42,6 +43,13 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category="Custom|Combat")
 	TObjectPtr<UAnimMontage> HitReactMontage;
+
+	//死亡溶解相关材质
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Combat")
+	TObjectPtr<UMaterialInstance> DissolveMaterialInstance;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Combat")
+	TObjectPtr<UMaterialInstance> WeaponDissolveMaterialInstance;
 
 	//是否是受击状态
 	UPROPERTY(BlueprintReadOnly, Category="Custom|Combat")
@@ -69,8 +77,6 @@ protected:
 	virtual void MulticastHandleDeath();
 	
 	virtual void BeginPlay() override;
-
-	virtual void Die() override;
 	
 	virtual void InitAbilityActorInfo(){};
 
@@ -83,6 +89,14 @@ protected:
 	virtual FVector GetCombatSocketLocation() override;
 
 	virtual void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
+	virtual void Die() override;
+
+	//用蓝图实现时间轴溶解此逻辑不在c++做
+	UFUNCTION(BlueprintImplementableEvent)
+	void StartDissolveTimeline(const TArray<UMaterialInstanceDynamic*>& DynamicMaterialInstance);
+	
+	void Dissolve(); //溶解效果
 private:
 	UPROPERTY(EditAnywhere,Category="Custom|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartAbilities;
