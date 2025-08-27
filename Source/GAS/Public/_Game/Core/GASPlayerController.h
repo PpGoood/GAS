@@ -7,6 +7,7 @@
 #include "Char/GasCharacterBase.h"
 #include "GameFramework/PlayerController.h"
 #include "_Game/Interaction/EnemyInterface.h"
+#include "_Game/UI/Component/DamageTextWidgetComponent.h"
 #include "GASPlayerController.generated.h"
 
 class USplineComponent;
@@ -30,24 +31,30 @@ public:
 	AGASPlayerController();
 	//PlayerTick只能用于本地Controller，不能用于服务端和非本地的Controller；Tick则不受限制。
 	virtual void PlayerTick(float DeltaTime) override;
+
+	UFUNCTION(Client,Reliable)
+	void ClientShowDamageNumber(float Damage,ACharacter* TargetCharacter);
 protected:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 private:
-	UPROPERTY(EditAnywhere,Category="Input")
+	UPROPERTY(EditDefaultsOnly,Category="Custom|Components")
+	TSubclassOf<UDamageTextWidgetComponent> DamageTextComponentClass;
+	
+	UPROPERTY(EditAnywhere,Category="Custom|Input")
 	TObjectPtr<UInputMappingContext> InputContext;
 
-	UPROPERTY(EditAnywhere,Category="Input")
+	UPROPERTY(EditAnywhere,Category="Custom|Input")
 	TObjectPtr<UInputAction> MoveAction;
 
-	UPROPERTY(EditAnywhere, Category="Input")
+	UPROPERTY(EditAnywhere, Category="Custom|Input")
 	TObjectPtr<UInputAction> ShiftAction;
 	void ShiftPressed() { bShiftKeyDown = true; };
 	void ShiftReleased() { bShiftKeyDown = false; };
 	bool bShiftKeyDown = false;
 	
 	
-	UPROPERTY(EditDefaultsOnly,Category="Input")
+	UPROPERTY(EditDefaultsOnly,Category="Custom|Input")
 	TObjectPtr<UInputDataAsset> InputDataAsset;
 
 	void Move(const struct FInputActionValue& InputActionValue);

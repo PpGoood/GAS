@@ -5,8 +5,10 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "_Game/GameplayTagsInstance.h"
+#include "_Game/Core/GASPlayerController.h"
 #include "_Game/Interaction/CombatInterface.h"
 
 UMyAttributeSet::UMyAttributeSet()
@@ -99,7 +101,9 @@ void UMyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 
 		const float NewHealth = GetHealth() - TempIncompingDamage;
 		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-
+		//显示掉血ui
+		ShowDamageText(Props, TempIncompingDamage);
+		
 		const bool IsDied = NewHealth <= 0;
 		if(!IsDied)
 		{
@@ -233,6 +237,15 @@ void UMyAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& 
 		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
 		Props.TargetCharacter = Cast<ACharacter>(Props.TargetAvatarActor);
 		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
+	}
+}
+
+void UMyAttributeSet::ShowDamageText(const FEffectProperties& Props, const float Damage)
+{
+	UE_LOG(LogTemp, Display, TEXT("[PeiLog]ShowDamageText"));
+	if(AGASPlayerController* PC = Cast<AGASPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+	{
+		PC->ClientShowDamageNumber(Damage, Props.TargetCharacter); //调用显示伤害数字
 	}
 }
 
