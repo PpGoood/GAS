@@ -58,10 +58,11 @@ private:
 	TObjectPtr<UInputDataAsset> InputDataAsset;
 
 	void Move(const struct FInputActionValue& InputActionValue);
-
+	
 	void CursorTrace();
-	IEnemyInterface* LastHighlightEnemy = nullptr;
-	IEnemyInterface* CurHightlightEnemy = nullptr;
+	//事故提高班TScriptInterface 既能当UObject使用又能当接口使用
+	TScriptInterface<IEnemyInterface> LastHighlightEnemy = nullptr;
+	TScriptInterface<IEnemyInterface> CurHightlightEnemy = nullptr;
 	FHitResult CursorHit; //鼠标拾取结果，可以复用
 
 	/**

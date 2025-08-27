@@ -84,7 +84,7 @@ void AGASPlayerController::CursorTrace()
 	GetHitResultUnderCursor(ECC_Visibility,false,CursorHit);
 
 	LastHighlightEnemy = CurHightlightEnemy;
-	CurHightlightEnemy = Cast<IEnemyInterface>(CursorHit.GetActor());
+	CurHightlightEnemy = CursorHit.GetActor();
 
 	if(CurHightlightEnemy != LastHighlightEnemy)
 	{
