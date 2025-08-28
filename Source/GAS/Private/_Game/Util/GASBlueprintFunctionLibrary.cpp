@@ -13,11 +13,8 @@
 void UGASBlueprintFunctionLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject,
                                                                ECharacterClassType CharacterClass, float Level,UAbilitySystemComponent* ASC)
 {
-	ATopDownGameMode* GameMode = Cast<ATopDownGameMode>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (GameMode == nullptr) return;
-
-	UCharacterClassInfo* ClassInfo = GameMode->CharacterClassInfo;
-	FCharacterClassDefaultInfo ClassDefaultInfo = GameMode->CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+	UCharacterClassInfo* ClassInfo = GetCharacterClassInfo(WorldContextObject);
+	FCharacterClassDefaultInfo ClassDefaultInfo = ClassInfo->GetClassDefaultInfo(CharacterClass);
 
 	//应用基础属性
 	FGameplayEffectContextHandle PrimaryContextHandle = ASC->MakeEffectContext();
@@ -40,14 +37,14 @@ void UGASBlueprintFunctionLibrary::InitializeDefaultAttributes(const UObject* Wo
 
 void UGASBlueprintFunctionLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
 {
-	//获取到当前关卡的GameMode实例
-	ATopDownGameMode* GameMode = Cast<ATopDownGameMode>(UGameplayStatics::GetGameMode(WorldContextObject));
-	if (GameMode == nullptr) return;
+	// //获取到当前关卡的GameMode实例
+	// ATopDownGameMode* GameMode = Cast<ATopDownGameMode>(UGameplayStatics::GetGameMode(WorldContextObject));
+	// if (GameMode == nullptr) return;
 
 	const AActor* AvatarActor = ASC->GetAvatarActor();
 	if (!AvatarActor->HasAuthority()) return;
 	//从实例获取到关卡角色的配置
-	UCharacterClassInfo* CharacterClassInfo = GameMode->CharacterClassInfo;
+	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
 
 	//遍历角色拥有的技能数组
 	for(const TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
@@ -55,6 +52,13 @@ void UGASBlueprintFunctionLibrary::GiveStartupAbilities(const UObject* WorldCont
 		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1); //创建技能实例
 		ASC->GiveAbility(AbilitySpec); //只应用不激活
 	}
-	
+}
+
+UCharacterClassInfo* UGASBlueprintFunctionLibrary::GetCharacterClassInfo(const UObject* WorldContextObject)
+{
+	ATopDownGameMode* GameMode = Cast<ATopDownGameMode>(UGameplayStatics::GetGameMode(WorldContextObject));
+	if (GameMode == nullptr) return nullptr;
+
+	return GameMode->CharacterClassInfo;
 }
 

@@ -54,6 +54,7 @@ void AEnemyCharacter::BeginPlay()
 
 void AEnemyCharacter::InitDefaultAttributes() const
 {
+	if (!HasAuthority())return;
 	UGASBlueprintFunctionLibrary::InitializeDefaultAttributes(this,CharacterClassType,Level,AbilitySystemComponent);
 }
 

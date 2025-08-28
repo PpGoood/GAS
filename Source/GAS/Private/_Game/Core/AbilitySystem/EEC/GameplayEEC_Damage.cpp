@@ -6,6 +6,9 @@
 #include "AbilitySystemComponent.h"
 #include "_Game/GameplayTagsInstance.h"
 #include "_Game/Core/AbilitySystem/MyAttributeSet.h"
+#include "_Game/Core/AbilitySystem/Data/CharacterClassInfo.h"
+#include "_Game/Interaction/CombatInterface.h"
+#include "_Game/Util/GASBlueprintFunctionLibrary.h"
 
 //这里结构体不加F是因为它是内部结构体，不需要外部获取，也不需要在蓝图中使用
 struct SDamageStatics 
@@ -50,9 +53,11 @@ void UGameplayEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExec
 	const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
 	const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
 
-	const AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
-	const AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
-
+	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
+	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
+	ICombatInterface* SourceCombatInterface = Cast<ICombatInterface>(SourceAvatar);
+	ICombatInterface* TargetCombatInterface = Cast<ICombatInterface>(TargetAvatar);
+	
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 
 	const FGameplayTagContainer* SourceTages = Spec.CapturedSourceTags.GetAggregatedTags();
@@ -68,9 +73,6 @@ void UGameplayEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExec
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef,EvaluateParameters,TargetBlockChance);
 	TargetBlockChance = FMath::Max<float>(0, TargetBlockChance);
 
-	const bool bBlocked = FMath::RandRange(1,100) < TargetBlockChance;
-	if (bBlocked) Damage /= 2.f;
-
 	float TargetArmor = 0.f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluateParameters, TargetArmor);
 	TargetArmor = FMath::Max<float>(TargetArmor, 0.f);
@@ -79,9 +81,22 @@ void UGameplayEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExec
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluateParameters, SourceArmorPenetration);
 	SourceArmorPenetration = FMath::Max<float>(SourceArmorPenetration, 0.f);
 
-	const float EffectiveArmor = TargetArmor *= (100 - SourceArmorPenetration * 0.25f) / 100.f;
-	Damage *= (100 - EffectiveArmor * 0.25f) / 100.f;
+	const UCharacterClassInfo* CharacterClassInfo = UGASBlueprintFunctionLibrary::GetCharacterClassInfo(SourceAvatar);
+	const FRealCurve* ArmorPenetrationCurve = CharacterClassInfo->DamageCalculationTable->FindCurve(FName("ArmorPenetration"), FString());
+	const FRealCurve* EffectiveArmorCurve = CharacterClassInfo->DamageCalculationTable->FindCurve(FName("EffectiveArmor"), FString());
+
+	const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCombatInterface->GetPlayerLevel());
+	const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+
+	UE_LOG(LogTemp, Display, TEXT("[PeiLog]DamageText[%f|%f]"),ArmorPenetrationCoefficient,EffectiveArmorCoefficient);
 	
+	const bool bBlocked = FMath::RandRange(1,100) < TargetBlockChance;
+	if (bBlocked) Damage /= 2.f;
+	
+	const float EffectiveArmor = TargetArmor * (100 - SourceArmorPenetration * ArmorPenetrationCoefficient) / 100.f;
+	Damage *= (100 - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
+	UE_LOG(LogTemp, Warning, TEXT("Execute [EffectiveArmor: %f, TargetArmor: %f, SourceArmorPenetration: %f, ArmorPenetrationCoefficient: %f, Damage: %f, EffectiveArmorCoefficient: %f]"), 
+	EffectiveArmor, TargetArmor, SourceArmorPenetration, ArmorPenetrationCoefficient, Damage, EffectiveArmorCoefficient);
 	const FGameplayModifierEvaluatedData EvaluatedData(UMyAttributeSet::GetIncomingDamageAttribute(),EGameplayModOp::Additive,Damage);
 	OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }

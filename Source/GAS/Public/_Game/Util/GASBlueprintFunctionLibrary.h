@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "_Game/Core/AbilitySystem/Data/CharacterClassInfo.h"
 #include "GASBlueprintFunctionLibrary.generated.h"
 
 class UAbilitySystemComponent;
@@ -18,9 +19,12 @@ class GAS_API UGASBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 
 public:
 
-	UFUNCTION(BlueprintCallable,Category="GASAbilitySystemLibrary|CharacterClassDefaults")
+	UFUNCTION(BlueprintCallable,Category="UGASBlueprintFunctionLibrary|CharacterClassDefaults")
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject,ECharacterClassType CharacterClass,float Level,UAbilitySystemComponent* ASC);
 
-	UFUNCTION(BlueprintCallable, Category="GASAbilitySystemLibrary|CharacterClassDefaults")
+	UFUNCTION(BlueprintCallable, Category="UGASBlueprintFunctionLibrary|CharacterClassDefaults")
 	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
+
+	UFUNCTION(BlueprintCallable, Category="UGASBlueprintFunctionLibrary|CharacterClassDefaults")
+	static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);
 };
