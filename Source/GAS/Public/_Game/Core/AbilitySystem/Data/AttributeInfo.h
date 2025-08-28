@@ -29,7 +29,7 @@ struct FGASAttributeInfo
 };
 
 /**
- * 
+ * 用于初始化属性面板
  */
 UCLASS()
 class GAS_API UAttributeInfo : public UDataAsset
