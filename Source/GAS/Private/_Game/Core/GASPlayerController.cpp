@@ -25,7 +25,7 @@ void AGASPlayerController::PlayerTick(float DeltaTime)
 	AutoRun();
 }
 
-void AGASPlayerController::ClientShowDamageNumber_Implementation(float Damage, ACharacter* TargetCharacter)
+void AGASPlayerController::ClientShowDamageNumber_Implementation(float Damage, ACharacter* TargetCharacter,bool bBlockedHit,bool bCriticalHit)
 {
 	if(!IsValid(TargetCharacter) && !DamageTextComponentClass)return;
 	
@@ -36,7 +36,7 @@ void AGASPlayerController::ClientShowDamageNumber_Implementation(float Damage, A
 	DamageText->SetRelativeLocation(FVector(0.f, 0.f, 100.f)); // Z轴 +100
 	DamageText->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform); //然后从角色身上分离，保证在一个位置播放完成动画
 
-	DamageText->SetDamageText(Damage); //设置显示的伤害数字
+	DamageText->SetDamageText(Damage,bBlockedHit,bCriticalHit); //设置显示的伤害数字
 }
 
 void AGASPlayerController::BeginPlay()
