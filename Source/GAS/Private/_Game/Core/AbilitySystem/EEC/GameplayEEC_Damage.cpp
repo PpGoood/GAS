@@ -57,78 +57,118 @@ UGameplayEEC_Damage::UGameplayEEC_Damage()
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitResistanceDef);
 }
 
-void UGameplayEEC_Damage::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
-                                                 FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
+void UGameplayEEC_Damage::Execute_Implementation(
+    const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+    FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
+    // =========================
+    // 1️⃣ 获取源和目标能力系统组件与 Actor
+    // =========================
+    const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
+    const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
 
-	const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
-	const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
+    AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
+    AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
 
-	AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
-	AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
-	ICombatInterface* SourceCombatInterface = Cast<ICombatInterface>(SourceAvatar);
-	ICombatInterface* TargetCombatInterface = Cast<ICombatInterface>(TargetAvatar);
-	
-	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+    ICombatInterface* SourceCombatInterface = Cast<ICombatInterface>(SourceAvatar);
+    ICombatInterface* TargetCombatInterface = Cast<ICombatInterface>(TargetAvatar);
 
-	const FGameplayTagContainer* SourceTages = Spec.CapturedSourceTags.GetAggregatedTags();
-	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
+    // =========================
+    // 2️⃣ 获取 GameplayEffect 规格和标签
+    // =========================
+    const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+    const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
+    const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
 
-	FAggregatorEvaluateParameters EvaluationParameters;
-	EvaluationParameters.SourceTags = SourceTages;
-	EvaluationParameters.TargetTags = TargetTags;
+    FAggregatorEvaluateParameters EvalParams;
+    EvalParams.SourceTags = SourceTags;
+    EvalParams.TargetTags = TargetTags;
 
-	float Damage = Spec.GetSetByCallerMagnitude(GameplayTagsInstance::GetInstance().Damage);
-	
-	float TargetBlockChance = 0;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef,EvaluationParameters,TargetBlockChance);
-	TargetBlockChance = FMath::Max<float>(0, TargetBlockChance);
+    // =========================
+    // 3️⃣ 获取基础伤害值
+    // =========================
+    float Damage = Spec.GetSetByCallerMagnitude(GameplayTagsInstance::GetInstance().Damage);
 
-	float TargetArmor = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluationParameters, TargetArmor);
-	TargetArmor = FMath::Max<float>(TargetArmor, 0.f);
+    // =========================
+    // 4️⃣ 计算目标属性：格挡、护甲、暴击抵抗等
+    // =========================
+    float TargetBlockChance = 0.f;
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvalParams, TargetBlockChance);
+    TargetBlockChance = FMath::Max(0.f, TargetBlockChance);
 
-	float SourceArmorPenetration = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluationParameters, SourceArmorPenetration);
-	SourceArmorPenetration = FMath::Max<float>(SourceArmorPenetration, 0.f);
+    float TargetArmor = 0.f;
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvalParams, TargetArmor);
+    TargetArmor = FMath::Max(0.f, TargetArmor);
 
-	//暴击率
-	float SourceCriticalHitChance = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitChanceDef, EvaluationParameters, SourceCriticalHitChance);
-	SourceCriticalHitChance = FMath::Max(0.f, SourceCriticalHitChance);
-	//暴击伤害
-	float SourceCriticalHitDamage = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitDamageDef, EvaluationParameters, SourceCriticalHitDamage);
-	SourceCriticalHitDamage = FMath::Max(0.f, SourceCriticalHitDamage);
-	//暴击抵抗
-	float TargetCriticalHitResistance = 0.f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitResistanceDef, EvaluationParameters, TargetCriticalHitResistance);
-	TargetCriticalHitResistance = FMath::Max(0.f, TargetCriticalHitResistance);
+    float SourceArmorPenetration = 0.f;
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvalParams, SourceArmorPenetration);
+    SourceArmorPenetration = FMath::Max(0.f, SourceArmorPenetration);
 
-	const UCharacterClassInfo* CharacterClassInfo = UGASBlueprintFunctionLibrary::GetCharacterClassInfo(SourceAvatar);
-	const FRealCurve* ArmorPenetrationCurve = CharacterClassInfo->DamageCalculationTable->FindCurve(FName("ArmorPenetration"), FString());
-	const FRealCurve* EffectiveArmorCurve = CharacterClassInfo->DamageCalculationTable->FindCurve(FName("EffectiveArmor"), FString());
-	const FRealCurve* CriticalHitResistanceCurve = CharacterClassInfo->DamageCalculationTable->FindCurve(FName("CriticalHitResistance"), FString());
-	
+    float SourceCriticalHitChance = 0.f;
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitChanceDef, EvalParams, SourceCriticalHitChance);
+    SourceCriticalHitChance = FMath::Max(0.f, SourceCriticalHitChance);
 
-	const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCombatInterface->GetPlayerLevel());
-	const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCombatInterface->GetPlayerLevel());
-	const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetCombatInterface->GetPlayerLevel());
-	
-	const bool bBlocked = FMath::RandRange(1,100) < TargetBlockChance;
-	if (bBlocked) Damage /= 2.f;
+    float SourceCriticalHitDamage = 0.f;
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitDamageDef, EvalParams, SourceCriticalHitDamage);
+    SourceCriticalHitDamage = FMath::Max(0.f, SourceCriticalHitDamage);
 
-	//护甲 和 护甲穿透
-	const float EffectiveArmor = TargetArmor * (100 - SourceArmorPenetration * ArmorPenetrationCoefficient) / 100.f;
-	Damage *= (100 - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
+    float TargetCriticalHitResistance = 0.f;
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitResistanceDef, EvalParams, TargetCriticalHitResistance);
+    TargetCriticalHitResistance = FMath::Max(0.f, TargetCriticalHitResistance);
 
-	//计算当前是否暴击
-	const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
-	const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
-	//触发暴击 伤害乘以暴击伤害率
-	if(bCriticalHit) Damage = Damage * 2.f + SourceCriticalHitDamage;
-	
-	const FGameplayModifierEvaluatedData EvaluatedData(UMyAttributeSet::GetIncomingDamageAttribute(),EGameplayModOp::Additive,Damage);
-	OutExecutionOutput.AddOutputModifier(EvaluatedData);
-	
+    // =========================
+    // 5️⃣ 获取伤害计算曲线系数
+    // =========================
+    const UCharacterClassInfo* CharacterClassInfo = UGASBlueprintFunctionLibrary::GetCharacterClassInfo(SourceAvatar);
+
+    const FRealCurve* ArmorPenetrationCurve = CharacterClassInfo->DamageCalculationTable->FindCurve(FName("ArmorPenetration"), FString());
+    const FRealCurve* EffectiveArmorCurve = CharacterClassInfo->DamageCalculationTable->FindCurve(FName("EffectiveArmor"), FString());
+    const FRealCurve* CriticalHitResistanceCurve = CharacterClassInfo->DamageCalculationTable->FindCurve(FName("CriticalHitResistance"), FString());
+
+    const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCombatInterface->GetPlayerLevel());
+    const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+    const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+
+    // =========================
+    // 6️⃣ 格挡判定
+    // =========================
+    const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
+    if (bBlocked)
+    {
+        Damage /= 2.f; // 格挡后伤害减半
+    }
+
+    // =========================
+    // 7️⃣ 护甲与护甲穿透计算
+    // =========================
+    const float EffectiveArmor = TargetArmor * (100 - SourceArmorPenetration * ArmorPenetrationCoefficient) / 100.f;
+    Damage *= (100 - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
+
+    // =========================
+    // 8️⃣ 暴击判定
+    // =========================
+    const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
+    const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
+
+    if (bCriticalHit)
+    {
+        Damage = Damage * 2.f + SourceCriticalHitDamage; // 暴击加成
+    }
+
+    // =========================
+    // 9️⃣ 输出伤害
+    // =========================
+    const FGameplayModifierEvaluatedData EvaluatedData(
+        UMyAttributeSet::GetIncomingDamageAttribute(),
+        EGameplayModOp::Additive,
+        Damage
+    );
+
+	// =========================
+	// 9️⃣ GE自定义上下文赋值字段
+	// =========================
+	UGASBlueprintFunctionLibrary::SetIsBlockedHit(EffectContextHandle,bBlocked);
+	UGASBlueprintFunctionLibrary::SetIsCriticalHit(EffectContextHandle,bCriticalHit);
+    OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }

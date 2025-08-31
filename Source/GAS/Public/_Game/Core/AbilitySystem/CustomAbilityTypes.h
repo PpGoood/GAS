@@ -28,6 +28,17 @@ public:
 	/** 用于序列化类的参数 因为新增了两个字段*/
 	//结构体多态重写他的网络复制序列化
 	virtual bool NetSerialize(FArchive& Ar, class UPackageMap* Map, bool& bOutSuccess) override;
+	
+	virtual FGameplayEffectContext* Duplicate() const
+	{
+		FGameplayEffectContext* NewContext = new FGameplayEffectContext();
+		*NewContext = *this;
+		if (GetHitResult())
+		{
+			NewContext->AddHitResult(*GetHitResult(), true);
+		}
+		return NewContext;
+	}
 protected:
 
 	UPROPERTY()
@@ -35,5 +46,15 @@ protected:
 
 	UPROPERTY()
 	bool BIsCriticalHit = false; //暴击
+};
+
+template<>
+struct TStructOpsTypeTraits<FCustomGameplayEffectContext> : public TStructOpsTypeTraitsBase2<FCustomGameplayEffectContext>
+{
+	enum
+	{
+		WithNetSerializer = true,
+		WithCopy = true
+	};
 };
 

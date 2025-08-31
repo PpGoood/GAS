@@ -7,6 +7,7 @@
 #include "GameplayEffectTypes.h"
 #include "Kismet/GameplayStatics.h"
 #include "_Game/Core/TopDownGameMode.h"
+#include "_Game/Core/AbilitySystem/CustomAbilityTypes.h"
 #include "_Game/Core/AbilitySystem/Data/CharacterClassInfo.h"
 
 
@@ -62,3 +63,37 @@ UCharacterClassInfo* UGASBlueprintFunctionLibrary::GetCharacterClassInfo(const U
 	return GameMode->CharacterClassInfo;
 }
 
+bool UGASBlueprintFunctionLibrary::IsBlockedHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FCustomGameplayEffectContext* CustomGameplayEffectContext = static_cast<const FCustomGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return CustomGameplayEffectContext->IsBlockedHit();
+	}
+	return false;
+}
+
+bool UGASBlueprintFunctionLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+	if (const FCustomGameplayEffectContext* CustomGameplayEffectContext = static_cast<const FCustomGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		return CustomGameplayEffectContext->IsCriticalHit();
+	}
+	return false;
+}
+
+void UGASBlueprintFunctionLibrary::SetIsBlockedHit(FGameplayEffectContextHandle& EffectContextHandle, bool bInIsBlockedHit)
+{
+	if (FCustomGameplayEffectContext* CustomGameplayEffectContext = static_cast<FCustomGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		CustomGameplayEffectContext->SetIsBlockedHit(bInIsBlockedHit);
+	}
+}
+
+void UGASBlueprintFunctionLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle,
+	bool bInIsCriticalHit)
+{
+	if (FCustomGameplayEffectContext* CustomGameplayEffectContext = static_cast<FCustomGameplayEffectContext*>(EffectContextHandle.Get()))
+	{
+		CustomGameplayEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+	}
+}

@@ -10,6 +10,7 @@
 #include "_Game/GameplayTagsInstance.h"
 #include "_Game/Core/GASPlayerController.h"
 #include "_Game/Interaction/CombatInterface.h"
+#include "_Game/Util/GASBlueprintFunctionLibrary.h"
 
 UMyAttributeSet::UMyAttributeSet()
 {
@@ -102,7 +103,9 @@ void UMyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 		const float NewHealth = GetHealth() - TempIncompingDamage;
 		SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
 		//显示掉血ui
-		ShowDamageText(Props, TempIncompingDamage);
+		const bool bBlockHit = UGASBlueprintFunctionLibrary::IsBlockedHit(Props.EffectContextHandle);
+		const bool bCriticalHit = UGASBlueprintFunctionLibrary::IsCriticalHit(Props.EffectContextHandle);
+		ShowDamageText(Props, TempIncompingDamage,bBlockHit,bCriticalHit);
 		
 		const bool IsDied = NewHealth <= 0;
 		if(!IsDied)
@@ -240,9 +243,12 @@ void UMyAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& 
 	}
 }
 
-void UMyAttributeSet::ShowDamageText(const FEffectProperties& Props, const float Damage)
+void UMyAttributeSet::ShowDamageText(const FEffectProperties& Props,const float Damage,bool bBlockedHit,bool bCriticalHit)
 {
-	UE_LOG(LogTemp, Display, TEXT("[PeiLog]ShowDamageText"));
+	UE_LOG(LogTemp, Display, TEXT("[PeiLog] ShowDamageText - Damage: %.2f, BlockedHit: %s, CriticalHit: %s"),
+		  Damage, 
+		  bBlockedHit ? TEXT("True") : TEXT("False"), 
+		  bCriticalHit ? TEXT("True") : TEXT("False"));
 	if(AGASPlayerController* PC = Cast<AGASPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
 	{
 		PC->ClientShowDamageNumber(Damage, Props.TargetCharacter); //调用显示伤害数字
