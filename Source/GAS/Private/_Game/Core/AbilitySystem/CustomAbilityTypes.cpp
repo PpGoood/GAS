@@ -4,7 +4,8 @@
 bool FCustomGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 {
 	uint32 RepBits = 0;
-	
+
+	//用一个整数 RepBits 的每一位表示对应字段是否需要同步。
 	if (Ar.IsSaving())
 	{
 		if (bReplicateInstigator && Instigator.IsValid())
@@ -48,7 +49,8 @@ bool FCustomGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, 
 
 	//使用了多少长度，就将长度设置为多少
 	Ar.SerializeBits(&RepBits, 9);
-
+	//先检查对应 bit 是否置位
+	// 如果置位 → 对字段进行序列化（存储）或反序列化（读取）
 	if (RepBits & (1 << 0))
 	{
 		Ar << Instigator;
@@ -99,6 +101,9 @@ bool FCustomGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, 
 		Ar << BIsCriticalHit;
 	}
 
+	//反序列化完成后，用 AddInstigator 初始化能力系统组件上下文
+	// 保证客户端拿到完整的上下文环境
+	
 	if (Ar.IsLoading())
 	{
 		AddInstigator(Instigator.Get(), EffectCauser.Get()); // Just to initialize InstigatorAbilitySystemComponent
@@ -106,5 +111,5 @@ bool FCustomGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, 
 
 	bOutSuccess = true;
 	return true;
-}
+} 
 
