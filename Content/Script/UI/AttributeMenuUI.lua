@@ -8,7 +8,7 @@
 
 ---@type WBP_AttributeMenu_C
 local M = UnLua.Class()
-
+--TODO应该用对象池生成,错误示范
 function M:WidgetControllerSet_Event()
     local ChildWiget = {self.WBP_TextValueRow_Point,
     self.WBP_TextValueButtonRow_1,
@@ -24,7 +24,11 @@ function M:WidgetControllerSet_Event()
     self.WBP_TextValueRow_7,
     self.WBP_TextValueRow_8,
     self.WBP_TextValueRow_9,
-    self.WBP_TextValueRow_10  
+    self.WBP_TextValueRow_10, 
+    self.WBP_TextValueRow_11,
+    self.WBP_TextValueRow_12,
+    self.WBP_TextValueRow_13,
+    self.WBP_TextValueRow_14 
     }
     for _, widget in ipairs(ChildWiget) do
         widget:SetWidgetController(self.WidgetController)
@@ -44,6 +48,7 @@ end
 function M:OnCloseButtonClick()
     -- local GameInstance = self:GetGameInstance()
     -- GameInstance:CloseUIByString("UI.Layer.GameMenu.AttributeMenuUI")
+    --TODO应该抽成蓝图库静态全局方法
     local PlayerController = UE.UGameplayStatics.GetPlayerController(self,0)
     local HUD = PlayerController:GetHUD()
     HUD:CloseUIByString("UI.Layer.GameMenu.AttributeMenuUI")
