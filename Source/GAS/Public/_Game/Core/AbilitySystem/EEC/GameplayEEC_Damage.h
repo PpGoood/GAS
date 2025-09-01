@@ -18,5 +18,9 @@ public:
 	UGameplayEEC_Damage();
 
 	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
-	
+
+	// 将 TagsToCaptureDefs 声明为 mutable，允许在 const 函数中修改
+	mutable TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> TagsToCaptureDefs;
+
+	void SetupTagsToCaptureDefs()const;
 };
