@@ -16,7 +16,4 @@ class GAS_API UGASGameplayAbility : public UGameplayAbility
 public:
 	UPROPERTY(EditDefaultsOnly, Category="Custom|Ability|Input")
 	FGameplayTag DefaultInputAbilityTag;
-
-	UPROPERTY(EditDefaultsOnly, Category="Custom|Ability|Damage")
-	FScalableFloat Damage;
 };

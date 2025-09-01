@@ -55,6 +55,8 @@ public:
 	FGameplayTag InputTag_3;
 	FGameplayTag InputTag_4;
 	FGameplayTag Damage;
+	FGameplayTag Damage_Fire;
+	TArray<FGameplayTag> DamageTypes;
 	FGameplayTag Effects_HitReact; //受击 标签
 private:
 	// 私有构造函数和析构函数，防止外部创建实例

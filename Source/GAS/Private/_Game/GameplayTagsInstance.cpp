@@ -51,6 +51,8 @@ void GameplayTagsInstance::InitNativeGameplayTags()
 	InputTag_4 = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Input.Action.4"), FString("键位4"));
 
 	Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("伤害"));
+	Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fire"), FString("火焰伤害类型"));
+	DamageTypes.Add(Damage_Fire);
 
 	Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.HitReact"), FString("受到攻击时，赋予的标签"));
 }

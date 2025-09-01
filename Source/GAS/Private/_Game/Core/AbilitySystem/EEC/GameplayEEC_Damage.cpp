@@ -62,7 +62,7 @@ void UGameplayEEC_Damage::Execute_Implementation(
     FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
     // =========================
-    // 1️⃣ 获取源和目标能力系统组件与 Actor
+    //获取源和目标能力系统组件与 Actor
     // =========================
     const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
     const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
@@ -74,7 +74,7 @@ void UGameplayEEC_Damage::Execute_Implementation(
     ICombatInterface* TargetCombatInterface = Cast<ICombatInterface>(TargetAvatar);
 
     // =========================
-    // 2️⃣ 获取 GameplayEffect 规格和标签
+    //获取 GameplayEffect 规格和标签
     // =========================
     const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
@@ -86,12 +86,17 @@ void UGameplayEEC_Damage::Execute_Implementation(
     EvalParams.TargetTags = TargetTags;
 
     // =========================
-    // 3️⃣ 获取基础伤害值
+    //获取基础伤害值
     // =========================
-    float Damage = Spec.GetSetByCallerMagnitude(GameplayTagsInstance::GetInstance().Damage);
-
+	float Damage = 0 ;	
+	for (FGameplayTag Tag : GameplayTagsInstance::GetInstance().DamageTypes)
+	{
+		const float DamageTypeValue = Spec.GetSetByCallerMagnitude(Tag);
+		Damage += DamageTypeValue;
+	}
+	
     // =========================
-    // 4️⃣ 计算目标属性：格挡、护甲、暴击抵抗等
+    // 计算目标属性：格挡、护甲、暴击抵抗等
     // =========================
     float TargetBlockChance = 0.f;
     ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvalParams, TargetBlockChance);
@@ -118,7 +123,7 @@ void UGameplayEEC_Damage::Execute_Implementation(
     TargetCriticalHitResistance = FMath::Max(0.f, TargetCriticalHitResistance);
 
     // =========================
-    // 5️⃣ 获取伤害计算曲线系数
+    // 获取伤害计算曲线系数
     // =========================
     const UCharacterClassInfo* CharacterClassInfo = UGASBlueprintFunctionLibrary::GetCharacterClassInfo(SourceAvatar);
 
@@ -129,27 +134,28 @@ void UGameplayEEC_Damage::Execute_Implementation(
     const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCombatInterface->GetPlayerLevel());
     const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCombatInterface->GetPlayerLevel());
     const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+	
 
     // =========================
-    // 6️⃣ 格挡判定
-    // =========================
-    const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
-    if (bBlocked)
-    {
-        Damage /= 2.f; // 格挡后伤害减半
-    }
-
-    // =========================
-    // 7️⃣ 护甲与护甲穿透计算
+    //  护甲与护甲穿透计算
     // =========================
     const float EffectiveArmor = TargetArmor * (100 - SourceArmorPenetration * ArmorPenetrationCoefficient) / 100.f;
     Damage *= (100 - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
 
     // =========================
-    // 8️⃣ 暴击判定
+    // 暴击判定
     // =========================
     const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
     const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
+
+	// =========================
+	// 格挡判定
+	// =========================
+	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
+	if (bBlocked)
+	{
+		Damage /= 2.f; // 格挡后伤害减半
+	}
 
     if (bCriticalHit)
     {
@@ -157,7 +163,7 @@ void UGameplayEEC_Damage::Execute_Implementation(
     }
 
     // =========================
-    // 9️⃣ 输出伤害
+    // 输出伤害
     // =========================
     const FGameplayModifierEvaluatedData EvaluatedData(
         UMyAttributeSet::GetIncomingDamageAttribute(),
@@ -166,7 +172,7 @@ void UGameplayEEC_Damage::Execute_Implementation(
     );
 
 	// =========================
-	// 9️⃣ GE自定义上下文赋值字段
+	//  GE自定义上下文赋值字段
 	// =========================
 	UGASBlueprintFunctionLibrary::SetIsBlockedHit(EffectContextHandle,bBlocked);
 	UGASBlueprintFunctionLibrary::SetIsCriticalHit(EffectContextHandle,bCriticalHit);

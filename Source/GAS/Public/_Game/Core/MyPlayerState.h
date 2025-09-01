@@ -32,7 +32,7 @@ protected:
 
 private:
 	
-	UPROPERTY(VisibleAnywhere,ReplicatedUsing = OnRep_Level, Category="Attributes")
+	UPROPERTY(EditDefaultsOnly,ReplicatedUsing = OnRep_Level, Category="Attributes")
 	int32 Level = 1;
 
 	UFUNCTION()

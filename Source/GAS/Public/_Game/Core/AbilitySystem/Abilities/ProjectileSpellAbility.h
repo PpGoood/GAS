@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GASDamageGameplayAbility.h"
 #include "_Game/Core/AbilitySystem/Abilities/GASGameplayAbility.h"
 #include "ProjectileSpellAbility.generated.h"
 
@@ -11,7 +12,7 @@ class AProjectileBase;
  * 
  */
 UCLASS()
-class GAS_API UProjectileSpellAbility : public UGASGameplayAbility
+class GAS_API UProjectileSpellAbility : public UGASDamageGameplayAbility
 {
 	GENERATED_BODY()
 
@@ -19,9 +20,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Ability")
 	TSubclassOf<AProjectileBase> ProjectileClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Ability")
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
+	
 	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
