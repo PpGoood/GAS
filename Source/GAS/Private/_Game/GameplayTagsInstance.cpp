@@ -50,10 +50,10 @@ void GameplayTagsInstance::InitDamageTypesTags()
 	Damage_Arcane = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Arcane"), FString("魔法伤害"));
 	Damage_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Physical"), FString("物理伤害"));
 	
-	DamageTypes.Add(Damage_Fire);
-	DamageTypes.Add(Damage_Lightning);
-	DamageTypes.Add(Damage_Arcane);
-	DamageTypes.Add(Damage_Physical);
+	DamageTypesToResistances.Add(Damage_Arcane, Attributes_Resistance_Arcane);
+	DamageTypesToResistances.Add(Damage_Lightning, Attributes_Resistance_Lightning);
+	DamageTypesToResistances.Add(Damage_Physical, Attributes_Resistance_Physical);
+	DamageTypesToResistances.Add(Damage_Fire, Attributes_Resistance_Fire);
 }
 
 void GameplayTagsInstance::InitUILayoutsTags()

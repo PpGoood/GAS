@@ -19,6 +19,10 @@ struct SDamageStatics
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitChance);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitDamage);
 	DECLARE_ATTRIBUTE_CAPTUREDEF(CriticalHitResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(FireResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(LightningResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(ArcaneResistance);
+	DECLARE_ATTRIBUTE_CAPTUREDEF(PhysicalResistance);
 	
 	//等价与
 	// FProperty* ArmorProperty;
@@ -32,6 +36,10 @@ struct SDamageStatics
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UMyAttributeSet, CriticalHitChance, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UMyAttributeSet, CriticalHitDamage, Source, false);
 		DEFINE_ATTRIBUTE_CAPTUREDEF(UMyAttributeSet, CriticalHitResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UMyAttributeSet, FireResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UMyAttributeSet, LightningResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UMyAttributeSet, ArcaneResistance, Target, false);
+		DEFINE_ATTRIBUTE_CAPTUREDEF(UMyAttributeSet, PhysicalResistance, Target, false);
 
 		//等价与
 		// ArmorProperty = FindFieldChecked<FProperty>(UMyAttributeSet::StaticClass(), GET_MEMBER_NAME_CHECKED(UMyAttributeSet, Armor));
@@ -55,12 +63,31 @@ UGameplayEEC_Damage::UGameplayEEC_Damage()
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitChanceDef);
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitDamageDef);
 	RelevantAttributesToCapture.Add(DamageStatics().CriticalHitResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().FireResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().LightningResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().ArcaneResistanceDef);
+	RelevantAttributesToCapture.Add(DamageStatics().PhysicalResistanceDef);
 }
 
 void UGameplayEEC_Damage::Execute_Implementation(
     const FGameplayEffectCustomExecutionParameters& ExecutionParams,
     FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
+	TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> TagsToCaptureDefs;
+	const GameplayTagsInstance& Tags = GameplayTagsInstance::GetInstance();
+		
+	TagsToCaptureDefs.Add(Tags.Attributes_Secondary_Armor, DamageStatics().ArmorDef);
+	TagsToCaptureDefs.Add(Tags.Attributes_Secondary_BlockChance, DamageStatics().BlockChanceDef);
+	TagsToCaptureDefs.Add(Tags.Attributes_Secondary_ArmorPenetration, DamageStatics().ArmorPenetrationDef);
+	TagsToCaptureDefs.Add(Tags.Attributes_Secondary_CriticalHitChance, DamageStatics().CriticalHitChanceDef);
+	TagsToCaptureDefs.Add(Tags.Attributes_Secondary_CriticalHitResistance, DamageStatics().CriticalHitResistanceDef);
+	TagsToCaptureDefs.Add(Tags.Attributes_Secondary_CriticalHitDamage, DamageStatics().CriticalHitDamageDef);
+
+	TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Arcane, DamageStatics().ArcaneResistanceDef);
+	TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Fire, DamageStatics().FireResistanceDef);
+	TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Lightning, DamageStatics().LightningResistanceDef);
+	TagsToCaptureDefs.Add(Tags.Attributes_Resistance_Physical, DamageStatics().PhysicalResistanceDef);
+	
     // =========================
     //获取源和目标能力系统组件与 Actor
     // =========================
@@ -81,45 +108,35 @@ void UGameplayEEC_Damage::Execute_Implementation(
     const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
     const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
 
-    FAggregatorEvaluateParameters EvalParams;
-    EvalParams.SourceTags = SourceTags;
-    EvalParams.TargetTags = TargetTags;
-
-    // =========================
-    //获取基础伤害值
-    // =========================
-	float Damage = 0 ;	
-	for (FGameplayTag Tag : GameplayTagsInstance::GetInstance().DamageTypes)
-	{
-		const float DamageTypeValue = Spec.GetSetByCallerMagnitude(Tag);
-		Damage += DamageTypeValue;
-	}
+    FAggregatorEvaluateParameters EvaluateParameters;
+    EvaluateParameters.SourceTags = SourceTags;
+    EvaluateParameters.TargetTags = TargetTags;
 	
     // =========================
     // 计算目标属性：格挡、护甲、暴击抵抗等
     // =========================
     float TargetBlockChance = 0.f;
-    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvalParams, TargetBlockChance);
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().BlockChanceDef, EvaluateParameters, TargetBlockChance);
     TargetBlockChance = FMath::Max(0.f, TargetBlockChance);
 
     float TargetArmor = 0.f;
-    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvalParams, TargetArmor);
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorDef, EvaluateParameters, TargetArmor);
     TargetArmor = FMath::Max(0.f, TargetArmor);
 
     float SourceArmorPenetration = 0.f;
-    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvalParams, SourceArmorPenetration);
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().ArmorPenetrationDef, EvaluateParameters, SourceArmorPenetration);
     SourceArmorPenetration = FMath::Max(0.f, SourceArmorPenetration);
 
     float SourceCriticalHitChance = 0.f;
-    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitChanceDef, EvalParams, SourceCriticalHitChance);
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitChanceDef, EvaluateParameters, SourceCriticalHitChance);
     SourceCriticalHitChance = FMath::Max(0.f, SourceCriticalHitChance);
 
     float SourceCriticalHitDamage = 0.f;
-    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitDamageDef, EvalParams, SourceCriticalHitDamage);
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitDamageDef, EvaluateParameters, SourceCriticalHitDamage);
     SourceCriticalHitDamage = FMath::Max(0.f, SourceCriticalHitDamage);
 
     float TargetCriticalHitResistance = 0.f;
-    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitResistanceDef, EvalParams, TargetCriticalHitResistance);
+    ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().CriticalHitResistanceDef, EvaluateParameters, TargetCriticalHitResistance);
     TargetCriticalHitResistance = FMath::Max(0.f, TargetCriticalHitResistance);
 
     // =========================
@@ -135,6 +152,33 @@ void UGameplayEEC_Damage::Execute_Implementation(
     const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCombatInterface->GetPlayerLevel());
     const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetCombatInterface->GetPlayerLevel());
 	
+	// =========================
+	//获取基础伤害值 减去伤害抗性
+	// =========================
+
+	float Damage = 0 ;
+	for (const TTuple<FGameplayTag, FGameplayTag>& Pair  : GameplayTagsInstance::GetInstance().DamageTypesToResistances)
+	{
+		const FGameplayTag DamageTypeTag = Pair.Key;
+		const FGameplayTag ResistanceTag = Pair.Value;
+		checkf(TagsToCaptureDefs.Contains(ResistanceTag), TEXT("[PeiLog]TagsToCaptureDefs doesn't contain Tag: [%s] in ExecCalc_Damage"), *ResistanceTag.ToString());
+		const FGameplayEffectAttributeCaptureDefinition CaptureDef = TagsToCaptureDefs[ResistanceTag];
+
+		float DamageTypeValue = Spec.GetSetByCallerMagnitude(Pair.Key, false);
+		if (DamageTypeValue <= 0.f)
+		{
+			continue;
+		}
+		
+		float Resistance = 0.f;
+		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(CaptureDef, EvaluateParameters, Resistance);
+		Resistance = FMath::Clamp(Resistance, 0.f, 100.f);
+
+		//抗性是按照百分比计算的
+		DamageTypeValue *= ( 100.f - Resistance ) / 100.f;
+
+		Damage += DamageTypeValue;
+	}
 
     // =========================
     //  护甲与护甲穿透计算
@@ -143,24 +187,27 @@ void UGameplayEEC_Damage::Execute_Implementation(
     Damage *= (100 - EffectiveArmor * EffectiveArmorCoefficient) / 100.f;
 
     // =========================
-    // 暴击判定
+    // 格挡暴击判定
     // =========================
     const float EffectiveCriticalHitChance = SourceCriticalHitChance - TargetCriticalHitResistance * CriticalHitResistanceCoefficient;
     const bool bCriticalHit = FMath::RandRange(1, 100) < EffectiveCriticalHitChance;
-
-	// =========================
-	// 格挡判定
-	// =========================
 	const bool bBlocked = FMath::RandRange(1, 100) < TargetBlockChance;
-	if (bBlocked)
-	{
-		Damage /= 2.f; // 格挡后伤害减半
-	}
-
+	
+	// =========================
+	// 暴击加成
+	// =========================
     if (bCriticalHit)
     {
         Damage = Damage * 2.f + SourceCriticalHitDamage; // 暴击加成
     }
+
+	// =========================
+	// 格挡减伤
+	// =========================
+	if (bBlocked)
+	{
+		Damage /= 2.f; // 格挡后伤害减半
+	}
 
     // =========================
     // 输出伤害
@@ -178,3 +225,5 @@ void UGameplayEEC_Damage::Execute_Implementation(
 	UGASBlueprintFunctionLibrary::SetIsCriticalHit(EffectContextHandle,bCriticalHit);
     OutExecutionOutput.AddOutputModifier(EvaluatedData);
 }
+
+

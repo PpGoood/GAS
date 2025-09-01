@@ -63,7 +63,7 @@ public:
 	FGameplayTag Damage_Lightning; //雷属性伤害 标签
 	FGameplayTag Damage_Arcane; //魔法伤害 标签
 	FGameplayTag Damage_Physical; //物理伤害 标签
-	TArray<FGameplayTag> DamageTypes;
+	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 	FGameplayTag Effects_HitReact; //受击效果 标签
 private:
 	// 私有构造函数和析构函数，防止外部创建实例
