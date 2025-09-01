@@ -38,6 +38,10 @@ public:
 	FGameplayTag Attributes_Secondary_ManaRegeneration;
 	FGameplayTag Attributes_Secondary_MaxHealth;  // Attributes.Secondary.MaxHealth
 	FGameplayTag Attributes_Secondary_MaxMana;    // Attributes.Secondary.MaxMana
+	FGameplayTag Attributes_Resistance_Fire;
+	FGameplayTag Attributes_Resistance_Lightning;
+	FGameplayTag Attributes_Resistance_Arcane;
+	FGameplayTag Attributes_Resistance_Physical;
 	FGameplayTag Message_HealthCrystal;           // Message.HealthCrystal
 	FGameplayTag Message_HealthPotion;            // Message.HealthPotion
 	FGameplayTag Message_ManaCrystal;             // Message.ManaCrystal
@@ -55,11 +59,21 @@ public:
 	FGameplayTag InputTag_3;
 	FGameplayTag InputTag_4;
 	FGameplayTag Damage;
-	FGameplayTag Damage_Fire;
+	FGameplayTag Damage_Fire; //火属性伤害 标签
+	FGameplayTag Damage_Lightning; //雷属性伤害 标签
+	FGameplayTag Damage_Arcane; //魔法伤害 标签
+	FGameplayTag Damage_Physical; //物理伤害 标签
 	TArray<FGameplayTag> DamageTypes;
-	FGameplayTag Effects_HitReact; //受击 标签
+	FGameplayTag Effects_HitReact; //受击效果 标签
 private:
 	// 私有构造函数和析构函数，防止外部创建实例
 	GameplayTagsInstance() = default;
 	~GameplayTagsInstance() = default;
+
+	void InitAttributesTags();
+	void InitDamageTypesTags();
+	void InitUILayoutsTags();
+	void InitInputTags();
+	void InitMessageTags();
+	void InitEffectsTags();
 };

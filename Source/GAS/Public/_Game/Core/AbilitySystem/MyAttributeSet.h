@@ -137,6 +137,23 @@ public:
 	FGameplayAttributeData MaxMana;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, MaxMana);
 
+	//增加抗性
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category="Custom|Secondary Attributes")
+	FGameplayAttributeData FireResistance; // 火属性抗性
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, FireResistance);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningResistance, Category="Custom|Secondary Attributes")
+	FGameplayAttributeData LightningResistance; // 雷属性抗性
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, LightningResistance);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ArcaneResistance, Category="Custom|Secondary Attributes")
+	FGameplayAttributeData ArcaneResistance; // 魔法抗性
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, ArcaneResistance);
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalResistance, Category="Custom|Secondary Attributes")
+	FGameplayAttributeData PhysicalResistance; // 物理抗性
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, PhysicalResistance);
+	
 	//此数据只在服务端做计算，不用复制
 	UPROPERTY(BlueprintReadOnly,Category="Custom|Mera Attributes")
 	FGameplayAttributeData IncomingDamage;
@@ -190,6 +207,17 @@ public:
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) const;
 
+	UFUNCTION()
+	void OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const;
+
+	UFUNCTION()
+	void OnRep_LightningResistance(const FGameplayAttributeData& OldLightningResistance) const;
+
+	UFUNCTION()
+	void OnRep_ArcaneResistance(const FGameplayAttributeData& OldArcaneResistance) const;
+
+	UFUNCTION()
+	void OnRep_PhysicalResistance(const FGameplayAttributeData& OldPhysicalResistance) const;
 private:
 	static void SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props);
 

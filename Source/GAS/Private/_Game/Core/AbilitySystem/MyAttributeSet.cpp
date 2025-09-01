@@ -15,28 +15,33 @@
 UMyAttributeSet::UMyAttributeSet()
 {
 	// 由GE进行初始化不需要每次编译C++代码
-	//InitHealth(1.f);
-	// InitMaxHealth(100.f);
-	//InitMana(1.f);
-	// InitMaxMana(100.f);
-	//Test
+	
+	//将方法添加到Map中，map作为回调方法的载体
+	const auto& Tags = GameplayTagsInstance::GetInstance();
 
-	//将委托添加到Map中
+	// Primary
+	TagsToAttributes.Add(Tags.Attributes_Primary_Strength,        &GetStrengthAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Primary_Intelligence,    &GetIntelligenceAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Primary_Resilience,      &GetResilienceAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Primary_Vigor,           &GetVigorAttribute);
 
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Primary_Strength, &GetStrengthAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Primary_Intelligence, &GetIntelligenceAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Primary_Resilience, &GetResilienceAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Primary_Vigor, &GetVigorAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_Armor, &GetArmorAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_ArmorPenetration, &GetArmorPenetrationAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_BlockChance, &GetBlockChanceAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_CriticalHitChance, &GetCriticalHitChanceAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_CriticalHitDamage, &GetCriticalHitDamageAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_CriticalHitResistance, &GetCriticalHitResistanceAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_HealthRegeneration, &GetHealthRegenerationAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_ManaRegeneration, &GetManaRegenerationAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_MaxHealth, &GetMaxHealthAttribute);
-	TagsToAttributes.Add(GameplayTagsInstance::GetInstance().Attributes_Secondary_MaxMana, &GetMaxManaAttribute);
+	// Secondary
+	TagsToAttributes.Add(Tags.Attributes_Secondary_Armor,               &GetArmorAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Secondary_ArmorPenetration,    &GetArmorPenetrationAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Secondary_BlockChance,         &GetBlockChanceAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Secondary_CriticalHitChance,   &GetCriticalHitChanceAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Secondary_CriticalHitDamage,   &GetCriticalHitDamageAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Secondary_CriticalHitResistance,&GetCriticalHitResistanceAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Secondary_HealthRegeneration,  &GetHealthRegenerationAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Secondary_ManaRegeneration,    &GetManaRegenerationAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Secondary_MaxHealth,           &GetMaxHealthAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Secondary_MaxMana,             &GetMaxManaAttribute);
+
+	// Resistance
+	TagsToAttributes.Add(Tags.Attributes_Resistance_Fire,      &GetFireResistanceAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Resistance_Lightning, &GetLightningResistanceAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Resistance_Arcane,    &GetArcaneResistanceAttribute);
+	TagsToAttributes.Add(Tags.Attributes_Resistance_Physical,  &GetPhysicalResistanceAttribute);
 }
 
 void UMyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -61,6 +66,12 @@ void UMyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutL
 	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet, ManaRegeneration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
+
+	//抗性属性
+	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet, FireResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet, LightningResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet, ArcaneResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UMyAttributeSet, PhysicalResistance, COND_None, REPNOTIFY_Always);
 }
 //确保传入的值合法 NewValue是计算返回的值，并不会改变他本身的修饰符 所以下面还需要对本身的值进行Clamp
 void UMyAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -124,6 +135,53 @@ void UMyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 			}
 		}
 		
+	}
+}
+
+//将信息用结构体记录
+void UMyAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props)
+{
+	//Source 效果的所有者   Target 效果应用的目标
+	Props.EffectContextHandle = Data.EffectSpec.GetContext();
+	Props.SourceASC = Props.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent(); //获取效果所有者的ASC
+
+	//获取效果所有者的相关对象
+	if(IsValid(Props.SourceASC) && Props.SourceASC->AbilityActorInfo.IsValid() && Props.SourceASC->AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.SourceAvatarActor = Props.SourceASC->AbilityActorInfo->AvatarActor.Get(); //获取Actor
+		Props.SourceController = Props.SourceASC->AbilityActorInfo->PlayerController.Get(); //获取PlayerController
+		if(Props.SourceController == nullptr && Props.SourceAvatarActor != nullptr)
+		{
+			if(const APawn* Pawn = Cast<APawn>(Props.SourceAvatarActor))
+			{
+				Props.SourceController = Pawn->GetController();
+			}
+		}
+
+		if(Props.SourceController)
+		{
+			Props.SourceCharacter = Cast<ACharacter>(Props.SourceController->GetPawn());
+		}
+	}
+
+	if(Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	{
+		Props.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
+		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
+		Props.TargetCharacter = Cast<ACharacter>(Props.TargetAvatarActor);
+		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
+	}
+}
+
+void UMyAttributeSet::ShowDamageText(const FEffectProperties& Props,const float Damage,bool bBlockedHit,bool bCriticalHit)
+{
+	UE_LOG(LogTemp, Display, TEXT("[PeiLog] ShowDamageText - Damage: %.2f, BlockedHit: %s, CriticalHit: %s"),
+		  Damage, 
+		  bBlockedHit ? TEXT("True") : TEXT("False"), 
+		  bCriticalHit ? TEXT("True") : TEXT("False"));
+	if(AGASPlayerController* PC = Cast<AGASPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+	{
+		PC->ClientShowDamageNumber(Damage, Props.TargetCharacter,bBlockedHit,bCriticalHit); //调用显示伤害数字
 	}
 }
 
@@ -208,50 +266,22 @@ void UMyAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldMaxMana) co
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UMyAttributeSet, MaxMana, OldMaxMana);
 }
 
-//将信息用结构体记录
-void UMyAttributeSet::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FEffectProperties& Props)
+void UMyAttributeSet::OnRep_FireResistance(const FGameplayAttributeData& OldFireResistance) const
 {
-	//Source 效果的所有者   Target 效果应用的目标
-	Props.EffectContextHandle = Data.EffectSpec.GetContext();
-	Props.SourceASC = Props.EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent(); //获取效果所有者的ASC
-
-	//获取效果所有者的相关对象
-	if(IsValid(Props.SourceASC) && Props.SourceASC->AbilityActorInfo.IsValid() && Props.SourceASC->AbilityActorInfo->AvatarActor.IsValid())
-	{
-		Props.SourceAvatarActor = Props.SourceASC->AbilityActorInfo->AvatarActor.Get(); //获取Actor
-		Props.SourceController = Props.SourceASC->AbilityActorInfo->PlayerController.Get(); //获取PlayerController
-		if(Props.SourceController == nullptr && Props.SourceAvatarActor != nullptr)
-		{
-			if(const APawn* Pawn = Cast<APawn>(Props.SourceAvatarActor))
-			{
-				Props.SourceController = Pawn->GetController();
-			}
-		}
-
-		if(Props.SourceController)
-		{
-			Props.SourceCharacter = Cast<ACharacter>(Props.SourceController->GetPawn());
-		}
-	}
-
-	if(Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
-	{
-		Props.TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
-		Props.TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
-		Props.TargetCharacter = Cast<ACharacter>(Props.TargetAvatarActor);
-		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Props.TargetAvatarActor);
-	}
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMyAttributeSet, FireResistance, OldFireResistance);
 }
 
-void UMyAttributeSet::ShowDamageText(const FEffectProperties& Props,const float Damage,bool bBlockedHit,bool bCriticalHit)
+void UMyAttributeSet::OnRep_LightningResistance(const FGameplayAttributeData& OldLightningResistance) const
 {
-	UE_LOG(LogTemp, Display, TEXT("[PeiLog] ShowDamageText - Damage: %.2f, BlockedHit: %s, CriticalHit: %s"),
-		  Damage, 
-		  bBlockedHit ? TEXT("True") : TEXT("False"), 
-		  bCriticalHit ? TEXT("True") : TEXT("False"));
-	if(AGASPlayerController* PC = Cast<AGASPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
-	{
-		PC->ClientShowDamageNumber(Damage, Props.TargetCharacter,bBlockedHit,bCriticalHit); //调用显示伤害数字
-	}
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMyAttributeSet, LightningResistance, OldLightningResistance);
 }
 
+void UMyAttributeSet::OnRep_ArcaneResistance(const FGameplayAttributeData& OldArcaneResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMyAttributeSet, ArcaneResistance, OldArcaneResistance);
+}
+
+void UMyAttributeSet::OnRep_PhysicalResistance(const FGameplayAttributeData& OldPhysicalResistance) const
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UMyAttributeSet, PhysicalResistance, OldPhysicalResistance);
+}
