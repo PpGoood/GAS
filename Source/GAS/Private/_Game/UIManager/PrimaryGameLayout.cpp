@@ -36,11 +36,15 @@ void UPrimaryGameLayout::OnIsDormantChanged()
 
 void UPrimaryGameLayout::FindAndRemoveWidgetFromLayer(UCommonActivatableWidget* ActivatableWidget)
 {
+	//Todo可优化，目前是知道ui是属于哪个层级的
 	// We're not sure what layer the widget is on so go searching.
 	for (const auto& LayerKVP : Layers)
 	{
 		LayerKVP.Value->RemoveWidget(*ActivatableWidget);
 	}
+	UE_LOG(LogTemp, Warning, TEXT("[PeiLog]Widget %s removed. Current visibility: %s"), 
+			   *ActivatableWidget->GetName(),
+			   *UEnum::GetValueAsString(ActivatableWidget->GetVisibility()));
 }
 
 UCommonActivatableWidgetContainerBase* UPrimaryGameLayout::GetLayerWidget(FGameplayTag LayerName)
