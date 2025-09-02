@@ -57,12 +57,12 @@ void AGASPlayerController::BeginPlay()
 	//显示鼠标
 	bShowMouseCursor = true;
 	DefaultMouseCursor = EMouseCursor::Default;
-
-	FInputModeGameAndUI InputModeData;
-	//鼠标不锁定 开始游戏后不隐藏能自由移动
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	InputModeData.SetHideCursorDuringCapture(false);
-	SetInputMode(InputModeData);
+	//
+	// FInputModeGameAndUI InputModeData;
+	// //鼠标不锁定 开始游戏后不隐藏能自由移动
+	// InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	// InputModeData.SetHideCursorDuringCapture(false);
+	// SetInputMode(InputModeData);
 }
 
 void AGASPlayerController::SetupInputComponent()
