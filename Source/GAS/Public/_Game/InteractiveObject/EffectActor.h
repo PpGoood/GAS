@@ -55,33 +55,37 @@ protected:
 	UFUNCTION(BlueprintCallable) 
 	void OnEndOverlap(AActor* TargetActor);
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	//敌人是否能够拾取此物体
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Apply Effects")
+	bool bApplyEffectsToEnemies = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Apply Effects")
 	EDestroyPolicy DestroyPolicy = EDestroyPolicy::None;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Apply Effects")
 	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass; //生成GameplayEffect的类
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Apply Effects")
 	EEffectApplicationPolicy InstantEffectApplicationPolicy = EEffectApplicationPolicy::None;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Apply Effects")
 	TSubclassOf<UGameplayEffect> DurationGameplayEffectClass; //生成具有一定持续时间的GameplayEffect的类
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Apply Effects")
 	EEffectApplicationPolicy DurationEffectApplicationPolicy = EEffectApplicationPolicy::None;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Apply Effects")
 	TSubclassOf<UGameplayEffect> InfinityGameplayEffectClass; //生成具有一定持续时间的GameplayEffect的类
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Apply Effects")
 	EEffectApplicationPolicy InfinityEffectApplicationPolicy = EEffectApplicationPolicy::None;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Apply Effects")
 	EEffectRemovalPolicy InfinityEffectRemovalPolicy = EEffectRemovalPolicy::RemoveOnEndOverlap;
 
 	//用于存储当前已经激活的GameplayEffect的句柄的map
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Apply Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Apply Effects")
 	float ActorLevel = 1.f;
 };

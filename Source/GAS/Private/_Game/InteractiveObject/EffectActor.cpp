@@ -45,6 +45,8 @@ void AEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGamepla
 
 void AEffectActor::OnOverlap(AActor* TargetActor)
 {
+	if(TargetActor->ActorHasTag("Enemy") && !bApplyEffectsToEnemies) return;
+	
 	if(InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
@@ -68,6 +70,8 @@ void AEffectActor::OnOverlap(AActor* TargetActor)
 
 void AEffectActor::OnEndOverlap(AActor* TargetActor)
 {
+	if(TargetActor->ActorHasTag("Enemy") && !bApplyEffectsToEnemies) return;
+	
 	//添加效果
 	if(InstantEffectApplicationPolicy == EEffectApplicationPolicy::ApplyOnEndOverlap)
     	{
