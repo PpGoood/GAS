@@ -57,6 +57,7 @@ protected:
 	TObjectPtr<AGASAIController> GASAIController;
 
 	virtual void PossessedBy(AController* NewController) override;
+	virtual void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount) override;
 	virtual void InitAbilityActorInfo() override;
 	virtual void InitDefaultAttributes() const override;
 	virtual void InitDefaultAbilities() override;
@@ -68,3 +69,5 @@ private:
 	void BroadcastInitialValues();
 	void BindCallbacksToDependencies();
 };
+
+

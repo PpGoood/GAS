@@ -88,6 +88,9 @@ void AEnemyCharacter::PossessedBy(AController* NewController)
 	GASAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	//运行行为树
 	GASAIController->RunBehaviorTree(BehaviorTree);
+
+	GASAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"),false);
+	GASAIController->GetBlackboardComponent()->SetValueAsBool(FName("MeleeAttacker"),CharacterClassType == ECharacterClassType::Warrior);
 }
 
 void AEnemyCharacter::InitAbilityActorInfo()
@@ -131,4 +134,10 @@ void AEnemyCharacter::BindCallbacksToDependencies()
 			OnMaxHealthChanged.Broadcast(Data.NewValue);  
 		});
 
+}
+
+void AEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	Super::HitReactTagChanged(CallbackTag, NewCount);
+	GASAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"),false);
 }
