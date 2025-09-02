@@ -19,7 +19,11 @@ void UProjectileSpellAbility::ActivateAbility(const FGameplayAbilitySpecHandle H
 
 void UProjectileSpellAbility::SpawnProjectile(const FVector& ProjectileTargetLocation)
 {
-	if (!GetAvatarActorFromActorInfo()->HasAuthority())return;
+	const bool bIsServer = GetAvatarActorFromActorInfo()->HasAuthority();
+	
+	UE_LOG(LogTemp, Error, TEXT("[PeiLog]bIsServer: %s"), bIsServer ? TEXT("True") : TEXT("False"));
+    
+	if (!bIsServer) return;
 	
 	ICombatInterface* CombatInterFace = Cast<ICombatInterface>(GetAvatarActorFromActorInfo());
 	
@@ -27,7 +31,7 @@ void UProjectileSpellAbility::SpawnProjectile(const FVector& ProjectileTargetLoc
 	
 	const FVector SocketLocation = CombatInterFace->GetCombatSocketLocation();
 	FRotator SpawnRotation = (ProjectileTargetLocation - SocketLocation).Rotation();
-	SpawnRotation.Pitch = 0.f;
+	// SpawnRotation.Pitch = 0.f;
 	
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(SocketLocation);

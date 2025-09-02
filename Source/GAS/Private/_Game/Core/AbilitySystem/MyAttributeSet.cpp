@@ -179,7 +179,7 @@ void UMyAttributeSet::ShowDamageText(const FEffectProperties& Props,const float 
 		  Damage, 
 		  bBlockedHit ? TEXT("True") : TEXT("False"), 
 		  bCriticalHit ? TEXT("True") : TEXT("False"));
-	if(AGASPlayerController* PC = Cast<AGASPlayerController>(UGameplayStatics::GetPlayerController(Props.SourceCharacter, 0)))
+	if(AGASPlayerController* PC = Cast<AGASPlayerController>(Props.SourceCharacter->Controller))
 	{
 		PC->ClientShowDamageNumber(Damage, Props.TargetCharacter,bBlockedHit,bCriticalHit); //调用显示伤害数字
 	}

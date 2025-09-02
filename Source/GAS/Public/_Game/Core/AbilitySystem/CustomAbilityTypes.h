@@ -22,7 +22,7 @@ public:
 	/** 返回用于序列化的实际结构体 */
 	virtual UScriptStruct* GetScriptStruct() const override
 	{
-		return FGameplayEffectContext::StaticStruct();
+		return FCustomGameplayEffectContext::StaticStruct();
 	}
 
 	/** 用于序列化类的参数 因为新增了两个字段*/
@@ -31,7 +31,7 @@ public:
 	
 	virtual FGameplayEffectContext* Duplicate() const
 	{
-		FGameplayEffectContext* NewContext = new FGameplayEffectContext();
+		FGameplayEffectContext* NewContext = new FCustomGameplayEffectContext();
 		*NewContext = *this;
 		if (GetHitResult())
 		{

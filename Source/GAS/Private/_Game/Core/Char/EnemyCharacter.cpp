@@ -60,6 +60,7 @@ void AEnemyCharacter::InitDefaultAttributes() const
 
 void AEnemyCharacter::InitDefaultAbilities()
 {
+	if (!HasAuthority())return;
 	UGASBlueprintFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
 }
 
