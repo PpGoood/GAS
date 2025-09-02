@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/WidgetComponent.h"
 #include "_Game/Core/AbilitySystem/Data/CharacterClassInfo.h"
+#include "_Game/Core/AI/GASAIController.h"
 #include "_Game/Core/Char/GasCharacterBase.h"
 #include "_Game/Interaction/CombatInterface.h"
 #include "_Game/Interaction/EnemyInterface.h"
@@ -48,7 +49,14 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Widget")
 	TObjectPtr<UWidgetComponent> HealthBar;
+
+	UPROPERTY(EditAnywhere, Category="Custom|AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
 	
+	UPROPERTY()
+	TObjectPtr<AGASAIController> GASAIController;
+
+	virtual void PossessedBy(AController* NewController) override;
 	virtual void InitAbilityActorInfo() override;
 	virtual void InitDefaultAttributes() const override;
 	virtual void InitDefaultAbilities() override;

@@ -3,6 +3,8 @@
 
 #include "_Game/Core/Char/EnemyCharacter.h"
 #include "DrawDebugHelpers.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GAS/GAS.h"
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 #include "_Game/Core/AbilitySystem/MyAttributeSet.h"
@@ -68,6 +70,19 @@ void AEnemyCharacter::Die()
 {
 	SetLifeSpan(LifeSpan);
 	Super::Die();
+}
+
+void AEnemyCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if(!HasAuthority()) return;
+	//AIController是在服务器端执行的，所以需要在PossessedBy函数回调中获取服务器返回
+	GASAIController = Cast<AGASAIController>(NewController);
+	//初始化行为树上设置的黑板
+	GASAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	//运行行为树
+	GASAIController->RunBehaviorTree(BehaviorTree);
 }
 
 void AEnemyCharacter::InitAbilityActorInfo()
