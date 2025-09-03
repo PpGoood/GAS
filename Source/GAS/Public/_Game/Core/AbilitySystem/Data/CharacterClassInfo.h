@@ -9,13 +9,12 @@
 class UGameplayAbility;
 class UGameplayEffect;
 
-//角色职业类型的枚举
 UENUM(BlueprintType)
 enum class ECharacterClassType : uint8
 {
-	Elementalist, //法师
-	Warrior, //战士
-	Ranger //游侠
+	Elementalist UMETA(DisplayName = "Elementalist", ToolTip = "法师"),
+	Warrior UMETA(DisplayName = "Warrior", ToolTip = "战士"),
+	Ranger UMETA(DisplayName = "Ranger", ToolTip = "游侠")
 };
 
 USTRUCT(BlueprintType)
