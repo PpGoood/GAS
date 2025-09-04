@@ -13,6 +13,7 @@ void GameplayTagsInstance::InitNativeGameplayTags()
 	InitDamageTypesTags();
 	InitMessageTags();
 	InitEffectsTags();
+	InitEnvironmentTags();
 }
 
 void GameplayTagsInstance::InitAttributesTags()
@@ -88,6 +89,13 @@ void GameplayTagsInstance::InitMessageTags()
 void GameplayTagsInstance::InitEffectsTags()
 {
 	Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.HitReact"), FString("受到攻击时，赋予的标签"));
+}
+
+void GameplayTagsInstance::InitEnvironmentTags()
+{
+	Environment = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Environment"), FString("环境类型"));
+	Environment_LightObject = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Environment.LightObject"), FString("轻物体"));
+	Environment_MediumObject = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Environment.MediumObject"), FString("中等物体"));
 }
 
 

@@ -65,6 +65,9 @@ public:
 	FGameplayTag Damage_Physical; //物理伤害 标签
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 	FGameplayTag Effects_HitReact; //受击效果 标签
+	FGameplayTag Environment;
+	FGameplayTag Environment_LightObject;
+	FGameplayTag Environment_MediumObject;
 private:
 	// 私有构造函数和析构函数，防止外部创建实例
 	GameplayTagsInstance() = default;
@@ -76,4 +79,5 @@ private:
 	void InitInputTags();
 	void InitMessageTags();
 	void InitEffectsTags();
+	void InitEnvironmentTags();
 };
