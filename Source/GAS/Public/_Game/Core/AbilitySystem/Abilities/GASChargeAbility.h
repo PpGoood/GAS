@@ -31,19 +31,20 @@ public:
 
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Charge Ability|Tag")
+	FGameplayTag ChargeStateTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Charge Ability|Tag")
+	FGameplayTag ActiveAbilityTag;
+	
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 	// 释放技能时的函数
 	void ReleaseCharge();
-	
-	virtual void ActivateChargeAbility(){};
-	
+	virtual void ActivateChargeAbility();
 	// 在蓄力时持续调用
 	void ChargeTick();
-	
-
 	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
-
 	virtual void InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 };

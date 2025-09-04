@@ -68,6 +68,14 @@ public:
 	FGameplayTag Environment;
 	FGameplayTag Environment_LightObject;
 	FGameplayTag Environment_MediumObject;
+
+	FGameplayTag State;
+	FGameplayTag State_ChargingWind;
+	FGameplayTag State_GustActive;
+
+	FGameplayTag Buff;
+	FGameplayTag Buff_WindMastery;
+	
 private:
 	// 私有构造函数和析构函数，防止外部创建实例
 	GameplayTagsInstance() = default;
@@ -80,4 +88,6 @@ private:
 	void InitMessageTags();
 	void InitEffectsTags();
 	void InitEnvironmentTags();
+	void InitStateTags();
+	void InitBuffTags();
 };

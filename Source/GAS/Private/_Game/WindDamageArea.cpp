@@ -39,7 +39,10 @@ void AWindDamageArea::BeginPlay()
 void AWindDamageArea::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	//忽略自己
+	if (OtherActor == GetInstigator())return;
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Wind碰撞到了"));  // 输出在屏幕上
+	
 	AEnvironmentBaseActor* Environment = Cast<AEnvironmentBaseActor>(OtherActor);
 	if (Environment == nullptr)return;
 

@@ -9,6 +9,7 @@
 
 void UWindChargeAbility::ActivateChargeAbility()
 {
+	Super::ActivateChargeAbility();
 	SpawnDamageArea();
 }
 

@@ -3,6 +3,9 @@
 
 #include "_Game/Core/AbilitySystem/Abilities/GASChargeAbility.h"
 
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+
 UGASChargeAbility::UGASChargeAbility()
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
@@ -18,20 +21,37 @@ void UGASChargeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	{
 		return;
 	}
-
+	//手动管理标签需要双端都同步不能
+	UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+	SourceASC->AddLooseGameplayTag(ChargeStateTag);
+	
 	bIsCharging = true;
 	CurrentChargeTime = 0.0f;  // 重置蓄力时间
 }
 
 void UGASChargeAbility::ReleaseCharge()
 {
+	UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+	SourceASC->RemoveLooseGameplayTag(ChargeStateTag);
 	
-	// 在这里可以执行技能的释放逻辑
-	// 例如：对敌人造成伤害，施加状态效果等
 	ActivateChargeAbility();
-	// 结束能力的激活
 	bIsCharging = false;
 	CurrentChargeTime = 0.0f;
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true,false);
+}
+
+void UGASChargeAbility::ActivateChargeAbility()
+{
+	UE_LOG(LogTemp, Display, TEXT("[PeiLog]111Activating Charge Ability"));
+	UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
+	SourceASC->AddLooseGameplayTag(ActiveAbilityTag);
+	//0.3秒后移除此标签
+	FTimerHandle TimerHandle;
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, [this,SourceASC]()
+	{
+		// 移除标签
+		SourceASC->RemoveLooseGameplayTag(ActiveAbilityTag);
+	}, 0.3f, false);
 }
 
 void UGASChargeAbility::ChargeTick()
