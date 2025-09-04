@@ -8,12 +8,6 @@ AEnvironmentBaseActor::AEnvironmentBaseActor()
 {
 	PrimaryActorTick.bCanEverTick = false;
 	bReplicates = true;
-}
-
-void AEnvironmentBaseActor::BeginPlay()
-{
-	Super::BeginPlay();
-
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(FName("MeshComponent"));
 	SetRootComponent(MeshComponent);
 
@@ -31,7 +25,6 @@ void AEnvironmentBaseActor::BeginPlay()
 	MeshComponent->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);  // 对静态物体产生阻挡
 	MeshComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Block);  // 对角色物体产生阻挡
 }
-
 
 void AEnvironmentBaseActor::KnockbackEffect(FVector Direction, float Strength)
 {

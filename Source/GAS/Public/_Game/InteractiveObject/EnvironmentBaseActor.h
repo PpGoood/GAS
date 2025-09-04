@@ -25,7 +25,4 @@ public:
 protected:
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,category="Custom|Environment")
 	TObjectPtr<UStaticMeshComponent> MeshComponent;
-	
-	
-	virtual void BeginPlay() override;
 };
