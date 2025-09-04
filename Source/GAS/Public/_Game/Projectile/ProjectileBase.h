@@ -23,6 +23,7 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UProjectileMovementComponent> ProjectileMovementComponent;
 
+	//生成的时候暴露给外面的属性
 	UPROPERTY(BlueprintReadWrite,meta=( ExposeOnSpawn = true ))
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
 protected:

@@ -26,31 +26,33 @@ void UMyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 
 void UMyAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
 {
-	if (!InputTag.IsValid())return;
-
+	if (!InputTag.IsValid()) return;
+	
+	FScopedAbilityListLock ActiveScopeLoc(*this);
+	
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		UE_LOG(LogTemp,Log,TEXT("[PeiLog]UMyAbilitySystemComponent 的tag[%s] %d"),*InputTag.ToString(),AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag));
-		if (!AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag))return;
-
-		//用于触发InputPressed回调，在GA可以实现 激活的第一次不会触发因为会判断IsActive
-		AbilitySpecInputPressed(AbilitySpec);
-		if (!AbilitySpec.IsActive())
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))
 		{
-			TryActivateAbility(AbilitySpec.Handle);
+			AbilitySpecInputPressed(AbilitySpec);
+			if (!AbilitySpec.IsActive())
+			{
+				TryActivateAbility(AbilitySpec.Handle);
+			}
 		}
 	}
 }
 
 void UMyAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
 {
-	if (!InputTag.IsValid())return;
-
+	if (!InputTag.IsValid()) return;
+	FScopedAbilityListLock ActiveScopeLoc(*this);
 	for (FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 	{
-		if (!AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag))return;
-		//用于触发InputReleased回调，在GA可以实现
-		AbilitySpecInputReleased(AbilitySpec);
+		if (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag) && AbilitySpec.IsActive())
+		{
+			AbilitySpecInputReleased(AbilitySpec);
+		}
 	}
 }
 
