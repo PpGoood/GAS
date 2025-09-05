@@ -12,7 +12,7 @@ local M = UnLua.Class()
 
 function M:WidgetControllerSet_Event()
     -- 设置所有需要的控件的 WidgetController
-    local widgets = { self.WBP_HealthGlobe, self.WBP_ManaGlobe }
+    local widgets = { self.WBP_HealthGlobe, self.WBP_ManaGlobe,self.WBP_SkillItem }
     for _, widget in ipairs(widgets) do
         widget:SetWidgetController(self.WidgetController)
     end
