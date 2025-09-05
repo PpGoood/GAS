@@ -5,6 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 
 UGASChargeAbility::UGASChargeAbility()
 {
@@ -77,6 +78,8 @@ void UGASChargeAbility::InputPressed(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
 	ChargeTick();
+	UMyAbilitySystemComponent* SourceASC = Cast<UMyAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo()));
+	SourceASC->OnAbilityChargeChanged.Broadcast(CurrentChargeTime,MaxChargeTime);
 }
 
 void UGASChargeAbility::InputReleased(const FGameplayAbilitySpecHandle Handle,
@@ -84,4 +87,6 @@ void UGASChargeAbility::InputReleased(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::InputReleased(Handle, ActorInfo, ActivationInfo);
 	ReleaseCharge();
+	UMyAbilitySystemComponent* SourceASC = Cast<UMyAbilitySystemComponent>(UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo()));
+	SourceASC->OnAbilityChargeChanged.Broadcast(CurrentChargeTime,MaxChargeTime);
 }

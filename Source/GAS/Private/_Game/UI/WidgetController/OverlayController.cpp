@@ -57,6 +57,11 @@ void UOverlayController::BindCallbacksToDependencies()
 			}
 		}
 	});
+
+	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->OnAbilityChargeChanged.AddLambda([this](float ChargeTime,float MaxChargeTime)
+	{
+		OnControllerChargeChanged.Broadcast(ChargeTime,MaxChargeTime);
+	});
 }
 
 

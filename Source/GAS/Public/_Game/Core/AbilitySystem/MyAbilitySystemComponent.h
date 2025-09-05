@@ -7,6 +7,8 @@
 #include "MyAbilitySystemComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnEffectTriggerAssetTags,const FGameplayTagContainer& /**AssetTags**/);
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnAbilityChargeChangedSignature,float,float);
 /**
  * 
  */
@@ -19,6 +21,8 @@ public:
 
 	FOnEffectTriggerAssetTags EffectAssetTags;
 
+	FOnAbilityChargeChangedSignature OnAbilityChargeChanged;
+	
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
 
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
