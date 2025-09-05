@@ -17,21 +17,29 @@ class GAS_API UWindChargeAbility : public UGASChargeAbility
 public:
 	const float BUFF_EXTRA_BONUS = 1.4f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Custom|Charge Ability")
+	UPROPERTY(EditDefaultsOnly, Category = "Custom|Wind Ability")
 	TObjectPtr<UWindAbilityDataAsset> WindAbilityDataAsset;
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Ability")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Wind Ability")
 	TSubclassOf<AWindDamageArea> DamageAreaClass;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Ability|Damage")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Wind Ability|Damage")
 	TSubclassOf<UGameplayEffect> DebuffEffectClass;
 	
 	virtual void ActivateChargeAbility() override;
 
-	UFUNCTION(BlueprintCallable, Category = "Custom|Ability")
+	UFUNCTION(BlueprintCallable, Category = "Custom|Wind Ability")
 	void SpawnDamageArea();
 
 	virtual void ApplyCooldown(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const override;
+
+	virtual void InputPressed(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
+	virtual void InputReleased(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) override;
 private:
 	FWindChargeAbilityInfo CurrentChargeAbilityInfo;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Custom|Wind Ability")
+	TSubclassOf<AActor> SkillRangeCircleClass;
+
+	TObjectPtr<AActor> SkillRangeCircle;
 };

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayEffect.h"
 #include "GameplayEffectTypes.h"
 #include "Data/WindAbilityDataAsset.h"
 #include "GameFramework/Actor.h"

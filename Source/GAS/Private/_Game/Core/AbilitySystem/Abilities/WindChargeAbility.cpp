@@ -12,6 +12,9 @@ void UWindChargeAbility::ActivateChargeAbility()
 {
 	Super::ActivateChargeAbility();
 	SpawnDamageArea();
+	if (SkillRangeCircle == nullptr)return;
+	SkillRangeCircle->Destroy();
+	SkillRangeCircle = nullptr;
 }
 
 void UWindChargeAbility::SpawnDamageArea()
@@ -80,6 +83,46 @@ void UWindChargeAbility::ApplyCooldown(const FGameplayAbilitySpecHandle Handle,
 	{
 		ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo, CooldownGE, GetAbilityLevel(Handle, ActorInfo));
 	}
+}
+
+void UWindChargeAbility::InputPressed(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
+{
+	if (SkillRangeCircle == nullptr)
+	{
+		check(SkillRangeCircleClass);
+		APawn* Pawn = Cast<APawn>(GetAvatarActorFromActorInfo());
+
+		FTransform SpawnTransform;
+		SpawnTransform.SetLocation(Pawn->GetActorLocation());
+		SpawnTransform.SetRotation(FRotator::ZeroRotator.Quaternion());
+
+		SkillRangeCircle = GetWorld()->SpawnActorDeferred<AActor>(
+			SkillRangeCircleClass,
+			SpawnTransform,
+			Pawn,
+			Pawn,
+			ESpawnActorCollisionHandlingMethod::AlwaysSpawn
+		);
+		SkillRangeCircle->FinishSpawning(SpawnTransform);
+		//SkillRangeCircle->GetRootComponent()->SetWorldScale3D(FVector(0.f, 0.f, 0.f));
+	}
+	else
+	{
+		//最大蓄力范围
+		const float ScaleValue = 5 * (CurrentChargeTime / MaxChargeTime);
+		SkillRangeCircle->GetRootComponent()->SetWorldScale3D(FVector(ScaleValue, ScaleValue, ScaleValue));
+	}
+	Super::InputPressed(Handle, ActorInfo, ActivationInfo);
+}
+
+void UWindChargeAbility::InputReleased(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo)
+{
+	Super::InputReleased(Handle, ActorInfo, ActivationInfo);
+	if (SkillRangeCircle == nullptr)return;
+	SkillRangeCircle->Destroy();
+	SkillRangeCircle = nullptr;
 }
 
 
