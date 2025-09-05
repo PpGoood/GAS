@@ -18,7 +18,6 @@ class GAS_API AWindDamageArea : public AActor
 {
 	GENERATED_BODY()
 public:
-	const float BUFF_EXTRA_BONUS = 1.4f;
 	//球体的直径是200，用于范围和其比值得到缩放大小
 	const float DIAMETER = 200.f;
 	

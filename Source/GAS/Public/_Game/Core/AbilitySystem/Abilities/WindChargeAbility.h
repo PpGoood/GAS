@@ -15,6 +15,8 @@ class GAS_API UWindChargeAbility : public UGASChargeAbility
 {
 	GENERATED_BODY()
 public:
+	const float BUFF_EXTRA_BONUS = 1.4f;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Custom|Charge Ability")
 	TObjectPtr<UWindAbilityDataAsset> WindAbilityDataAsset;
 protected:

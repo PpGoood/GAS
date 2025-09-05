@@ -40,7 +40,8 @@ void UWindChargeAbility::SpawnDamageArea()
 	EffectContextHandle.AddSourceObject(DamageArea);
 
 	const FGameplayEffectSpecHandle DamegeSpecHandle = SourceASC->MakeOutgoingSpec(DamageEffectClass,GetAbilityLevel(),SourceASC->MakeEffectContext());
-
+	const bool bHaveBuff = SourceASC->HasMatchingGameplayTag(GameplayTagsInstance::GetInstance().Buff_WindMastery);
+	//减速GE
 	if (SourceASC->HasMatchingGameplayTag(GameplayTagsInstance::GetInstance().Buff_WindMastery))
 	{
 		FGameplayEffectSpecHandle DebuffSpecHandle = SourceASC->MakeOutgoingSpec(DebuffEffectClass,GetAbilityLevel(),SourceASC->MakeEffectContext());
@@ -53,8 +54,12 @@ void UWindChargeAbility::SpawnDamageArea()
 	
 	for (auto& Pair:DamageTypes)
 	{
-		//TODOScaledDamage需要根据buff进行加成
-		const float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
+		float ScaledDamage = Pair.Value.GetValueAtLevel(GetAbilityLevel());
+		//伤害加成
+		if (bHaveBuff)
+		{
+			ScaledDamage *= BUFF_EXTRA_BONUS;
+		}
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(DamegeSpecHandle,Pair.Key,ScaledDamage);
 	}
 
