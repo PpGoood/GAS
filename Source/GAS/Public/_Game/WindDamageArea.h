@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayEffect.h"
 #include "GameplayEffectTypes.h"
 #include "Data/WindAbilityDataAsset.h"
 #include "GameFramework/Actor.h"
+#include "Components/AudioComponent.h"
 #include "WindDamageArea.generated.h"
 
 class USphereComponent;
@@ -25,11 +27,12 @@ public:
 	//生成的时候暴露给外面的属性
 	UPROPERTY(BlueprintReadWrite,meta=( ExposeOnSpawn = true ))
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
+
+	UPROPERTY(BlueprintReadWrite,meta=( ExposeOnSpawn = true ))
+	FGameplayEffectSpecHandle DebuffEffectSpecHandle;
 	
 	UPROPERTY(BlueprintReadWrite,meta=( ExposeOnSpawn = true ))
 	FWindChargeAbilityInfo WindChargeAbilityInfo;
-	
-	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -37,14 +40,17 @@ protected:
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	TObjectPtr<USphereComponent> SphereComponent;
 
+	UPROPERTY(BlueprintReadOnly)
+	FVector TargetScale;
+
+	void EffectToActor(AActor* Actor);
+	
 	UFUNCTION()
 	void OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult);
 
 	virtual void Destroyed() override;
 	
-	UPROPERTY(BlueprintReadOnly)
-	FVector TargetScale;
 
 private:
 	//用于集合记录已经碰撞操作到的物体避免重复碰撞
@@ -54,5 +60,5 @@ private:
 	TObjectPtr<UAudioComponent> LoopingSoundComponent;
 	
 	UPROPERTY(EditAnywhere,category="Custom|Wind")
-	TObjectPtr<USoundBase> LoopingSound;
+	TObjectPtr<USoundBase> ActiveSound;
 };

@@ -47,7 +47,6 @@ void GameplayTagsInstance::InitAttributesTags()
 
 void GameplayTagsInstance::InitDamageTypesTags()
 {
-	Damage = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage"), FString("伤害"));
 	Damage_Fire = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Fire"), FString("火焰伤害类型"));
 	Damage_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Lightning"), FString("雷属性伤害"));
 	Damage_Arcane = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Damage.Arcane"), FString("魔法伤害"));
@@ -91,25 +90,23 @@ void GameplayTagsInstance::InitMessageTags()
 void GameplayTagsInstance::InitEffectsTags()
 {
 	Effects_HitReact = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.HitReact"), FString("受到攻击时，赋予的标签"));
+	Effects_Slow = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Effects.Slow"), FString("减速效果"));
 }
 
 void GameplayTagsInstance::InitEnvironmentTags()
 {
-	Environment = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Environment"), FString("环境类型"));
 	Environment_LightObject = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Environment.LightObject"), FString("轻物体"));
 	Environment_MediumObject = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Environment.MediumObject"), FString("中等物体"));
 }
 
 void GameplayTagsInstance::InitStateTags()
 {
-	State = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("State"), FString("默认状态"));
 	State_ChargingWind = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("State.ChargingWind"), FString("蓄力风"));
 	State_GustActive = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("State.GustActive"), FString("技能激活"));
 }
 
 void GameplayTagsInstance::InitBuffTags()
 {
-	Buff = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff"), FString("默认Buff"));
 	Buff_WindMastery = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.WindMastery"), FString("风之精通"));
 }
 

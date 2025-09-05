@@ -58,22 +58,17 @@ public:
 	FGameplayTag InputTag_2;
 	FGameplayTag InputTag_3;
 	FGameplayTag InputTag_4;
-	FGameplayTag Damage;
 	FGameplayTag Damage_Fire; //火属性伤害 标签
 	FGameplayTag Damage_Lightning; //雷属性伤害 标签
 	FGameplayTag Damage_Arcane; //魔法伤害 标签
 	FGameplayTag Damage_Physical; //物理伤害 标签
 	TMap<FGameplayTag, FGameplayTag> DamageTypesToResistances;
 	FGameplayTag Effects_HitReact; //受击效果 标签
-	FGameplayTag Environment;
+	FGameplayTag Effects_Slow; //受击效果 标签
 	FGameplayTag Environment_LightObject;
 	FGameplayTag Environment_MediumObject;
-
-	FGameplayTag State;
 	FGameplayTag State_ChargingWind;
 	FGameplayTag State_GustActive;
-
-	FGameplayTag Buff;
 	FGameplayTag Buff_WindMastery;
 	
 private:

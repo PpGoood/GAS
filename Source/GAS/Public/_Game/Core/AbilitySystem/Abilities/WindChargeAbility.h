@@ -20,6 +20,10 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Ability")
 	TSubclassOf<AWindDamageArea> DamageAreaClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Ability|Damage")
+	TSubclassOf<UGameplayEffect> DebuffEffectClass;
+	
 	virtual void ActivateChargeAbility() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Custom|Ability")

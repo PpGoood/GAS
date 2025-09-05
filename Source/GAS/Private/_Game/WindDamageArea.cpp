@@ -3,7 +3,8 @@
 
 #include "_Game/WindDamageArea.h"
 
-#include "GameplayTagAssetInterface.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "_Game/GameplayTagsInstance.h"
@@ -28,20 +29,38 @@ void AWindDamageArea::BeginPlay()
 	Super::BeginPlay();
 
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::OnSphereOverlap);
-	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
-
+	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(ActiveSound, GetRootComponent());
+	// UGameplayStatics::PlaySoundAtLocation(this, ActiveSound, GetActorLocation(), FRotator::ZeroRotator);
+	
 	const float Scale = WindChargeAbilityInfo.Range / DIAMETER;
 	TargetScale.Set(Scale,Scale,Scale);
 	
 	SphereComponent->SetWorldScale3D(FVector(0.0f, 0.0f, 0.0f));
 }
 
+void AWindDamageArea::EffectToActor(AActor* Actor)
+{
+	if (!HasAuthority())return;
+	if (UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
+	{
+		//有组件的受伤害
+		TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+		if (DebuffEffectSpecHandle != nullptr)
+		{
+			TargetASC->ApplyGameplayEffectSpecToSelf(*DebuffEffectSpecHandle.Data.Get());
+		}
+	}
+	//如果是敌人需要击退
+}
+
 void AWindDamageArea::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	//忽略自己
 	if (OtherActor == GetInstigator())return;
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Wind碰撞到了"));  // 输出在屏幕上
+
+	EffectToActor(OtherActor);
 	
 	AEnvironmentBaseActor* Environment = Cast<AEnvironmentBaseActor>(OtherActor);
 	if (Environment == nullptr)return;
@@ -76,18 +95,14 @@ void AWindDamageArea::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActo
 		default:
 			break;
 	}
-	//TODO 如果是敌人则掉血
 	
 }
 
 void AWindDamageArea::Destroyed()
 {
 	Super::Destroyed();
+	if(LoopingSoundComponent) LoopingSoundComponent->Stop();
 }
 
-void AWindDamageArea::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	
-}
+
 
