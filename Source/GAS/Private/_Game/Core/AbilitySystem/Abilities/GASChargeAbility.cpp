@@ -18,11 +18,8 @@ void UGASChargeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	// 如果已经开始蓄力，返回
-	if (bIsCharging)
-	{
-		return;
-	}
-	//手动管理标签需要双端都同步不能
+	if (bIsCharging)return;
+	
 	UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
 	SourceASC->AddLooseGameplayTag(ChargeStateTag);
 	
@@ -33,7 +30,7 @@ void UGASChargeAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 void UGASChargeAbility::ReleaseCharge()
 {
 	UAbilitySystemComponent* SourceASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(GetAvatarActorFromActorInfo());
-	SourceASC->RemoveLooseGameplayTag(ChargeStateTag);
+	SourceASC->RemoveLooseGameplayTag(ChargeStateTag);;
 	
 	ActivateChargeAbility();
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true,false);
@@ -69,8 +66,8 @@ void UGASChargeAbility::ChargeTick()
 	}
 
 	// 打印蓄力时间
-	FString ChargeTimeText = FString::Printf(TEXT("Current Charge Time: %.2f"), CurrentChargeTime);
-	GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Yellow, ChargeTimeText);  // 输出在屏幕上
+	// FString ChargeTimeText = FString::Printf(TEXT("Current Charge Time: %.2f"), CurrentChargeTime);
+	// GEngine->AddOnScreenDebugMessage(-1, 0.1f, FColor::Yellow, ChargeTimeText);  // 输出在屏幕上
 }
 
 void UGASChargeAbility::InputPressed(const FGameplayAbilitySpecHandle Handle,

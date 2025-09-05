@@ -19,6 +19,9 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Custom|Wind Ability")
 	TObjectPtr<UWindAbilityDataAsset> WindAbilityDataAsset;
+
+	UFUNCTION(BlueprintCallable, Category = "Custom|Wind Ability")
+	void SpawnDamageArea();
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Wind Ability")
 	TSubclassOf<AWindDamageArea> DamageAreaClass;
@@ -27,9 +30,6 @@ protected:
 	TSubclassOf<UGameplayEffect> DebuffEffectClass;
 	
 	virtual void ActivateChargeAbility() override;
-
-	UFUNCTION(BlueprintCallable, Category = "Custom|Wind Ability")
-	void SpawnDamageArea();
 
 	virtual void ApplyCooldown(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const override;
 
