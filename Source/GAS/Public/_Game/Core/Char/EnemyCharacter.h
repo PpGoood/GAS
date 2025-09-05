@@ -27,6 +27,7 @@ public:
 	/** EnemyInterface **/
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
+	virtual void KnockbackEffect(FVector Direction, float Strength = 100) override;
 	/** EnemyInterface **/
 
 	/** CombatInterface **/
@@ -38,6 +39,8 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="Custom|Attributes")
 	FOnAttributeChangedSignature OnMaxHealthChanged;
+
+	
 
 protected:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Custom|Attributes")

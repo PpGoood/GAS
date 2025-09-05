@@ -6,8 +6,10 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Components/SphereComponent.h"
+#include "GameFramework/Character.h"
 #include "Kismet/GameplayStatics.h"
 #include "_Game/GameplayTagsInstance.h"
+#include "_Game/Interaction/EnemyInterface.h"
 #include "_Game/InteractiveObject/EnvironmentBaseActor.h"
 
 AWindDamageArea::AWindDamageArea()
@@ -50,31 +52,42 @@ void AWindDamageArea::EffectToActor(AActor* Actor)
 			TargetASC->ApplyGameplayEffectSpecToSelf(*DebuffEffectSpecHandle.Data.Get());
 		}
 	}
-	//如果是敌人需要击退
 }
 
 void AWindDamageArea::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
                                       UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//忽略自己
+	if (OverlapActors.Contains(OtherActor))return;
+	OverlapActors.Add(OtherActor);
 	if (OtherActor == GetInstigator())return;
 	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Red, TEXT("Wind碰撞到了"));  // 输出在屏幕上
 
 	EffectToActor(OtherActor);
-	
-	AEnvironmentBaseActor* Environment = Cast<AEnvironmentBaseActor>(OtherActor);
-	if (Environment == nullptr)return;
 
 	// 计算风源位置与目标（Environment）位置之间的向量
 	FVector WindSourceLocation = GetActorLocation();  // WindDamageArea 的位置
-	FVector TargetLocation = Environment->GetActorLocation();  // 环境物体的位置
+	FVector TargetLocation = OtherActor->GetActorLocation();  // 环境物体的位置
 
 	// 计算反向向量
 	FVector KnockbackDirection = TargetLocation - WindSourceLocation;
-	KnockbackDirection.Normalize();  // 归一化得到单位向量
+	KnockbackDirection.Normalize();  
 
 	const GameplayTagsInstance& TagsInstance = GameplayTagsInstance::GetInstance();
-
+	
+	if (OtherActor->ActorHasTag(FName("Enemy")))
+	{
+		// if (IEnemyInterface* EnemyInterface = Cast<IEnemyInterface>(OtherActor))
+		// {
+		// 	EnemyInterface->KnockbackEffect(KnockbackDirection,WindChargeAbilityInfo.WindStrength);
+		// }
+		if (ACharacter* Character = Cast<ACharacter>(OtherActor))
+		{
+			//TODO 暂时写法
+			Character->LaunchCharacter(KnockbackDirection * WindChargeAbilityInfo.WindStrength*2,true,true);
+		}
+	}
+	AEnvironmentBaseActor* Environment = Cast<AEnvironmentBaseActor>(OtherActor);
+	if (Environment == nullptr)return;
 
 	switch (WindChargeAbilityInfo.ChargeType)
 	{

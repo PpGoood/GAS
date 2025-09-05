@@ -5,16 +5,18 @@
 #include "DrawDebugHelpers.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "GAS/GAS.h"
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 #include "_Game/Core/AbilitySystem/MyAttributeSet.h"
 #include "_Game/Util/GASBlueprintFunctionLibrary.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Components/SkeletalMeshComponent.h"
 
 AEnemyCharacter::AEnemyCharacter()
 {
+	GetMesh()->SetEnableGravity(true); //开启重力效果
 	GetMesh()->SetCollisionResponseToChannel(ECC_Visibility,ECR_Block);
-
 	//初始化GAS组件
 	AbilitySystemComponent = CreateDefaultSubobject<UMyAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
@@ -44,6 +46,13 @@ void AEnemyCharacter::UnHighlightActor()
 {
 	GetMesh()->SetRenderCustomDepth(false);
 	WeaponMeshComponent->SetRenderCustomDepth(false);
+}
+
+void AEnemyCharacter::KnockbackEffect(FVector Direction, float Strength)
+{
+	FVector KnockbackVector = Direction * Strength;
+	UE_LOG(LogTemp, Log, TEXT("[PeiLog]Launch Velocity: %s"), *KnockbackVector.ToString());
+	LaunchCharacter(KnockbackVector,true,true);
 }
 
 void AEnemyCharacter::BeginPlay()

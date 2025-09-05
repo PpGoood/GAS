@@ -24,4 +24,5 @@ class GAS_API IEnemyInterface
 public:
 	virtual void HighlightActor() = 0;
 	virtual void UnHighlightActor() = 0;
+	virtual void KnockbackEffect(FVector Direction, float Strength = 100) = 0;
 };
