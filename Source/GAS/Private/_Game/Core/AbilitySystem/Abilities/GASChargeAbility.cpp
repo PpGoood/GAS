@@ -35,9 +35,9 @@ void UGASChargeAbility::ReleaseCharge()
 	SourceASC->RemoveLooseGameplayTag(ChargeStateTag);
 	
 	ActivateChargeAbility();
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true,false);
 	bIsCharging = false;
 	CurrentChargeTime = 0.0f;
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, true,false);
 }
 
 void UGASChargeAbility::ActivateChargeAbility()

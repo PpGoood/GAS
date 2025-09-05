@@ -70,6 +70,9 @@ public:
 	FGameplayTag State_ChargingWind;
 	FGameplayTag State_GustActive;
 	FGameplayTag Buff_WindMastery;
+
+	FGameplayTag Cooldown_Fire_FireBolt;
+	FGameplayTag Cooldown_Wind_WindCharge;
 	
 private:
 	// 私有构造函数和析构函数，防止外部创建实例
@@ -85,4 +88,5 @@ private:
 	void InitEnvironmentTags();
 	void InitStateTags();
 	void InitBuffTags();
+	void InitAbilityTags();
 };

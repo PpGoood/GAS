@@ -30,5 +30,8 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Custom|Ability")
 	void SpawnDamageArea();
-	
+
+	virtual void ApplyCooldown(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const override;
+private:
+	FWindChargeAbilityInfo CurrentChargeAbilityInfo;
 };

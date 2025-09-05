@@ -45,6 +45,7 @@ void UWindChargeAbility::SpawnDamageArea()
 	if (SourceASC->HasMatchingGameplayTag(GameplayTagsInstance::GetInstance().Buff_WindMastery))
 	{
 		FGameplayEffectSpecHandle DebuffSpecHandle = SourceASC->MakeOutgoingSpec(DebuffEffectClass,GetAbilityLevel(),SourceASC->MakeEffectContext());
+		 (*DebuffSpecHandle.Data.Get()).Duration = 10.f;
 		DamageArea->DebuffEffectSpecHandle = DebuffSpecHandle;
 	}
 	else
@@ -64,8 +65,25 @@ void UWindChargeAbility::SpawnDamageArea()
 	}
 
 	DamageArea->DamageEffectSpecHandle = DamegeSpecHandle;
-	DamageArea->WindChargeAbilityInfo = WindAbilityDataAsset->FindChargeAbilityInfoByTime(CurrentChargeTime);
-	DamageArea->FinishSpawning(SpawnTransform);	
+	CurrentChargeAbilityInfo = WindAbilityDataAsset->FindChargeAbilityInfoByTime(CurrentChargeTime);
+	DamageArea->WindChargeAbilityInfo = CurrentChargeAbilityInfo;
+	DamageArea->FinishSpawning(SpawnTransform);
+	
 }
+
+void UWindChargeAbility::ApplyCooldown(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const
+{
+	const auto info = WindAbilityDataAsset->FindChargeAbilityInfoByTime(CurrentChargeTime);
+	UGameplayEffect* CooldownGE = info.CooldownGameplayEffectClass->GetDefaultObject<UGameplayEffect>();
+	if (CooldownGE)
+	{
+		ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo, CooldownGE, GetAbilityLevel(Handle, ActorInfo));
+	}
+}
+
+
+
+
 
 

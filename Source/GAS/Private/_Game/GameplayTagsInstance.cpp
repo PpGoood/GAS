@@ -16,6 +16,7 @@ void GameplayTagsInstance::InitNativeGameplayTags()
 	InitEnvironmentTags();
 	InitStateTags();
 	InitBuffTags();
+	InitAbilityTags();
 }
 
 void GameplayTagsInstance::InitAttributesTags()
@@ -108,6 +109,13 @@ void GameplayTagsInstance::InitStateTags()
 void GameplayTagsInstance::InitBuffTags()
 {
 	Buff_WindMastery = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Buff.WindMastery"), FString("风之精通"));
+}
+
+void GameplayTagsInstance::InitAbilityTags()
+{
+	Cooldown_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Fire.FireBolt"), FString("火球术"));
+	Cooldown_Wind_WindCharge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Wind.WindCharge"), FString("蓄力风技能"));
+	
 }
 
 

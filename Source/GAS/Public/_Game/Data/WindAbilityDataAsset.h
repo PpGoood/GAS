@@ -37,7 +37,7 @@ struct FWindChargeAbilityInfo
 	float WindStrength;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	float CooldownDuration;
+	TSubclassOf<class UGameplayEffect> CooldownGameplayEffectClass;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	FGameplayTagContainer ObjectsThatCanBeBlownAwayTags;
