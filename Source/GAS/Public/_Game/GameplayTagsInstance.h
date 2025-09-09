@@ -73,6 +73,7 @@ public:
 
 	FGameplayTag Cooldown_Fire_FireBolt;
 	FGameplayTag Cooldown_Wind_WindCharge;
+	FGameplayTag Abilities_Attack; //攻击技能激活标签
 	
 private:
 	// 私有构造函数和析构函数，防止外部创建实例

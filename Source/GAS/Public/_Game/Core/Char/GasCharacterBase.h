@@ -86,7 +86,7 @@ protected:
 	
 	virtual void InitDefaultAbilities();
 
-	virtual FVector GetCombatSocketLocation() override;
+	virtual FVector GetCombatSocketLocation_Implementation() override;
 
 	virtual void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 

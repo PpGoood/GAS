@@ -55,6 +55,16 @@ void AEnemyCharacter::KnockbackEffect(FVector Direction, float Strength)
 	LaunchCharacter(KnockbackVector,true,true);
 }
 
+void AEnemyCharacter::SetCombatTarget_Implementation(AActor* InCombatTarget)
+{
+	CombatTarget = InCombatTarget;
+}
+
+AActor* AEnemyCharacter::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
+}
+
 void AEnemyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -77,7 +87,7 @@ void AEnemyCharacter::InitDefaultAttributes() const
 void AEnemyCharacter::InitDefaultAbilities()
 {
 	if (!HasAuthority())return;
-	UGASBlueprintFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent);
+	UGASBlueprintFunctionLibrary::GiveStartupAbilities(this, AbilitySystemComponent,CharacterClassType);
 }
 
 void AEnemyCharacter::Die()

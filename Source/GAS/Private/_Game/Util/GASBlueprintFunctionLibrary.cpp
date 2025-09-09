@@ -9,6 +9,7 @@
 #include "_Game/Core/TopDownGameMode.h"
 #include "_Game/Core/AbilitySystem/CustomAbilityTypes.h"
 #include "_Game/Core/AbilitySystem/Data/CharacterClassInfo.h"
+#include "_Game/Interaction/CombatInterface.h"
 
 
 void UGASBlueprintFunctionLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject,
@@ -36,21 +37,35 @@ void UGASBlueprintFunctionLibrary::InitializeDefaultAttributes(const UObject* Wo
 	ASC->ApplyGameplayEffectSpecToSelf(*VitalSpecHandle.Data.Get());
 }
 
-void UGASBlueprintFunctionLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC)
+void UGASBlueprintFunctionLibrary::GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC,ECharacterClassType CharacterType)
 {
-	// //获取到当前关卡的GameMode实例
-	// ATopDownGameMode* GameMode = Cast<ATopDownGameMode>(UGameplayStatics::GetGameMode(WorldContextObject));
-	// if (GameMode == nullptr) return;
 
-	const AActor* AvatarActor = ASC->GetAvatarActor();
-	if (!AvatarActor->HasAuthority()) return;
 	//从实例获取到关卡角色的配置
 	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	if(CharacterClassInfo == nullptr) return;
 
-	//遍历角色拥有的技能数组
+	//从战斗接口获取到角色的等级
+	ICombatInterface* CombatInterface = Cast<ICombatInterface>(ASC->GetAvatarActor());
+	int32 CharacterLevel = 1;
+	if(CombatInterface)
+	{
+		CharacterLevel = CombatInterface->GetPlayerLevel();
+	}
+
+	//应用角色拥有的技能数组
 	for(const TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)
 	{
-		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, 1); //创建技能实例
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, CharacterLevel); //创建技能实例
+		ASC->GiveAbility(AbilitySpec); //只应用不激活
+	}
+
+	//获取到默认的基础角色数据
+	const FCharacterClassDefaultInfo ClassDefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterType);
+
+	//应用职业技能数组
+	for(const TSubclassOf<UGameplayAbility> AbilityClass : ClassDefaultInfo.StartupAbilities)
+	{
+		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(AbilityClass, CharacterLevel); //创建技能实例
 		ASC->GiveAbility(AbilitySpec); //只应用不激活
 	}
 }

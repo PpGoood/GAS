@@ -22,7 +22,8 @@ public:
 	virtual int32 GetPlayerLevel(){return 0;}
 
 	//用于返回武器插槽的位置，用来生成特效
-	virtual FVector GetCombatSocketLocation(){return FVector::ZeroVector;}
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	FVector GetCombatSocketLocation();
 
 	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
 	void UpdateFacingTarget(const FVector& TargetLocation);

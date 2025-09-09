@@ -24,7 +24,7 @@ public:
 	static void InitializeDefaultAttributes(const UObject* WorldContextObject,ECharacterClassType CharacterClass,float Level,UAbilitySystemComponent* ASC);
 
 	UFUNCTION(BlueprintCallable, Category="UGASBlueprintFunctionLibrary|CharacterClassDefaults")
-	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC);
+	static void GiveStartupAbilities(const UObject* WorldContextObject, UAbilitySystemComponent* ASC,ECharacterClassType CharacterType);
 
 	UFUNCTION(BlueprintCallable, Category="UGASBlueprintFunctionLibrary|CharacterClassDefaults")
 	static UCharacterClassInfo* GetCharacterClassInfo(const UObject* WorldContextObject);

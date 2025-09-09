@@ -28,6 +28,8 @@ public:
 	virtual void HighlightActor() override;
 	virtual void UnHighlightActor() override;
 	virtual void KnockbackEffect(FVector Direction, float Strength = 100) override;
+	virtual void SetCombatTarget_Implementation(AActor* InCombatTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
 	/** EnemyInterface **/
 
 	/** CombatInterface **/
@@ -39,8 +41,6 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category="Custom|Attributes")
 	FOnAttributeChangedSignature OnMaxHealthChanged;
-
-	
 
 protected:
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Custom|Attributes")
@@ -71,6 +71,8 @@ private:
 	void InitWidget();
 	void BroadcastInitialValues();
 	void BindCallbacksToDependencies();
+
+	TObjectPtr<AActor> CombatTarget;
 };
 
 

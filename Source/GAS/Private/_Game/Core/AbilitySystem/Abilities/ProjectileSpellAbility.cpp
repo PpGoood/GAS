@@ -28,7 +28,7 @@ void UProjectileSpellAbility::SpawnProjectile(const FVector& ProjectileTargetLoc
 	
 	if (CombatInterFace == nullptr)return;
 	
-	const FVector SocketLocation = CombatInterFace->GetCombatSocketLocation();
+	const FVector SocketLocation = CombatInterFace->GetCombatSocketLocation_Implementation();
 	FRotator SpawnRotation = (ProjectileTargetLocation - SocketLocation).Rotation();
 	// SpawnRotation.Pitch = 0.f;
 	

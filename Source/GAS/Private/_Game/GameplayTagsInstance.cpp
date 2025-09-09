@@ -115,7 +115,8 @@ void GameplayTagsInstance::InitAbilityTags()
 {
 	Cooldown_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Fire.FireBolt"), FString("火球术"));
 	Cooldown_Wind_WindCharge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Wind.WindCharge"), FString("蓄力风技能"));
-	
+	Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Attack"), FString("普通攻击"));
+
 }
 
 
