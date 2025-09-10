@@ -63,6 +63,8 @@ void AGasCharacterBase::MulticastHandleDeath_Implementation()
 	GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	Dissolve();
+
+	bDead = true;
 }
 
 void AGasCharacterBase::InitDefaultAttributes() const
@@ -103,6 +105,16 @@ void AGasCharacterBase::Die()
 	//将武器从角色身上分离
 	WeaponMeshComponent->DetachFromComponent(FDetachmentTransformRules(EDetachmentRule::KeepWorld, true));
 	MulticastHandleDeath();
+}
+
+AActor* AGasCharacterBase::GetAvatar_Implementation()
+{
+	return this;
+}
+
+bool AGasCharacterBase::IsDead_Implementation() const
+{
+	return bDead;
 }
 
 void AGasCharacterBase::Dissolve()

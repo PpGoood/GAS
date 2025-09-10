@@ -25,6 +25,10 @@ public:
 
 	/** CombatInterface **/
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
+	virtual FVector GetCombatSocketLocation_Implementation() override;
+	virtual void Die() override;
+	virtual AActor* GetAvatar_Implementation() override;
+	virtual bool IsDead_Implementation() const override;
 	/** CombatInterface **/
 	 
 protected:
@@ -35,6 +39,8 @@ protected:
 	TObjectPtr<UAttributeSet> AttributeSet;
 
 	//战斗
+	bool bDead = false;
+	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Custom|Combat")
 	TObjectPtr<USkeletalMeshComponent> WeaponMeshComponent;
 
@@ -86,11 +92,7 @@ protected:
 	
 	virtual void InitDefaultAbilities();
 
-	virtual FVector GetCombatSocketLocation_Implementation() override;
-
 	virtual void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
-
-	virtual void Die() override;
 
 	//用蓝图实现时间轴溶解此逻辑不在c++做
 	UFUNCTION(BlueprintImplementableEvent)
