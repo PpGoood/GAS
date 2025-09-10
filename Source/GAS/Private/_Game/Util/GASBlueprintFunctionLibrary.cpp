@@ -10,6 +10,7 @@
 #include "_Game/Core/AbilitySystem/CustomAbilityTypes.h"
 #include "_Game/Core/AbilitySystem/Data/CharacterClassInfo.h"
 #include "_Game/Interaction/CombatInterface.h"
+#include "Engine/OverlapResult.h"
 
 
 void UGASBlueprintFunctionLibrary::InitializeDefaultAttributes(const UObject* WorldContextObject,
@@ -112,3 +113,29 @@ void UGASBlueprintFunctionLibrary::SetIsCriticalHit(FGameplayEffectContextHandle
 		CustomGameplayEffectContext->SetIsCriticalHit(bInIsCriticalHit);
 	}
 }
+
+void UGASBlueprintFunctionLibrary::GetLivePlayersWithinRadius(const UObject* WorldContextObject,
+	TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, float Radius,
+	const FVector& SphereOrigin)
+{
+	FCollisionQueryParams SphereParams; //创建一个碰撞查询的配置
+	SphereParams.AddIgnoredActors(ActorsToIgnore); //添加忽略的Actor
+	
+	TArray<FOverlapResult> Overlaps; //创建存储检索到的与碰撞体产生碰撞的Actor
+	if (UWorld* World = GEngine->GetWorldFromContextObject(WorldContextObject, EGetWorldErrorMode::LogAndReturnNull)) //获取当前所处的场景，如果获取失败，将打印并返回Null
+	{
+		//获取到所有与此球体碰撞的动态物体
+		World->OverlapMultiByObjectType(Overlaps, SphereOrigin, FQuat::Identity, FCollisionObjectQueryParams(FCollisionObjectQueryParams::InitType::AllDynamicObjects), FCollisionShape::MakeSphere(Radius), SphereParams);
+		for(FOverlapResult& Overlap : Overlaps) //遍历所有获取到的动态Actor
+		{
+			//判断当前Actor是否包含战斗接口   Overlap.GetActor() 从碰撞检测结果中获取到碰撞的Actor
+			const bool ImplementsCombatInterface =  Overlap.GetActor()->Implements<UCombatInterface>();
+			//判断当前Actor是否存活，如果不包含战斗接口，将不会判断存活（放置的火堆也属于动态Actor，这样保证不会报错）
+			if(ImplementsCombatInterface && !ICombatInterface::Execute_IsDead(Overlap.GetActor())) 
+			{
+				OutOverlappingActors.AddUnique(Overlap.GetActor()); //将Actor添加到返回数组，AddUnique 只有在此Actor未被添加时，才可以添加到数组
+			}
+		}
+	}
+}
+

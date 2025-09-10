@@ -13,7 +13,9 @@ UCLASS()
 class GAS_API UGASDamageGameplayAbility : public UGASGameplayAbility
 {
 	GENERATED_BODY()
-
+public:
+	UFUNCTION(BlueprintCallable)
+	void CauseDamage(AActor* TargetActor);
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Custom|Ability|Damage")

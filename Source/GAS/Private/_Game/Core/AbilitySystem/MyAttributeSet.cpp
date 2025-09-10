@@ -183,6 +183,10 @@ void UMyAttributeSet::ShowDamageText(const FEffectProperties& Props,const float 
 	{
 		PC->ClientShowDamageNumber(Damage, Props.TargetCharacter,bBlockedHit,bCriticalHit); //调用显示伤害数字
 	}
+	if (AGASPlayerController* PC = Cast<AGASPlayerController>(Props.TargetCharacter->Controller))
+	{
+		PC->ClientShowDamageNumber(Damage, Props.TargetCharacter,bBlockedHit,bCriticalHit); //调用显示伤害数字
+	}
 }
 
 void UMyAttributeSet::OnRep_Health(const FGameplayAttributeData& OldHealth) const

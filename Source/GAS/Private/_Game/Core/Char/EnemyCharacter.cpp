@@ -158,5 +158,8 @@ void AEnemyCharacter::BindCallbacksToDependencies()
 void AEnemyCharacter::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	Super::HitReactTagChanged(CallbackTag, NewCount);
-	GASAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"),false);
+	if (GASAIController && GASAIController->GetBlackboardComponent())
+	{
+		GASAIController->GetBlackboardComponent()->SetValueAsBool(FName("HitReacting"),false);
+	}
 }
