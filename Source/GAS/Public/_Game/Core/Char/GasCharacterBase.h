@@ -29,6 +29,8 @@ public:
 	virtual void Die() override;
 	virtual AActor* GetAvatar_Implementation() override;
 	virtual bool IsDead_Implementation() const override;
+	virtual TArray<FTaggedMontage> GetAttackMontageInfo_Implementation() override;
+	virtual FVector GetCombatSocketLocationByInfo_Implementation(const FTaggedMontage TaggedMontage) const override;
 	/** CombatInterface **/
 	 
 protected:
@@ -67,6 +69,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Combat")
 	float LifeSpan = 5.f;
 
+	UPROPERTY(EditAnywhere, Category="Custom|Combat")
+	TArray<FTaggedMontage> AttackMontageInfo;
+
 	//使用GE对AttributeSet初始化
 	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Custom|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultVitalAttributes;
@@ -76,6 +81,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly,EditAnywhere,Category="Custom|Attributes")
 	TSubclassOf<UGameplayEffect> DefaultSecondaryAttributes;
+
+	UPROPERTY(EditAnywhere,Category="Custom|Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartAbilities;
 	
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectClass,float Level) const;
 
@@ -99,7 +107,5 @@ protected:
 	void StartDissolveTimeline(const TArray<UMaterialInstanceDynamic*>& DynamicMaterialInstance);
 	
 	void Dissolve(); //溶解效果
-private:
-	UPROPERTY(EditAnywhere,Category="Custom|Abilities")
-	TArray<TSubclassOf<UGameplayAbility>> StartAbilities;
+	
 };

@@ -75,6 +75,10 @@ public:
 	FGameplayTag Cooldown_Wind_WindCharge;
 	FGameplayTag Abilities_Attack; //攻击技能激活标签
 	
+	FGameplayTag Montage_Attack_Weapon; //使用武器攻击蒙太奇标签
+	FGameplayTag Montage_Attack_RightHand; //右手攻击蒙太奇标签
+	FGameplayTag Montage_Attack_LeftHand; //左手攻击蒙太奇标签
+
 private:
 	// 私有构造函数和析构函数，防止外部创建实例
 	GameplayTagsInstance() = default;
@@ -90,4 +94,5 @@ private:
 	void InitStateTags();
 	void InitBuffTags();
 	void InitAbilityTags();
+	void InitMontageTags();
 };

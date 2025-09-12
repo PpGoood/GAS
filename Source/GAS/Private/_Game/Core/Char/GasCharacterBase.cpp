@@ -117,6 +117,23 @@ bool AGasCharacterBase::IsDead_Implementation() const
 	return bDead;
 }
 
+TArray<FTaggedMontage> AGasCharacterBase::GetAttackMontageInfo_Implementation()
+{
+	return AttackMontageInfo;
+}
+
+FVector AGasCharacterBase::GetCombatSocketLocationByInfo_Implementation(const FTaggedMontage TaggedMontage) const
+{
+	if(TaggedMontage.MontageTag.MatchesTagExact(GameplayTagsInstance::GetInstance().Montage_Attack_Weapon))
+	{
+		return WeaponMeshComponent->GetSocketLocation(TaggedMontage.CombatTipSocketName);
+	}
+	else
+	{
+		return GetMesh()->GetSocketLocation(TaggedMontage.CombatTipSocketName);
+	}
+}
+
 void AGasCharacterBase::Dissolve()
 {
 	TArray<UMaterialInstanceDynamic*> MatArray;

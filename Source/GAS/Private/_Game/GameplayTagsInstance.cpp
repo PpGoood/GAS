@@ -17,6 +17,7 @@ void GameplayTagsInstance::InitNativeGameplayTags()
 	InitStateTags();
 	InitBuffTags();
 	InitAbilityTags();
+	InitMontageTags();
 }
 
 void GameplayTagsInstance::InitAttributesTags()
@@ -116,8 +117,16 @@ void GameplayTagsInstance::InitAbilityTags()
 	Cooldown_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Fire.FireBolt"), FString("火球术"));
 	Cooldown_Wind_WindCharge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Wind.WindCharge"), FString("蓄力风技能"));
 	Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Attack"), FString("普通攻击"));
-
 }
+
+void GameplayTagsInstance::InitMontageTags()
+{
+	Montage_Attack_Weapon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.Weapon"), FString("使用武器攻击蒙太奇标签"));
+	Montage_Attack_LeftHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.LeftHand"), FString("使用左手攻击蒙太奇标签"));
+	Montage_Attack_RightHand = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Montage.Attack.RightHand"), FString("使用右手攻击蒙太奇标签"));
+}
+
+
 
 
 
