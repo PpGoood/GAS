@@ -139,3 +139,18 @@ void UGASBlueprintFunctionLibrary::GetLivePlayersWithinRadius(const UObject* Wor
 	}
 }
 
+bool UGASBlueprintFunctionLibrary::IsNotFriend(AActor* FirstActor, AActor* SecondActor)
+{
+	if(FirstActor->ActorHasTag("Player"))
+	{
+		return !SecondActor->ActorHasTag("Player");
+	}
+
+	if(FirstActor->ActorHasTag("Enemy"))
+	{
+		return !SecondActor->ActorHasTag("Enemy");
+	}
+
+	return false;
+}
+

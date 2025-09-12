@@ -63,7 +63,7 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category="Custom|Combat")
 	bool bHitReacting = false; //当前是否处于被攻击状态
 
-	UPROPERTY(BlueprintReadOnly, Category="Custom|Combat")
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Custom|Combat")
 	float BaseWalkSpeed = 250.f; //当前角色的最大移动速度
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Custom|Combat")
