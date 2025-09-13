@@ -9,6 +9,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
+#include "_Game/Util/GASBlueprintFunctionLibrary.h"
 
 AProjectileBase::AProjectileBase()
 {
@@ -36,12 +37,18 @@ void AProjectileBase::BeginPlay()
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this,&ThisClass::OnSphereOverlap);
 
 	//添加一个音效，并附加到根组件上面，在技能移动时，声音也会跟随移动
-	LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
+	if (LoopingSound)
+	{
+		LoopingSoundComponent = UGameplayStatics::SpawnSoundAttached(LoopingSound, GetRootComponent());
+	}
 }
 
 void AProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult & SweepResult)
 {
 	if (GetInstigator() == OtherActor) return;
+
+	if (!UGASBlueprintFunctionLibrary::IsNotFriend(GetInstigator(),OtherActor))return;
+	
 	PlayImpact();
 
 	//在重叠后，销毁自身
@@ -72,15 +79,20 @@ void AProjectileBase::Destroyed()
 
 void AProjectileBase::PlayImpact() const
 {
-	check(ImpactSound);
-	check(ImpactEffect);
-	//播放音效
-	UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
-	//播放粒子特效
-	UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
-	//将音乐停止后会自动销毁
-	//如果我们添加的是循环播放的音效，它无法被停止，所以，我们将在火球术结束时，将音效组件暂停。创建的附加音效默认会在音效播放完成或者暂停后自动销毁。
-	if(LoopingSoundComponent) LoopingSoundComponent->Stop();
+	if (ImpactSound)
+	{
+		UGameplayStatics::PlaySoundAtLocation(this, ImpactSound, GetActorLocation(), FRotator::ZeroRotator);
+	}
+	if (ImpactEffect)
+	{
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ImpactEffect, GetActorLocation());
+	}
+	if (LoopingSound)
+	{
+		//将音乐停止后会自动销毁
+		//如果我们添加的是循环播放的音效，它无法被停止，所以，我们将在火球术结束时，将音效组件暂停。创建的附加音效默认会在音效播放完成或者暂停后自动销毁。
+		if(LoopingSoundComponent) LoopingSoundComponent->Stop();
+	}
 }
 
 

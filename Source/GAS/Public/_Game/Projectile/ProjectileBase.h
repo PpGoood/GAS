@@ -27,7 +27,7 @@ public:
 	UPROPERTY(BlueprintReadWrite,meta=( ExposeOnSpawn = true ))
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
 protected:
-	UPROPERTY(EditDefaultsOnly,Category="Projectiles|Properties")
+	UPROPERTY(EditDefaultsOnly,Category="Custom|Projectiles|Properties")
 	float LifeSpan = 5.f; 
 	
 	virtual void BeginPlay() override;
@@ -41,13 +41,13 @@ private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USphereComponent> SphereComponent;
 
-	UPROPERTY(EditAnywhere,category="Projectiles|Properties")
+	UPROPERTY(EditAnywhere,category="Custom|Projectiles|Properties")
 	TObjectPtr<UNiagaraSystem> ImpactEffect;
 
-	UPROPERTY(EditAnywhere,category="Projectiles|Properties")
+	UPROPERTY(EditAnywhere,category="Custom|Projectiles|Properties")
 	TObjectPtr<USoundBase> ImpactSound;
 
-	UPROPERTY(EditAnywhere,category="Projectiles|Properties")
+	UPROPERTY(EditAnywhere,category="Custom|Projectiles|Properties")
 	TObjectPtr<USoundBase> LoopingSound;
 	
 	//储存循环音效的变量，后续用于删除
