@@ -93,6 +93,7 @@ void AEnemyCharacter::InitDefaultAbilities()
 void AEnemyCharacter::Die()
 {
 	SetLifeSpan(LifeSpan);
+	if(GASAIController) GASAIController->GetBlackboardComponent()->SetValueAsBool(FName("Dead"), true); //设置死亡，停止AI行为树
 	Super::Die();
 }
 
