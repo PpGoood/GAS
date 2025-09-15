@@ -28,8 +28,8 @@ public:
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual FVector GetCombatSocketLocation_Implementation() override;
 	virtual void Die() override;
-	virtual AActor* GetAvatar_Implementation() override;
 	virtual bool IsDead_Implementation() const override;
+	virtual AActor* GetAvatar_Implementation() override;
 	virtual TArray<FTaggedMontage> GetAttackMontageInfo_Implementation() override;
 	virtual FVector GetCombatSocketLocationByInfo_Implementation(const FTaggedMontage TaggedMontage) const override;
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
@@ -48,6 +48,8 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category="Custom|Combat")
 	UNiagaraSystem* BloodEffect; //受伤特效
 	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category="Custom|Combat")
+	USoundBase* DeathSound; //死亡音效
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Custom|Combat")
 	TObjectPtr<USkeletalMeshComponent> WeaponMeshComponent;

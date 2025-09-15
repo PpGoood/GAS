@@ -8,6 +8,7 @@
 #include "_Game/GameplayTagsInstance.h"
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 AGasCharacterBase::AGasCharacterBase()
 {
@@ -48,6 +49,7 @@ void AGasCharacterBase::ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectCla
 
 void AGasCharacterBase::MulticastHandleDeath_Implementation()
 {
+	UGameplayStatics::PlaySoundAtLocation(this, DeathSound, GetActorLocation(), GetActorRotation());
 	//开启武器物理效果
 	WeaponMeshComponent->SetSimulatePhysics(true); //开启模拟物理效果
 	WeaponMeshComponent->SetEnableGravity(true); //开启重力效果
