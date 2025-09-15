@@ -8,6 +8,7 @@
 #include "_Game/Interaction/CombatInterface.h"
 #include "GasCharacterBase.generated.h"
 
+class UNiagaraSystem;
 struct FGameplayTag;
 class UGameplayAbility;
 class UGameplayEffect;
@@ -31,6 +32,7 @@ public:
 	virtual bool IsDead_Implementation() const override;
 	virtual TArray<FTaggedMontage> GetAttackMontageInfo_Implementation() override;
 	virtual FVector GetCombatSocketLocationByInfo_Implementation(const FTaggedMontage TaggedMontage) const override;
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 	/** CombatInterface **/
 	 
 protected:
@@ -42,6 +44,10 @@ protected:
 
 	//战斗
 	bool bDead = false;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category="Custom|Combat")
+	UNiagaraSystem* BloodEffect; //受伤特效
+	
 	
 	UPROPERTY(EditAnywhere,BlueprintReadWrite,Category="Custom|Combat")
 	TObjectPtr<USkeletalMeshComponent> WeaponMeshComponent;

@@ -134,6 +134,12 @@ FVector AGasCharacterBase::GetCombatSocketLocationByInfo_Implementation(const FT
 	}
 }
 
+UNiagaraSystem* AGasCharacterBase::GetBloodEffect_Implementation()
+{
+	return BloodEffect;
+}
+
+
 void AGasCharacterBase::Dissolve()
 {
 	TArray<UMaterialInstanceDynamic*> MatArray;
