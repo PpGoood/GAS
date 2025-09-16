@@ -73,6 +73,8 @@ public:
 
 	FGameplayTag Cooldown_Fire_FireBolt;
 	FGameplayTag Cooldown_Wind_WindCharge;
+	FGameplayTag Cooldown_Shaman_Summon;
+	
 	FGameplayTag Abilities_Attack; //攻击技能激活标签
 	
 	FGameplayTag Montage_Attack_Weapon; //使用武器攻击蒙太奇标签

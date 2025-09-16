@@ -23,6 +23,7 @@ TArray<FVector> UGASSummonAbility::GetSpawnLocations()
 		GetWorld()->LineTraceSingleByChannel(Hit, ChosenSpawnLocation + FVector(0.f, 0.f, 400.f), ChosenSpawnLocation - FVector(0.f, 0.f, 400.f), ECC_Visibility);
 		if(Hit.bBlockingHit)
 		{
+		
 			ChosenSpawnLocation = Hit.ImpactPoint;
 		}
 		DrawDebugSphere(GetWorld(), ChosenSpawnLocation, 15.f,12,FColor::Green,false, 3.f);
@@ -34,10 +35,12 @@ TArray<FVector> UGASSummonAbility::GetSpawnLocations()
 	UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Location, Location + LeftOfSpread * MaxSpawnDistance, 4.f, FLinearColor::Red, 3.f);
 	UKismetSystemLibrary::DrawDebugArrow(GetAvatarActorFromActorInfo(), Location, Location + RightOfSpread * MaxSpawnDistance, 4.f, FLinearColor::Black, 3.f);
 	
-	DrawDebugSphere(GetWorld(), Location + LeftOfSpread * MinSpawnDistance, 15.f,12,FColor::Blue,false, 3.f);
-	DrawDebugSphere(GetWorld(), Location + LeftOfSpread * MaxSpawnDistance, 15.f,12,FColor::Blue,false, 3.f);
-	DrawDebugSphere(GetWorld(), Location + RightOfSpread * MinSpawnDistance, 15.f,12,FColor::Blue,false, 3.f);
-	DrawDebugSphere(GetWorld(), Location + RightOfSpread * MaxSpawnDistance, 15.f,12,FColor::Blue,false, 3.f);
 
 	return SpawnLocations;
+}
+
+TSubclassOf<APawn> UGASSummonAbility::GetRandomMinionClass()
+{
+	const int32 Selection = FMath::RandRange(0, MinionClasses.Num() - 1);
+	return MinionClasses[Selection];
 }
