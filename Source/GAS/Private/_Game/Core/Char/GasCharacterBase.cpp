@@ -130,10 +130,7 @@ FVector AGasCharacterBase::GetCombatSocketLocationByInfo_Implementation(const FT
 	{
 		return WeaponMeshComponent->GetSocketLocation(TaggedMontage.CombatTipSocketName);
 	}
-	else
-	{
-		return GetMesh()->GetSocketLocation(TaggedMontage.CombatTipSocketName);
-	}
+	return GetMesh()->GetSocketLocation(TaggedMontage.CombatTipSocketName);
 }
 
 UNiagaraSystem* AGasCharacterBase::GetBloodEffect_Implementation()
