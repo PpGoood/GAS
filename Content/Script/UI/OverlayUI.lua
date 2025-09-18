@@ -23,14 +23,14 @@ function M:WidgetControllerSet_Event()
 end
 
 function M:OnChargeBarUpdate(CurCharge,MaxCharge)
-    self.ChargeBar:SetPercent(CurCharge / MaxCharge)
+    self.ChargeProgressBar:SetPercent(CurCharge / MaxCharge)
 end
 
 function M:OnMessage(Row)
     --TODO 使用UI管理器，现在每次消息都会弹出
 
     -- 加载蓝图类，确保路径正确
-    local UMG_C = UE4.UClass.Load("/Game/_Game/Blueprints/UI/Main/SubWidget/WBP_EffectMessage.WBP_EffectMessage_C")
+    local UMG_C = UE.UClass.Load("/Game/_Game/Blueprints/UI/Main/SubWidget/WBP_EffectMessage.WBP_EffectMessage_C")
     if UMG_C == nil then
         print("[PeiLuaLog] Failed to load UMG class!")
         return
