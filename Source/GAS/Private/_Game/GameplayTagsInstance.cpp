@@ -118,6 +118,8 @@ void GameplayTagsInstance::InitAbilityTags()
 	Cooldown_Wind_WindCharge = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Wind.WindCharge"), FString("蓄力风技能"));
 	Cooldown_Shaman_Summon = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Cooldown.Shaman.Summon"), FString("萨满技能"));
 	Abilities_Attack = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Attack"), FString("普通攻击"));
+	Abilities_Fire_FireBolt = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Abilities.Fire.FireBolt"), FString("火球攻击"));
+
 }
 
 void GameplayTagsInstance::InitMontageTags()
