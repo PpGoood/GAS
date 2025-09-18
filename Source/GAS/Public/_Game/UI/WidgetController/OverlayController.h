@@ -66,6 +66,8 @@ protected:
 	//使用tag去查找datatable的数据，需要datatable每行的名称与Tag的名称完全一致
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable,const FGameplayTag& Tag);
+
+	void OnInitializeStartupAbilities(UMyAbilitySystemComponent* RPGAbilitySystemComponent) const; //技能初始化应用后的回调
 };
 
 template <typename T>

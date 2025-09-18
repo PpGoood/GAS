@@ -44,8 +44,19 @@ void UOverlayController::BindCallbacksToDependencies()
 			OnMaxManaChanged.Broadcast(Data.NewValue); 
 		});
 
+	UMyAbilitySystemComponent* GASASC = Cast<UMyAbilitySystemComponent>(AbilitySystemComponent);
+	if (GASASC == nullptr) return;
 
-	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->EffectAssetTags.AddLambda([this](const FGameplayTagContainer& TagContainer)
+	if (GASASC->bStartupAbilitiesGiven)
+	{
+		OnInitializeStartupAbilities(GASASC);
+	}
+	else
+	{
+		GASASC->AbilityGivenDelegate.AddUObject(this, &ThisClass::OnInitializeStartupAbilities);
+	}
+	
+	GASASC->EffectAssetTagsDelegate.AddLambda([this](const FGameplayTagContainer& TagContainer)
 	{
 		for (const FGameplayTag& Tag : TagContainer)
 		{
@@ -58,10 +69,17 @@ void UOverlayController::BindCallbacksToDependencies()
 		}
 	});
 
-	Cast<UMyAbilitySystemComponent>(AbilitySystemComponent)->OnAbilityChargeChanged.AddLambda([this](float ChargeTime,float MaxChargeTime)
+	GASASC->AbilityChargeChangedDelegate.AddLambda([this](float ChargeTime,float MaxChargeTime)
 	{
 		OnControllerChargeChanged.Broadcast(ChargeTime,MaxChargeTime);
 	});
+	
+}
+
+void UOverlayController::OnInitializeStartupAbilities(UMyAbilitySystemComponent* RPGAbilitySystemComponent) const
+{
+	if(!RPGAbilitySystemComponent->bStartupAbilitiesGiven) return; //判断当前技能初始化是否完成，触发回调时都已经完成
+	
 }
 
 

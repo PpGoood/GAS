@@ -9,6 +9,8 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnEffectTriggerAssetTags,const FGameplayTagContainer& /**AssetTags**/);
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnAbilityChargeChangedSignature,float,float);
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FAbilityGiven, UMyAbilitySystemComponent*) //技能初始化应用后的回调委托
 /**
  * 
  */
@@ -19,10 +21,15 @@ class GAS_API UMyAbilitySystemComponent : public UAbilitySystemComponent
 public:
 	void InitAbilitySystemComponent();
 
-	FOnEffectTriggerAssetTags EffectAssetTags;
+	FOnEffectTriggerAssetTags EffectAssetTagsDelegate;
 
-	FOnAbilityChargeChangedSignature OnAbilityChargeChanged;
-	
+	FOnAbilityChargeChangedSignature AbilityChargeChangedDelegate;
+
+	FAbilityGiven AbilityGivenDelegate; //技能初始化应用后的回调委托
+	//这样子配合委托可以避免用tick或者定时器的写法 无论如何都会被调用
+	bool bStartupAbilitiesGiven = false; //初始化应用技能后，此值将被设置为true，用于记录当前是否被初始化完成
+
+	//用于给玩家赋予技能
 	void AddCharacterAbilities(const TArray<TSubclassOf<UGameplayAbility>>& Abilities);
 
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);

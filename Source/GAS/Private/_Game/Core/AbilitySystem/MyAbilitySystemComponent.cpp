@@ -22,6 +22,8 @@ void UMyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 			GiveAbility(AbilitySpec);
 		}
 	}
+	bStartupAbilitiesGiven = true;
+	AbilityGivenDelegate.Broadcast(this);
 }
 
 void UMyAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
@@ -64,7 +66,7 @@ void UMyAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySyste
 	FGameplayTagContainer TagContainer;
 	GESpec.GetAllAssetTags(TagContainer);
 
-	EffectAssetTags.Broadcast(TagContainer);
+	EffectAssetTagsDelegate.Broadcast(TagContainer);
 	
 	// for (const FGameplayTag& Tag : TagContainer)
 	// {
