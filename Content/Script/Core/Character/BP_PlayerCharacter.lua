@@ -9,9 +9,9 @@
 ---@type BP_PlayerCharacter_C
 local M = UnLua.Class()
 
-function M:UpdateFacingTarget(TargetLocation)
-    self.MotionWarping:AddOrUpdateWarpTargetFromLocation("FacingTarget",TargetLocation)
-end
+-- function M:UpdateFacingTarget(TargetLocation)
+--     self.MotionWarping:AddOrUpdateWarpTargetFromLocation("FacingTarget",TargetLocation)
+-- end
 
 
 -- function M:Initialize(Initializer)
