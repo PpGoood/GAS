@@ -25,7 +25,7 @@ FGameplayTag UMyAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbili
 {
 	for(FGameplayTag Tag : AbilitySpec.DynamicAbilityTags) //从技能实例的动态标签容器中遍历所有标签
 	{
-		if(Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag")))) //查找标签中是否设置以输入标签开头的标签
+		if(Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Input")))) //查找标签中是否设置以输入标签开头的标签
 		{
 			return Tag;
 		}
