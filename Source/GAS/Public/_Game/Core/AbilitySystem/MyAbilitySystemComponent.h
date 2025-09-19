@@ -11,6 +11,9 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnEffectTriggerAssetTags,const FGameplayTag
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnAbilityChargeChangedSignature,float,float);
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FAbilityGiven, UMyAbilitySystemComponent*) //技能初始化应用后的回调委托
+
+DECLARE_DELEGATE_OneParam(FForEachAbility, const FGameplayAbilitySpec&); //单播委托，只能绑定一个回调
+
 /**
  * 
  */
@@ -19,6 +22,9 @@ class GAS_API UMyAbilitySystemComponent : public UAbilitySystemComponent
 {
 	GENERATED_BODY()
 public:
+	static FGameplayTag GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	static FGameplayTag GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec);
+	
 	void InitAbilitySystemComponent();
 
 	FOnEffectTriggerAssetTags EffectAssetTagsDelegate;
@@ -34,6 +40,8 @@ public:
 
 	void AbilityInputTagHeld(const FGameplayTag& InputTag);
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
+
+	void ForEachAbility(const FForEachAbility& Delegate); //遍历技能，并将技能广播出去
 protected:
 	UFUNCTION(Client, Reliable)
 	void ClientEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec, FActiveGameplayEffectHandle GEHandle);

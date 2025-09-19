@@ -5,9 +5,12 @@
 #include "CoreMinimal.h"
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 #include "_Game/Core/AbilitySystem/MyAttributeSet.h"
+#include "_Game/Data/AbilityIconInfo.h"
 #include "_Game/UI/Widget/MVCWidget.h"
 #include "_Game/UI/WidgetController/MVCController.h"
 #include "OverlayController.generated.h"
+
+class UAbilityIconInfo;
 
 USTRUCT(BlueprintType)
 struct FUIWidgetRow:public FTableRowBase
@@ -31,6 +34,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeChangedSignature,float, 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FMessageWidgetRowSignature,FUIWidgetRow,Row);
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUIChargeChangedSignature,float,CurCharge,float,MaxCharge);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAbilityInfoSignature, const FGASAbilityIconInfo, Info);
 /**
  * 
  */
@@ -54,20 +59,28 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Custom|GAS|Attributes")
 	FOnAttributeChangedSignature OnMaxManaChanged;
 
-	UPROPERTY(BlueprintAssignable, Category="Custom|GAS|Message")
+	UPROPERTY(BlueprintAssignable, Category="Custom|Message")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category="Custom|GAS|Message")
-	FOnUIChargeChangedSignature OnControllerChargeChanged;
+	UPROPERTY(BlueprintAssignable, Category="Custom|Messages")
+	FAbilityInfoSignature AbilityInfoDelegate;
+	
+	UPROPERTY(BlueprintAssignable, Category="Custom|Message")
+	FOnUIChargeChangedSignature ChargeChangedDelegate;
+
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category="Widget Data")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly,Category="Custom|Widget Data")
 	TObjectPtr<UDataTable> MessageWidgetDataTable;
 
 	//使用tag去查找datatable的数据，需要datatable每行的名称与Tag的名称完全一致
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable,const FGameplayTag& Tag);
+	
+	//技能的表格数据
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Custom|Widget Data")
+	TObjectPtr<UAbilityIconInfo> AbilityIconInfo;
 
-	void OnInitializeStartupAbilities(UMyAbilitySystemComponent* RPGAbilitySystemComponent) const; //技能初始化应用后的回调
+	void OnInitializeStartupAbilities(UMyAbilitySystemComponent* ASC) const; //技能初始化应用后的回调
 };
 
 template <typename T>

@@ -71,15 +71,27 @@ void UOverlayController::BindCallbacksToDependencies()
 
 	GASASC->AbilityChargeChangedDelegate.AddLambda([this](float ChargeTime,float MaxChargeTime)
 	{
-		OnControllerChargeChanged.Broadcast(ChargeTime,MaxChargeTime);
+		ChargeChangedDelegate.Broadcast(ChargeTime,MaxChargeTime);
 	});
 	
 }
 
-void UOverlayController::OnInitializeStartupAbilities(UMyAbilitySystemComponent* RPGAbilitySystemComponent) const
+void UOverlayController::OnInitializeStartupAbilities(UMyAbilitySystemComponent* ASC) const
 {
-	if(!RPGAbilitySystemComponent->bStartupAbilitiesGiven) return; //判断当前技能初始化是否完成，触发回调时都已经完成
-	
+	if(!ASC->bStartupAbilitiesGiven) return; //判断当前技能初始化是否完成，触发回调时都已经完成
+
+	FForEachAbility BroadcastDelegate;
+	//委托绑定回调匿名函数，委托广播时将会触发函数内部逻辑
+	BroadcastDelegate.BindLambda([this](const FGameplayAbilitySpec& AbilitySpec)
+	{
+		//通过静态函数获取到技能实例的技能标签，并通过标签获取到技能数据
+		FGASAbilityIconInfo Info = AbilityIconInfo->FindAbilityInfoForTag(UMyAbilitySystemComponent::GetAbilityTagFromSpec(AbilitySpec));
+		//获取到技能的输入标签
+		Info.InputTag = UMyAbilitySystemComponent::GetInputTagFromSpec(AbilitySpec);
+		AbilityInfoDelegate.Broadcast(Info); 
+	});
+	//遍历技能并触发委托回调
+	ASC->ForEachAbility(BroadcastDelegate);
 }
 
 

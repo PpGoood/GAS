@@ -19,7 +19,7 @@ function M:WidgetControllerSet_Event()
 
     if not self.WidgetController then return end
     self.WidgetController.MessageWidgetRowDelegate:Add(self, self.OnMessage)
-    self.WidgetController.OnControllerChargeChanged:Add(self, self.OnChargeBarUpdate)
+    self.WidgetController.AbilityInfoDelegate:Add(self, self.OnChargeBarUpdate)
 end
 
 function M:OnChargeBarUpdate(CurCharge,MaxCharge)

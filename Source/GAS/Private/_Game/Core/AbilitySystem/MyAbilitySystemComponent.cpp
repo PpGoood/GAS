@@ -3,7 +3,36 @@
 
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 
+#include "GAS/GASLogChannels.h"
 #include "_Game/Core/AbilitySystem/Abilities/GASGameplayAbility.h"
+
+FGameplayTag UMyAbilitySystemComponent::GetAbilityTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	if(AbilitySpec.Ability)
+	{
+		for(FGameplayTag Tag : AbilitySpec.Ability.Get()->AbilityTags) //获取设置的所有的技能标签并遍历
+		{
+			if(Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("Abilities")))) //判断当前标签是否包含"Abilities"名称
+			{
+				return Tag;
+			}
+		}
+	}
+	return FGameplayTag();
+}
+
+FGameplayTag UMyAbilitySystemComponent::GetInputTagFromSpec(const FGameplayAbilitySpec& AbilitySpec)
+{
+	for(FGameplayTag Tag : AbilitySpec.DynamicAbilityTags) //从技能实例的动态标签容器中遍历所有标签
+	{
+		if(Tag.MatchesTag(FGameplayTag::RequestGameplayTag(FName("InputTag")))) //查找标签中是否设置以输入标签开头的标签
+		{
+			return Tag;
+		}
+	}
+
+	return FGameplayTag();
+}
 
 void UMyAbilitySystemComponent::InitAbilitySystemComponent()
 {
@@ -57,6 +86,19 @@ void UMyAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& Inpu
 		}
 	}
 }
+
+void UMyAbilitySystemComponent::ForEachAbility(const FForEachAbility& Delegate)
+{
+	FScopedAbilityListLock ActiveScopeLock(*this); //使用域锁将此作用域this的内容锁定（无法修改），在遍历结束时解锁，保证线程安全
+	for(const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
+	{
+		if(!Delegate.ExecuteIfBound(AbilitySpec)) //运行绑定在技能实例上的委托，如果失败返回false
+		{
+			UE_LOG(LogGAS, Error, TEXT("在函数[%hs]运行委托失败"), __FUNCTION__);
+		}
+	}
+}
+
 
 //GE被应用时候委托调用方法,用于广播标签
 void UMyAbilitySystemComponent::ClientEffectApplied_Implementation(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec,
