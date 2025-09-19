@@ -42,6 +42,8 @@ public:
 	void AbilityInputTagReleased(const FGameplayTag& InputTag);
 
 	void ForEachAbility(const FForEachAbility& Delegate); //遍历技能，并将技能广播出去
+	
+	virtual void OnRep_ActivateAbilities() override;
 protected:
 	UFUNCTION(Client, Reliable)
 	void ClientEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& GESpec, FActiveGameplayEffectHandle GEHandle);

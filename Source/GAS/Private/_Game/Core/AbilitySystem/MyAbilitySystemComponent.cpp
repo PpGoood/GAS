@@ -55,6 +55,18 @@ void UMyAbilitySystemComponent::AddCharacterAbilities(const TArray<TSubclassOf<U
 	AbilityGivenDelegate.Broadcast(this);
 }
 
+void UMyAbilitySystemComponent::OnRep_ActivateAbilities()
+{
+	Super::OnRep_ActivateAbilities();
+	//为了让客户端也能够成功去广播
+	if(!bStartupAbilitiesGiven)
+	{
+		bStartupAbilitiesGiven = true;
+		AbilityGivenDelegate.Broadcast(this);
+	}
+}
+
+
 void UMyAbilitySystemComponent::AbilityInputTagHeld(const FGameplayTag& InputTag)
 {
 	if (!InputTag.IsValid()) return;
