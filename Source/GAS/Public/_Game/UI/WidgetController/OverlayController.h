@@ -59,6 +59,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Custom|GAS|Attributes")
 	FOnAttributeChangedSignature OnMaxManaChanged;
 
+	UPROPERTY(BlueprintAssignable, Category="Custom|GAS|Attributes")
+	FOnAttributeChangedSignature OnXPPercentChangedDelegate; //经验条百分比变动回调
+	
 	UPROPERTY(BlueprintAssignable, Category="Custom|Message")
 	FMessageWidgetRowSignature MessageWidgetRowDelegate;
 
@@ -81,6 +84,8 @@ protected:
 	TObjectPtr<UAbilityIconInfo> AbilityIconInfo;
 
 	void OnInitializeStartupAbilities(UMyAbilitySystemComponent* ASC) const; //技能初始化应用后的回调
+
+	void OnXPChanged(int32 NewXP) const; //经验变动后的回调
 };
 
 template <typename T>

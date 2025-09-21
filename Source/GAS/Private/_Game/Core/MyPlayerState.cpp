@@ -25,9 +25,41 @@ void AMyPlayerState::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>&
 	
 	// DOREPLIFETIME_CONDITION_NOTIFY(AMyPlayerState, Level, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME(AMyPlayerState,Level);
+	DOREPLIFETIME(AMyPlayerState, XP);
 }
 
-void AMyPlayerState::OnRep_Level(int32 OldLevel)
+void AMyPlayerState::AddToLevel(int32 InLevel)
 {
-	
+	Level += InLevel;
+	OnLevelChangedDelegate.Broadcast(Level);
 }
+
+void AMyPlayerState::SetLevel(int32 InLevel)
+{
+	Level = InLevel;
+	OnLevelChangedDelegate.Broadcast(Level);
+}
+
+void AMyPlayerState::AddToXP(int32 InXP)
+{
+	XP += InXP;
+	OnXPChangedDelegate.Broadcast(XP);
+}
+
+void AMyPlayerState::SetXP(int32 InXP)
+{
+	XP = InXP;
+	OnXPChangedDelegate.Broadcast(XP);
+}
+
+void AMyPlayerState::OnRep_Level(int32 OldLevel) const
+{
+	//用于客户端触发委托
+	OnLevelChangedDelegate.Broadcast(Level);
+}
+
+void AMyPlayerState::OnRep_XP(int32 OldXP) const
+{
+	OnXPChangedDelegate.Broadcast(XP);
+}
+
