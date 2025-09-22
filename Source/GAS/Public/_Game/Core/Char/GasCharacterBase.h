@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "_Game/Core/AbilitySystem/Data/CharacterClassInfo.h"
 #include "_Game/Interaction/CombatInterface.h"
 #include "GasCharacterBase.generated.h"
 
@@ -24,6 +25,9 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override {return AbilitySystemComponent;}
 	UAttributeSet* GetAttributeSet() const {return AttributeSet;}
 
+	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Custom|Attributes")
+	ECharacterClassType CharacterClassType = ECharacterClassType::Warrior;
+	
 	/** CombatInterface **/
 	virtual UAnimMontage* GetHitReactMontage_Implementation() override;
 	virtual FVector GetCombatSocketLocation_Implementation() override;
@@ -33,6 +37,7 @@ public:
 	virtual TArray<FTaggedMontage> GetAttackMontageInfo_Implementation() override;
 	virtual FVector GetCombatSocketLocationByInfo_Implementation(const FTaggedMontage TaggedMontage) const override;
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
+	virtual ECharacterClassType GetCharacterClassType_Implementation() override;
 	/** CombatInterface **/
 	 
 protected:
@@ -92,6 +97,10 @@ protected:
 
 	UPROPERTY(EditAnywhere,Category="Custom|Abilities")
 	TArray<TSubclassOf<UGameplayAbility>> StartAbilities;
+
+	UPROPERTY(EditAnywhere, Category="Custom|Abilities")
+	TArray<TSubclassOf<UGameplayAbility>> StartPassiveAbilities; //
+
 	
 	void ApplyEffectToSelf(TSubclassOf<UGameplayEffect> EffectClass,float Level) const;
 

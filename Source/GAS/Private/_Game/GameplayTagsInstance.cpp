@@ -45,6 +45,8 @@ void GameplayTagsInstance::InitAttributesTags()
 	Attributes_Resistance_Lightning = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Lightning"), FString("雷属性抗性"));
 	Attributes_Resistance_Arcane = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Arcane"), FString("魔法攻击抗性"));
 	Attributes_Resistance_Physical = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Resistance.Physical"), FString("物理攻击抗性"));
+
+	Attributes_Meta_IncomingXP = UGameplayTagsManager::Get().AddNativeGameplayTag(FName("Attributes.Meta.IncomingXP"), FString("经验值元属性"));
 }
 
 void GameplayTagsInstance::InitDamageTypesTags()

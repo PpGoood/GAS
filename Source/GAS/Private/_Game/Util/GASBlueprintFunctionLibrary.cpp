@@ -154,3 +154,17 @@ bool UGASBlueprintFunctionLibrary::IsNotFriend(AActor* FirstActor, AActor* Secon
 	return false;
 }
 
+int32 UGASBlueprintFunctionLibrary::GetXPRewardForClassAndLevel(const UObject* WorldContextObject,
+	ECharacterClassType CharacterClass, int32 CharacterLevel)
+{
+	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
+	if(CharacterClassInfo == nullptr) return 0;
+
+	//获取到默认的基础角色数据
+	const FCharacterClassDefaultInfo& ClassDefaultInfo = CharacterClassInfo->GetClassDefaultInfo(CharacterClass);
+
+	const float XPReward = ClassDefaultInfo.XPReward.GetValueAtLevel(CharacterLevel);
+
+	return static_cast<int32>(XPReward);
+}
+

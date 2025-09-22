@@ -42,6 +42,9 @@ public:
 	FGameplayTag Attributes_Resistance_Lightning;
 	FGameplayTag Attributes_Resistance_Arcane;
 	FGameplayTag Attributes_Resistance_Physical;
+	//元属性
+	FGameplayTag Attributes_Meta_IncomingXP; //元属性经验 标签
+
 	FGameplayTag Message_HealthCrystal;           // Message.HealthCrystal
 	FGameplayTag Message_HealthPotion;            // Message.HealthPotion
 	FGameplayTag Message_ManaCrystal;             // Message.ManaCrystal
@@ -81,7 +84,6 @@ public:
 	FGameplayTag Montage_Attack_Weapon; //使用武器攻击蒙太奇标签
 	FGameplayTag Montage_Attack_RightHand; //右手攻击蒙太奇标签
 	FGameplayTag Montage_Attack_LeftHand; //左手攻击蒙太奇标签
-
 private:
 	// 私有构造函数和析构函数，防止外部创建实例
 	GameplayTagsInstance() = default;

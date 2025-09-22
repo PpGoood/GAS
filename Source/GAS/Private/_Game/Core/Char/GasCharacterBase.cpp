@@ -82,6 +82,7 @@ void AGasCharacterBase::InitDefaultAbilities()
 	if (!HasAuthority()) return;
 	UMyAbilitySystemComponent* ASC = Cast<UMyAbilitySystemComponent>(AbilitySystemComponent);
 	ASC->AddCharacterAbilities(StartAbilities);
+	ASC->AddCharacterPassiveAbilities(StartPassiveAbilities);
 }
 
 FVector AGasCharacterBase::GetCombatSocketLocation_Implementation()
@@ -136,6 +137,11 @@ FVector AGasCharacterBase::GetCombatSocketLocationByInfo_Implementation(const FT
 UNiagaraSystem* AGasCharacterBase::GetBloodEffect_Implementation()
 {
 	return BloodEffect;
+}
+
+ECharacterClassType AGasCharacterBase::GetCharacterClassType_Implementation()
+{
+	return CharacterClassType;
 }
 
 

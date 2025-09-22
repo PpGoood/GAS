@@ -5,6 +5,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectExtension.h"
 #include "GameFramework/Character.h"
+#include "GAS/GASLogChannels.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "_Game/GameplayTagsInstance.h"
@@ -133,8 +134,31 @@ void UMyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 			{
 				CombatInterface->Die();
 			}
+			SendXPEvent(Props);
 		}
-		
+	}
+
+	if (Data.EvaluatedData.Attribute == GetIncomingXPAttribute())
+	{
+		UE_LOG(LogGAS, Log, TEXT("[PeiLog]获取传入经验值：%f"), GetIncomingXP());
+		SetIncomingXP(0);
+	}
+}
+
+void UMyAttributeSet::SendXPEvent(const FEffectProperties& Props)
+{
+	if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetCharacter))
+	{
+		//从战斗接口获取等级和职业，通过蓝图函数获取可提供的经验值
+		const int32 TargetLevel = CombatInterface->GetPlayerLevel();
+		const ECharacterClassType TargetClass = ICombatInterface::Execute_GetCharacterClassType(Props.TargetCharacter); //c++内调用BlueprintNativeEvent函数需要这样调用
+		const int32 XPReward = UGASBlueprintFunctionLibrary::GetXPRewardForClassAndLevel(Props.TargetCharacter, TargetClass, TargetLevel);
+
+		const GameplayTagsInstance& GameplayTags = GameplayTagsInstance::GetInstance();
+		FGameplayEventData Payload; //创建Payload
+		Payload.EventTag = GameplayTags.Attributes_Meta_IncomingXP;
+		Payload.EventMagnitude = XPReward;
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Props.SourceCharacter, GameplayTags.Attributes_Meta_IncomingXP, Payload);
 	}
 }
 

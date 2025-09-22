@@ -11,6 +11,8 @@
 
 APlayerCharacter::APlayerCharacter()
 {
+	//设置玩家职业
+	CharacterClassType = ECharacterClassType::Elementalist;
 	//角色是否根据其移动方向来调整旋转
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	//设置旋转速率

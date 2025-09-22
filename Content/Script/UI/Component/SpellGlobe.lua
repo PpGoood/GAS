@@ -15,7 +15,7 @@ function M:WidgetControllerSet_Event()
 end
 
 function M:OnAbilityInfoSignature(info)
-    UE.UKismetSystemLibrary.PrintString(WorldContectObject,"OnAbilityInfoSignature")
+    -- UE.UKismetSystemLibrary.PrintString(WorldContectObject,"OnAbilityInfoSignature")
     self:SetAbilityIconInfo(info)
     self:SetDefaultState()
     local isMatch = UE.UBlueprintGameplayTagLibrary.MatchesTag(info.InputTag,self.InputTag,true)

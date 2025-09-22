@@ -43,8 +43,6 @@ public:
 	FOnAttributeChangedSignature OnMaxHealthChanged;
 
 protected:
-	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Custom|Attributes")
-	ECharacterClassType CharacterClassType = ECharacterClassType::Warrior;
 	
 	virtual void BeginPlay() override;
 	UPROPERTY(EditAnywhere,BlueprintReadOnly, Category="Custom|Attributes")

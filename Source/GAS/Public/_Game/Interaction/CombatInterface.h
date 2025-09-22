@@ -7,6 +7,7 @@
 #include "UObject/Interface.h"
 #include "CombatInterface.generated.h"
 
+enum class ECharacterClassType : uint8;
 class UNiagaraSystem;
 //蒙太奇动画和标签以及骨骼位置的映射，用于攻击技能获取和设置攻击范围
 USTRUCT(BlueprintType)
@@ -43,6 +44,9 @@ class GAS_API ICombatInterface
 public:	
 	virtual int32 GetPlayerLevel(){return 0;}
 
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	ECharacterClassType GetCharacterClassType(); //获取当前角色的职业
+	
 	//用于返回武器插槽的位置，用来生成特效
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	FVector GetCombatSocketLocation();

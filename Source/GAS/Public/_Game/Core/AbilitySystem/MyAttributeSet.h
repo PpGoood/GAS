@@ -61,7 +61,10 @@ public:
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
-
+	
+	//发送经验事件
+	void SendXPEvent(const FEffectProperties& Props);
+	
 	//属性改变分发委托
 	//改为传入函数的指针
 	TMap<FGameplayTag, FGameplayAttribute(*)()> TagsToAttributes;
@@ -95,7 +98,7 @@ public:
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Vigor, Category="Custom|Primary Attributes")
 	FGameplayAttributeData Vigor;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Vigor);
-
+	
 	//次级属性
 	UPROPERTY(BlueprintReadOnly,ReplicatedUsing = OnRep_Armor, Category="Custom|Secondary Attributes")
 	FGameplayAttributeData Armor;
@@ -155,9 +158,14 @@ public:
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, PhysicalResistance);
 	
 	//此数据只在服务端做计算，不用复制
-	UPROPERTY(BlueprintReadOnly,Category="Custom|Mera Attributes")
+	UPROPERTY(BlueprintReadOnly,Category="Custom|Meta Attributes")
 	FGameplayAttributeData IncomingDamage;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, IncomingDamage);
+
+	UPROPERTY(BlueprintReadOnly, Category="Custom|Meta Attributes")
+	FGameplayAttributeData IncomingXP; //处理传入的经验
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, IncomingXP);
+
 	
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldHealth) const;
