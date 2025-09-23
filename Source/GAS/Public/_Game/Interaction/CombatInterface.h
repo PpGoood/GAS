@@ -41,8 +41,9 @@ class UCombatInterface : public UInterface
 class GAS_API ICombatInterface
 {
 	GENERATED_BODY()
-public:	
-	virtual int32 GetPlayerLevel(){return 0;}
+public:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	int32 GetPlayerLevel();
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	ECharacterClassType GetCharacterClassType(); //获取当前角色的职业

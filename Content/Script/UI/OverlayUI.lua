@@ -20,7 +20,8 @@ function M:WidgetControllerSet_Event()
     self.WBP_HealthManaSpells.WBP_SpellGlobe_3,
     self.WBP_HealthManaSpells.WBP_SpellGlobe_4,
     self.WBP_HealthManaSpells.WBP_SpellGlobe_Passive1,
-    self.WBP_HealthManaSpells.WBP_SpellGlobe_Passive2
+    self.WBP_HealthManaSpells.WBP_SpellGlobe_Passive2,
+    self.WBP_XPBar,
     }
     for _, widget in ipairs(widgets) do
         widget:SetWidgetController(self.WidgetController)
@@ -29,6 +30,11 @@ function M:WidgetControllerSet_Event()
     if not self.WidgetController then return end
     self.WidgetController.MessageWidgetRowDelegate:Add(self, self.OnMessage)
     self.WidgetController.AbilityInfoDelegate:Add(self, self.OnChargeBarUpdate)
+    self.WidgetController.OnXPPercentChangedDelegate:Add(self, self.OnXPPercentChange)
+end
+
+function M:OnXPPercentChange(XPPercent)
+    self.WBP_XPBar.ProgressBar:SetPercent(XPPercent)
 end
 
 function M:OnChargeBarUpdate(CurCharge,MaxCharge)

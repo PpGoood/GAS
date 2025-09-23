@@ -99,8 +99,16 @@ void UGameplayEEC_Damage::Execute_Implementation(
     AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
     AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
 
-    ICombatInterface* SourceCombatInterface = Cast<ICombatInterface>(SourceAvatar);
-    ICombatInterface* TargetCombatInterface = Cast<ICombatInterface>(TargetAvatar);
+	float SourceLevel = 1;
+	float TargetLevel = 1;
+	if ( ICombatInterface* SourceCombatInterface = Cast<ICombatInterface>(SourceAvatar))
+	{
+		SourceLevel = ICombatInterface::Execute_GetPlayerLevel(SourceAvatar);
+	}
+	if (ICombatInterface* TargetCombatInterface = Cast<ICombatInterface>(TargetAvatar))
+	{
+		TargetLevel = ICombatInterface::Execute_GetPlayerLevel(TargetAvatar);
+	}
 
     // =========================
     //获取 GameplayEffect 规格和标签
@@ -150,9 +158,9 @@ void UGameplayEEC_Damage::Execute_Implementation(
     const FRealCurve* EffectiveArmorCurve = CharacterClassInfo->DamageCalculationTable->FindCurve(FName("EffectiveArmor"), FString());
     const FRealCurve* CriticalHitResistanceCurve = CharacterClassInfo->DamageCalculationTable->FindCurve(FName("CriticalHitResistance"), FString());
 
-    const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceCombatInterface->GetPlayerLevel());
-    const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetCombatInterface->GetPlayerLevel());
-    const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetCombatInterface->GetPlayerLevel());
+    const float ArmorPenetrationCoefficient = ArmorPenetrationCurve->Eval(SourceLevel);
+    const float EffectiveArmorCoefficient = EffectiveArmorCurve->Eval(TargetLevel);
+    const float CriticalHitResistanceCoefficient = CriticalHitResistanceCurve->Eval(TargetLevel);
 	
 	// =========================
 	//获取基础伤害值 减去伤害抗性

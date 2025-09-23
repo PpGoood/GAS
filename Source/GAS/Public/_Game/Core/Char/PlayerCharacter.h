@@ -5,13 +5,14 @@
 #include "CoreMinimal.h"
 #include "_Game/Core/Char/GasCharacterBase.h"
 #include "_Game/Interaction/CombatInterface.h"
+#include "_Game/Interaction/PlayerInterface.h"
 #include "PlayerCharacter.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class GAS_API APlayerCharacter : public AGasCharacterBase
+class GAS_API APlayerCharacter : public AGasCharacterBase,public IPlayerInterface
 {
 	GENERATED_BODY()
 public:
@@ -20,8 +21,12 @@ public:
 	virtual void OnRep_PlayerState() override; //客户端初始化ASC
 
 	/** ICombatInterface **/
-	virtual int32 GetPlayerLevel() override;
+	virtual int32 GetPlayerLevel_Implementation() override;
 	/** ICombatInterface **/
+
+	/** IPlayerInterface **/
+	virtual void AddToXP_Implementation(int32 InXP) override;
+	/** IPlayerInterface **/
 
 	virtual void InitAbilityActorInfo() override;
 private:

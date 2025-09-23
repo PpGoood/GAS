@@ -29,7 +29,6 @@ function M:OnAbilityInfoSignature(info)
         self.ListenCooldownTask.CooldownEnd:Add(self,self.CooldownEnd)
 
     end
-    
 end
 
 function M:CooldownStart(TimeRemaining)

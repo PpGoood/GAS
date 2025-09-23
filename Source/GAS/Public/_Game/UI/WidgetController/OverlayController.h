@@ -59,7 +59,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category="Custom|GAS|Attributes")
 	FOnAttributeChangedSignature OnMaxManaChanged;
 
-	UPROPERTY(BlueprintAssignable, Category="Custom|GAS|Attributes")
+	UPROPERTY(BlueprintAssignable, Category="Custom|Message")
 	FOnAttributeChangedSignature OnXPPercentChangedDelegate; //经验条百分比变动回调
 	
 	UPROPERTY(BlueprintAssignable, Category="Custom|Message")

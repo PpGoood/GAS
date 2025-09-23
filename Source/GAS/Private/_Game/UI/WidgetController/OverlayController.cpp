@@ -3,6 +3,7 @@
 
 #include "_Game/UI/WidgetController/OverlayController.h"
 
+#include "GAS/GASLogChannels.h"
 #include "_Game/Core/MyPlayerState.h"
 #include "_Game/Core/AbilitySystem/MyAbilitySystemComponent.h"
 #include "_Game/Core/AbilitySystem/MyAttributeSet.h"
@@ -15,7 +16,8 @@ void UOverlayController::BroadcastInitialValues()
 	OnMaxHealthChanged.Broadcast(AttributeSetBase->GetMaxHealth());
 	OnManaChanged.Broadcast(AttributeSetBase->GetMana());
 	OnMaxManaChanged.Broadcast(AttributeSetBase->GetMaxMana());
-
+	//TODO
+	OnXPPercentChangedDelegate.Broadcast(0); 
 }
 
 void UOverlayController::BindCallbacksToDependencies()
@@ -107,13 +109,11 @@ void UOverlayController::OnXPChanged(int32 NewXP) const
 
 	const int32 Level =  LevelUpInfo->FindLevelForXP(NewXP); //获取当前等级
 	const int32 MaxLevel = LevelUpInfo->LevelUpInformation.Num(); //获取当前最大等级
-
 	if(Level <= MaxLevel && Level > 0)
 	{
 		const int32 LevelUpRequirement = LevelUpInfo->LevelUpInformation[Level].LevelUpRequirement; //当前等级升级所需经验值
 		const int32 PreviousLevelUpRequirement = LevelUpInfo->LevelUpInformation[Level-1].LevelUpRequirement; //上一级升级所需经验值
-
-		const float XPPercent = static_cast<float>((NewXP - PreviousLevelUpRequirement) / (LevelUpRequirement - PreviousLevelUpRequirement)); //计算经验百分比
+		const float XPPercent = static_cast<float>(NewXP - PreviousLevelUpRequirement) / (LevelUpRequirement - PreviousLevelUpRequirement); //计算经验百分比
 		OnXPPercentChangedDelegate.Broadcast(XPPercent); //广播经验条比例
 	}
 }

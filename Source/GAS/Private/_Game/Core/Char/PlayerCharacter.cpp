@@ -44,12 +44,19 @@ void APlayerCharacter::OnRep_PlayerState()
 	InitDefault();
 }
 
-int32 APlayerCharacter::GetPlayerLevel()
+int32 APlayerCharacter::GetPlayerLevel_Implementation()
 {
 	AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
 	if (MyPlayerState == nullptr)return 0;
 
 	return  MyPlayerState->GetPlayerLevel();
+}
+
+void APlayerCharacter::AddToXP_Implementation(int32 InXP)
+{
+	AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
+	check(MyPlayerState); //检测是否有效，无限会暂停游
+	MyPlayerState->AddToXP(InXP);
 }
 
 void APlayerCharacter::InitAbilityActorInfo()

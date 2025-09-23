@@ -44,14 +44,14 @@ void UGASBlueprintFunctionLibrary::GiveStartupAbilities(const UObject* WorldCont
 	//从实例获取到关卡角色的配置
 	UCharacterClassInfo* CharacterClassInfo = GetCharacterClassInfo(WorldContextObject);
 	if(CharacterClassInfo == nullptr) return;
-
+	
 	//从战斗接口获取到角色的等级
-	ICombatInterface* CombatInterface = Cast<ICombatInterface>(ASC->GetAvatarActor());
 	int32 CharacterLevel = 1;
-	if(CombatInterface)
+	if(ASC->GetAvatarActor()->Implements<UCombatInterface>())
 	{
-		CharacterLevel = CombatInterface->GetPlayerLevel();
+		CharacterLevel = ICombatInterface::Execute_GetPlayerLevel(ASC->GetAvatarActor());
 	}
+
 
 	//应用角色拥有的技能数组
 	for(const TSubclassOf<UGameplayAbility> AbilityClass : CharacterClassInfo->CommonAbilities)

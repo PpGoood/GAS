@@ -11,6 +11,7 @@
 #include "_Game/GameplayTagsInstance.h"
 #include "_Game/Core/GASPlayerController.h"
 #include "_Game/Interaction/CombatInterface.h"
+#include "_Game/Interaction/PlayerInterface.h"
 #include "_Game/Util/GASBlueprintFunctionLibrary.h"
 
 UMyAttributeSet::UMyAttributeSet()
@@ -140,8 +141,15 @@ void UMyAttributeSet::PostGameplayEffectExecute(const struct FGameplayEffectModC
 
 	if (Data.EvaluatedData.Attribute == GetIncomingXPAttribute())
 	{
-		UE_LOG(LogGAS, Log, TEXT("[PeiLog]获取传入经验值：%f"), GetIncomingXP());
+		const float LocalIncomingXP = GetIncomingXP();
 		SetIncomingXP(0);
+		// UE_LOG(LogRPG, Log, TEXT("获取传入经验值：%f"), LocalIncomingXP);
+
+		//将经验应用给自身
+		if(Props.SourceCharacter->Implements<UPlayerInterface>())
+		{
+			IPlayerInterface::Execute_AddToXP(Props.SourceCharacter, LocalIncomingXP);
+		}
 	}
 }
 
@@ -150,7 +158,7 @@ void UMyAttributeSet::SendXPEvent(const FEffectProperties& Props)
 	if(ICombatInterface* CombatInterface = Cast<ICombatInterface>(Props.TargetCharacter))
 	{
 		//从战斗接口获取等级和职业，通过蓝图函数获取可提供的经验值
-		const int32 TargetLevel = CombatInterface->GetPlayerLevel();
+		const int32 TargetLevel = ICombatInterface::Execute_GetPlayerLevel(Props.TargetCharacter);
 		const ECharacterClassType TargetClass = ICombatInterface::Execute_GetCharacterClassType(Props.TargetCharacter); //c++内调用BlueprintNativeEvent函数需要这样调用
 		const int32 XPReward = UGASBlueprintFunctionLibrary::GetXPRewardForClassAndLevel(Props.TargetCharacter, TargetClass, TargetLevel);
 
