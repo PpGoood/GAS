@@ -59,6 +59,56 @@ void APlayerCharacter::AddToXP_Implementation(int32 InXP)
 	MyPlayerState->AddToXP(InXP);
 }
 
+void APlayerCharacter::LevelUp_Implementation()
+{
+	//TODO:升级效果
+}
+
+int32 APlayerCharacter::GetXP_Implementation() const
+{
+	const AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
+	check(MyPlayerState); //检测是否有效，无限会暂停游戏
+	return MyPlayerState->GetXP();
+}
+
+int32 APlayerCharacter::FindLevelForXP_Implementation(int32 InXP) const
+{
+	const AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
+	check(MyPlayerState); //检测是否有效，无限会暂停游戏
+	return MyPlayerState->LevelUpInfo->FindLevelForXP(InXP);
+}
+
+int32 APlayerCharacter::GetAttributePointsReward_Implementation(int32 Level) const
+{
+	const AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
+	check(MyPlayerState); //检测是否有效，无限会暂停游戏
+	return MyPlayerState->LevelUpInfo->LevelUpInformation[Level].AttributePointAward;
+}
+
+int32 APlayerCharacter::GetSpellPointsReward_Implementation(int32 Level) const
+{
+	const AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
+	check(MyPlayerState); //检测是否有效，无限会暂停游戏
+	return MyPlayerState->LevelUpInfo->LevelUpInformation[Level].SpellPointAward;
+}
+
+void APlayerCharacter::AddToPlayerLevel_Implementation(int32 InPlayerLevel)
+{
+	AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
+	check(MyPlayerState); //检测是否有效，无限会暂停游戏
+	MyPlayerState->AddToLevel(InPlayerLevel);
+}
+
+void APlayerCharacter::AddToAttributePoints_Implementation(int32 InAttributePoints)
+{
+	//TODO:实现增加属性点
+}
+
+void APlayerCharacter::AddToSpellPoints_Implementation(int32 InSpellPoints)
+{
+	//TODO:实现增加技能点
+}
+
 void APlayerCharacter::InitAbilityActorInfo()
 {
 	AMyPlayerState* MyPlayerState = GetPlayerState<AMyPlayerState>();
